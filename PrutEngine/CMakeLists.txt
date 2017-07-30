@@ -15,8 +15,11 @@ SET(
     src/Mesh.cpp
     src/Shader.cpp
     src/Texture.cpp
+    src/RenderingException.cpp
+    src/easylogging++.cpp
 )
 ADD_DEFINITIONS( "-g -Wall   -O0" )
+
 include_directories(${Engine_SOURCE_DIR}/include )
 add_executable(PrutEngine ${ENGINE_SOURCES} )
 

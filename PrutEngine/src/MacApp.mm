@@ -2,7 +2,9 @@
 #import <string>
 #import "prutengine/platform/MacApp.h"
 #import "prutengine/AssetManager.hpp"
+#import "prutengine/exceptions/PrutEngineException.hpp"
 #import "prutengine/platform/Input.hpp"
+#include "easylogging++.h"
 
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -52,16 +54,22 @@ BOOL shouldStop = NO;
 }
 
 -(void) drawLoop:(NSTimer*) timer{
- 
-    if(shouldStop){
-        [self close];
-        return;
-    }
-    if([self isVisible]){
-      
-       	appInstance->loop();
-        [glView update];
-        [[glView openGLContext] flushBuffer];
+    try{
+        if(shouldStop){
+            [self close];
+            return;
+        }
+        if([self isVisible]){
+            
+            appInstance->loop();
+            [glView update];
+            [[glView openGLContext] flushBuffer];
+        }
+    } catch(const PrutEngine::Exceptions::PrutEngineException exception){
+        LOG(ERROR) << exception.getMsg();
+        
+        appInstance->quit();
+
     }
 
 }
@@ -146,6 +154,8 @@ void Application::quit(){
 std::string Application::getAppPath() const{
    return [[[NSBundle mainBundle]resourcePath]UTF8String];
 }
+
+INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char** argv){
 	application = [NSApplication sharedApplication];

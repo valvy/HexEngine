@@ -1,6 +1,6 @@
 #include "prutengine/data/Mesh.hpp"
 #include <fstream>
-#include <iostream>
+#include "easylogging++.h"
 #include <regex>
 #include "prutengine/math/Vector3.hpp"
 #include "prutengine/math/Vector2.hpp"
@@ -80,7 +80,7 @@ Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(pat
                        );
                 
                 if(matches != 9){
-                    std::cout << "error\n";
+                     LOG(WARNING)  <<"error\n";
                 }
                 verticesList.push_back(vertices);
             }
@@ -143,7 +143,7 @@ Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(pat
         this->size = verticesList.size() * 3;
     }
     else{
-        std::cout << "Error could not find file \n";
+        LOG(WARNING)  << "Error could not find file \n";
     }
     
   

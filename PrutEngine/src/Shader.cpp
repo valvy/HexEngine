@@ -1,7 +1,7 @@
 #include "prutengine/data/Shader.hpp"
 #include <fstream>
 #include <iostream>
-
+#include "easylogging++.h"
 using namespace PrutEngine;
 
 Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
@@ -34,7 +34,7 @@ Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber)
                 GLchar log[infoLen + 1];
                 glGetShaderInfoLog(result, infoLen, nullptr, log);
                 std::string errorMsg(log);
-                std::cout << log << "\n";
+                LOG(WARNING) << errorMsg;
                 // delete[] log;
                 // throw std::string(errorMsg);
             }
@@ -42,7 +42,7 @@ Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber)
         
         this->shaderData = result;
     }else{
-        std::cout << "file could not be loaded\n";
+        LOG(WARNING) << "file could not be loaded";
     }
     
 }
