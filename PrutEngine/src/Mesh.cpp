@@ -1,7 +1,7 @@
 #include "Mesh.hpp"
 #include <fstream>
 #include <iostream>
-
+#include <regex>
 #include "Math/Vector3.hpp"
 #include "Math/Vector2.hpp"
 
@@ -29,22 +29,38 @@ Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(pat
             if(dat.substr(0,1) == "#"){
                 continue;
             }
-            else if(dat.substr(0,2) == "v "){
-                Vector3<float> tmp;
-                sscanf(dat.c_str(), "v %f %f %f", &tmp.x, &tmp.y, &tmp.z);
-                vertex.push_back(tmp);
-            }else if(dat.substr(0,2) == "vt"){
+            const std::regex tokenThree ("\\s*([a-z|A-Z]+)\\s*(-?[0-9]+.[0-9]+)\\s*(-?[0-9]+.[0-9]+)\\s*(-?[0-9]+.[0-9]+)\\s*",std::regex::ECMAScript);
+            const std::regex tokenTwo ("\\s*([a-z|A-Z]+)\\s*(-?[0-9]+.[0-9]+)\\s*(-?[0-9]+.[0-9]+)\\s*",std::regex::ECMAScript);
+            std::smatch match;
+            std::regex_match(dat, match, tokenThree);
+            if(match[1] == "v"){
+                vertex.push_back(Vector3<float>(
+                    std::stof(match[2]),
+                    std::stof(match[3]),
+                    std::stof(match[4])
+                    ));
+            }
+            else if(match[1] == "vn"){
+                normals.push_back(Vector3<float>(
+                    std::stof(match[2]),
+                    std::stof(match[3]),
+                    std::stof(match[4])
+                    ));
+            }
+            if(dat.substr(0,2) == "vt"){
                 Vector2<float> tmp;
                 sscanf(dat.c_str(), "vt %f %f", &tmp.x, &tmp.y);
                 texture.push_back(tmp);
             }
-            else if(dat.substr(0,2) == "vn"){
+         /*   else if(dat.substr(0,2) == "vn"){
                 Vector3<float> tmp;
                 sscanf(dat.c_str(), "vn %f %f %f", &tmp.x, &tmp.y, &tmp.z);
                 
         
                 normals.push_back(tmp);
-            }else if(dat.substr(0,2) == "f "){
+            }
+            */
+            else if(dat.substr(0,2) == "f "){
                 Vector3<Vector3<int>> vertices;
                 int matches = sscanf(dat.c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",
                        &vertices.x.x,
@@ -56,17 +72,7 @@ Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(pat
                        &vertices.z.x,
                        &vertices.z.y,
                        &vertices.z.z
-                       /*
-                       &vertices.x.x,
-                       &vertices.y.x,
-                       &vertices.z.x,
-                       &vertices.x.y,
-                       &vertices.y.y,
-                       &vertices.z.y,
-                       &vertices.x.z,
-                       &vertices.y.z,
-                       &vertices.z.z
-                       */
+
                        );
                 
                 if(matches != 9){
