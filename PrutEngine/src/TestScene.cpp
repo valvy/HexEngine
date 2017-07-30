@@ -11,7 +11,9 @@ using namespace PrutEngine::Math;
 TestScene::TestScene(){
     this->setCamera(new Camera(Vector3<float>(0,0,9)));
     float offset = 0;
-    
+    TestObject* obj = new TestObject(Vector3<float>(0,0,0));
+    obj->rotate(Vector3<float>(0,90,0),50);
+    this->addGameObject(obj);
     for(int x = 0; x < 11; x++){
         for(int y = 0; y < 11; y++){
             this->addGameObject(new TestObject(Vector3<float>((x * 2.1f) -13,
