@@ -10,7 +10,6 @@ namespace PrutEngine{
         bool visible;
     protected:
         virtual void update(float tpf) override;
-        virtual void onClick() override;
     public:
         [[deprecated("Should be moved to unit tests")]]
         TestObject(const Math::Vector3<float> &position);

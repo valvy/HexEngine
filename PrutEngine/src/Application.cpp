@@ -43,10 +43,6 @@ void Application::keyDown(unsigned short keyCode){
     }
 }
 
-void Application::onScroll(float velocityX, float velocityY){
-    this->currentScene->onScroll(velocityX,velocityY);
-    
-}
 
 
 void Application::loop(){

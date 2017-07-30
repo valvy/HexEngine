@@ -16,10 +16,9 @@ namespace PrutEngine{
         
     protected:
         virtual void update(float tpf);
-        virtual void onScroll(float velocityX, float velocityY);
         virtual void keyDown(unsigned short keycode);
         void addGameObject(GameObject* obj);
-        void remGameObject(GameObject* obj);
+        void removeGameObject(GameObject* obj);
         void setCamera(Camera* cam);
     public:
         AbstractScene();

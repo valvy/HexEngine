@@ -16,9 +16,6 @@ void GameObject::loadTexture(std::string meshPath){
     this->texture = AssetManager::loadTexture(meshPath);
 }
 
-void GameObject::onClick(){
-    //virtual
-}
 
 void GameObject::translate(const Vector3<float>& vec, float speed){
     this->position.x += vec.x * speed;
@@ -30,9 +27,7 @@ void GameObject::onKeyDown(unsigned short keyCode){
     //virtual
 }
 
-void GameObject::onScroll(float velocityX, float velocityY){
-    //virtual
-}
+
 
 void GameObject::update(float tpf){
 

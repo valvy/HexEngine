@@ -78,23 +78,6 @@ BOOL shouldStop = NO;
 }
 
 
-- (void)mouseDown:(NSEvent *)theEvent {
-    appInstance->keyDown(KeyCodes::LEFT_MOUSE);
-}
-
-- (void)scrollWheel:(NSEvent *)theEvent {
-    
-    if(!shouldStop){
-        appInstance->onScroll([theEvent deltaX],[theEvent deltaY]);
-    }
-  //  NSLog(@"user scrolled %f horizontally and %f vertically", [theEvent deltaX], [theEvent deltaY]);
-}
-
-
-- (void)keyUp: (NSEvent *)event{
-    //NSLog(@"test\n");
-}
-
 - (void)applicationWillFinishLaunching:(NSNotification *)notification{
     //setup the menubar
     NSMenu* mainMenu = [[NSMenu alloc] initWithTitle:@"MainMenu"];
@@ -147,11 +130,6 @@ BOOL shouldStop = NO;
 
 MacApp* app;
 
-Vector2<float> Application::getMouseLocation() const{
-//        NSLog(@"%f | %f", [NSEvent mouseLocation].x, [NSEvent mouseLocation].y);
-
-    return Vector2<float>([NSEvent mouseLocation].x, [NSEvent mouseLocation].y);
-}
 
 Vector4<float> Application::getWindowSize() const{
     NSSize s = [app frame].size;

@@ -21,11 +21,6 @@ TestObject::TestObject(const Vector3<float> &position) : GameObject(){
     this->loadTexture(path + "/Assets/Textures/cube.bmp");
 }
 
-void TestObject::onClick(){
-    //visible = false;
- //   std::cout << "hai\n";
-}
-
 void TestObject::update(float tpf){
    // if(visible){
         GameObject::update(tpf);

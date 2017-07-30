@@ -20,12 +20,10 @@ namespace PrutEngine{
         GLint pos_reference;
         
     protected:
-        virtual void onClick();
         virtual void update(float tpf);
         void loadMesh(std::string meshPath);
         void loadTexture(std::string texturePath);
         virtual void onKeyDown(unsigned short keycode);
-        virtual void onScroll(float velocityX, float velocityY);
         template<typename... Arguments>
         void loadProgram(Arguments... shaders){
             this->program = AssetManager::loadProgram(shaders...);

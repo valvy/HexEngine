@@ -36,10 +36,8 @@ namespace PrutEngine{
 		*/
 		std::string getAppPath() const;
 		
-		Math::Vector2<float> getMouseLocation() const;
 		Math::Vector4<float> getWindowSize() const;
 		
-		void onScroll(float velocityX, float velocityY);
 		void keyDown(unsigned short keycode);
 		
 		/**
