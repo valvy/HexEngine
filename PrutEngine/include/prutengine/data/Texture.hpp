@@ -3,15 +3,16 @@
 #include "./AbstractResource.hpp"
 #include "../platform/OpenGL.hpp"
 namespace PrutEngine{
-    class Texture : public AbstractResource{
-    private:
-        GLuint texture;
-    public:
-        Texture(std::string name, unsigned short uniqueNumber);
-        ~Texture();
-        GLuint getTexture() const;
-    };
-
+    namespace Data{
+        class Texture : public AbstractResource{
+        private:
+            GLuint texture;
+        public:
+            Texture(std::string name, unsigned short uniqueNumber);
+            ~Texture();
+            GLuint getTexture() const;
+        };
+    }
 }
 
 

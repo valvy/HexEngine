@@ -1,6 +1,7 @@
 #include "prutengine/data/AbstractResource.hpp"
 
 using namespace PrutEngine;
+using namespace PrutEngine::Data;
 
 AbstractResource::AbstractResource(std::string path, unsigned short uniqueNumber) : memoryPosition(uniqueNumber), dataLocation(path){
     

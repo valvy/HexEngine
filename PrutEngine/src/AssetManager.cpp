@@ -2,7 +2,7 @@
 #include <iostream>
 
 using namespace PrutEngine;
-
+using namespace PrutEngine::Data;
 unsigned short AssetManager::uniqueNumber = 0;
 
 std::vector<Shader*> AssetManager::loadedShaders;

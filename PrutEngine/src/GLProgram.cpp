@@ -3,7 +3,7 @@
 #include "prutengine/AssetManager.hpp"
 
 using namespace PrutEngine;
-
+using namespace PrutEngine::Data;
 GLProgram::GLProgram(std::string name, unsigned short uniqueNumber, const std::vector<unsigned short> &shaders) : AbstractResource(name,uniqueNumber){
     
     this->programData = glCreateProgram();

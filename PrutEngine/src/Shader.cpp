@@ -3,6 +3,7 @@
 #include <iostream>
 #include "easylogging++.h"
 using namespace PrutEngine;
+using namespace PrutEngine::Data;
 
 Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
     std::fstream str(path, std::ios::in);

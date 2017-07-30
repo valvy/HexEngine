@@ -16,11 +16,11 @@ namespace PrutEngine{
         
         static unsigned short getUniqueNumber();
         
-        static std::vector<Shader*> loadedShaders;
-        static std::vector<GLProgram*> loadedPrograms;
-        static std::vector<Mesh*> loadedMeshes;
+        static std::vector<Data::Shader*> loadedShaders;
+        static std::vector<Data::GLProgram*> loadedPrograms;
+        static std::vector<Data::Mesh*> loadedMeshes;
         
-        static std::vector<Texture*> loadedTextures;
+        static std::vector<Data::Texture*> loadedTextures;
         
         static unsigned short loadShader(std::string path, GLenum type);
         
@@ -44,8 +44,8 @@ namespace PrutEngine{
         
         static GLuint getProgram(unsigned short memoryPosition);
         
-        static Mesh* getMesh(unsigned short memoryPosition);
-        static Shader* getShader(unsigned short memoryPosition);
+        static Data::Mesh* getMesh(unsigned short memoryPosition);
+        static Data::Shader* getShader(unsigned short memoryPosition);
         
         static std::vector<GLuint> allPrograms();
         
@@ -72,7 +72,7 @@ namespace PrutEngine{
                 }
             }
             
-            GLProgram* program = new GLProgram(programName, getUniqueNumber(), usedShaders);
+            Data::GLProgram* program = new Data::GLProgram(programName, getUniqueNumber(), usedShaders);
             loadedPrograms.push_back(program);
             
             

@@ -3,6 +3,7 @@
 #include <iostream>
 
 using namespace PrutEngine;
+using namespace PrutEngine::Data;
 
 Texture::Texture(std::string name, unsigned short uniqueNumber) : AbstractResource(name,uniqueNumber){
      std::fstream str(name, std::ios::in | std::ios::binary | std::ios::ate);

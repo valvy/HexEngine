@@ -6,7 +6,7 @@
 #include "prutengine/math/Vector2.hpp"
 
 using namespace PrutEngine;
-
+using namespace PrutEngine::Data;
 
 Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
     using namespace PrutEngine::Math;

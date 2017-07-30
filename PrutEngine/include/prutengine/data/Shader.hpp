@@ -4,16 +4,18 @@
 #include "../platform/OpenGL.hpp"
 
 namespace PrutEngine{
-    class Shader : public AbstractResource{
-    private:
-        GLuint shaderData;
-    public:
-        Shader(std::string path,GLenum shaderType, unsigned short uniqueNumber);
-        GLuint getShader() const;
-        virtual ~Shader();
-        
-        
-    };
+    namespace Data{
+        class Shader : public AbstractResource{
+        private:
+            GLuint shaderData;
+        public:
+            Shader(std::string path,GLenum shaderType, unsigned short uniqueNumber);
+            GLuint getShader() const;
+            virtual ~Shader();
+            
+            
+        };
+    }
 }
 
 
