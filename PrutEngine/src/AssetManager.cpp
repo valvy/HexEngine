@@ -1,5 +1,8 @@
-#include "AssetManager.hpp"
+#include "prutengine/AssetManager.hpp"
 #include <iostream>
+
+using namespace PrutEngine;
+
 unsigned short AssetManager::uniqueNumber = 0;
 
 std::vector<Shader*> AssetManager::loadedShaders;

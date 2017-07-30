@@ -1,7 +1,9 @@
-#include "GLProgram.hpp"
-#include "Shader.hpp"
-#include "AssetManager.hpp"
-#include <iostream>
+#include "prutengine/data/GLProgram.hpp"
+#include "prutengine/data/Shader.hpp"
+#include "prutengine/AssetManager.hpp"
+
+using namespace PrutEngine;
+
 GLProgram::GLProgram(std::string name, unsigned short uniqueNumber, const std::vector<unsigned short> &shaders) : AbstractResource(name,uniqueNumber){
     
     this->programData = glCreateProgram();

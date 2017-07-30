@@ -1,11 +1,15 @@
-#include "Mesh.hpp"
+#include "prutengine/data/Mesh.hpp"
 #include <fstream>
 #include <iostream>
 #include <regex>
-#include "Math/Vector3.hpp"
-#include "Math/Vector2.hpp"
+#include "prutengine/math/Vector3.hpp"
+#include "prutengine/math/Vector2.hpp"
+
+using namespace PrutEngine;
+
 
 Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
+    using namespace PrutEngine::Math;
     glGenVertexArrays(1,&this->vao);
     glBindVertexArray(this->vao);
     

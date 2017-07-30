@@ -1,10 +1,14 @@
-#include "Hex.hpp"
-#include "Application.hpp"
-#include "OpenGL.hpp"
+#include "prutengine/deprecated/TestObject.hpp"
+#include "prutengine/Application.hpp"
+#include "prutengine/platform/OpenGL.hpp"
 #include <string>
 #include <utility>
 #include <iostream>
-Hex::Hex(const Vector3<float> &position) : GameObject(){
+
+using namespace PrutEngine;
+using namespace PrutEngine::Math;
+
+TestObject::TestObject(const Vector3<float> &position) : GameObject(){
     
     this->setPosition(position);
     visible = true;
@@ -17,12 +21,12 @@ Hex::Hex(const Vector3<float> &position) : GameObject(){
     this->loadTexture(path + "/Assets/Textures/cube.bmp");
 }
 
-void Hex::onClick(){
+void TestObject::onClick(){
     //visible = false;
  //   std::cout << "hai\n";
 }
 
-void Hex::update(float tpf){
+void TestObject::update(float tpf){
    // if(visible){
         GameObject::update(tpf);
     //}

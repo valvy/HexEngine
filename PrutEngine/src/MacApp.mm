@@ -1,8 +1,12 @@
 #ifdef __APPLE__
-#import "MacApp.h"
 #import <string>
-#import "AssetManager.hpp"
-#import "Input.hpp"
+#import "prutengine/platform/MacApp.h"
+#import "prutengine/AssetManager.hpp"
+#import "prutengine/platform/Input.hpp"
+
+using namespace PrutEngine;
+using namespace PrutEngine::Math;
+
 @implementation MacApp
 
 @synthesize glView;

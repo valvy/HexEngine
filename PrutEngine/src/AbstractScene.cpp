@@ -1,7 +1,11 @@
-#include "AbstractScene.hpp"
-#include "GameObject.hpp"
-#include "Camera.hpp"
-#include "Application.hpp"
+#include "prutengine/AbstractScene.hpp"
+#include "prutengine/GameObject.hpp"
+#include "prutengine/Camera.hpp"
+#include "prutengine/Application.hpp"
+
+using namespace PrutEngine;
+using namespace PrutEngine::Math;
+
 AbstractScene::AbstractScene(){
     this->cam = std::shared_ptr<Camera>(new Camera(Vector3<float>(0,0,0)));
 }

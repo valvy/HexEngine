@@ -1,9 +1,10 @@
-#include "Camera.hpp"
-#include "AssetManager.hpp"
-#include "Math/Matrix4x4.hpp"
-#include "Math/Utilities.hpp"
-#include "Math/Quaternion.hpp"
-#include <iostream>
+#include "prutengine/Camera.hpp"
+#include "prutengine/AssetManager.hpp"
+#include "prutengine/math/Matrix4x4.hpp"
+#include "prutengine/math/Utilities.hpp"
+#include "prutengine/math/Quaternion.hpp"
+using namespace PrutEngine;
+using namespace PrutEngine::Math;
 
 Camera::Camera(const Vector3<float>& startPos){
     this->setPosition(startPos);

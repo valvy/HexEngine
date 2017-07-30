@@ -1,19 +1,20 @@
-#include "Application.hpp"
-#include "HexGameScene.hpp"
-#include "OpenGL.hpp"
-#include "AssetManager.hpp"
-#include "Math/Matrix4x4.hpp"
-#include "Math/Utilities.hpp"
-#include "Input.hpp"
+#include "prutengine/Application.hpp"
+#include "prutengine/deprecated/TestScene.hpp"
+#include "prutengine/platform/OpenGL.hpp"
+#include "prutengine/AssetManager.hpp"
+#include "prutengine/math/Matrix4x4.hpp"
+#include "prutengine/math/Utilities.hpp"
+#include "prutengine/platform/Input.hpp"
 #include <iostream>
 
+using namespace PrutEngine;
 
 std::shared_ptr<Application> Application::instance;
 
 
 
 void Application::start(){
-    this->currentScene = std::unique_ptr<AbstractScene>(new HexGameScene());
+    this->currentScene = std::unique_ptr<AbstractScene>(new TestScene());
 }
 
 Application::Application(){

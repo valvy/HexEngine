@@ -1,5 +1,5 @@
-#ifndef OPENGL_HPP
-#define OPENGL_HPP
+#ifndef PRUTENGINE_OPENGL_HPP
+#define PRUTENGINE_OPENGL_HPP
 
 #ifdef __APPLE__
 #include <OpenGl/gl3.h>

@@ -1,6 +1,9 @@
-#include "Texture.hpp"
+#include "prutengine/data/Texture.hpp"
 #include <fstream>
 #include <iostream>
+
+using namespace PrutEngine;
+
 Texture::Texture(std::string name, unsigned short uniqueNumber) : AbstractResource(name,uniqueNumber){
      std::fstream str(name, std::ios::in | std::ios::binary | std::ios::ate);
       if(str.good()){

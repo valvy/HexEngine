@@ -7,18 +7,16 @@ SET(
     src/Application.cpp
     src/AssetManager.cpp
     src/Camera.cpp
-    src/GameCam.cpp
     src/GameObject.cpp
     src/GLProgram.cpp
-    src/Hex.cpp
-    src/HexGameScene.cpp
+    src/TestObject.cpp
+    src/TestScene.cpp
     src/MacApp.mm
     src/Mesh.cpp
     src/Shader.cpp
-    src/TestCube.cpp
     src/Texture.cpp
 )
-
+ADD_DEFINITIONS( "-g -Wall   -O0" )
 include_directories(${Engine_SOURCE_DIR}/include )
 add_executable(PrutEngine ${ENGINE_SOURCES} )
 

@@ -1,6 +1,8 @@
-#include "GameObject.hpp"
-#include "Math/Utilities.hpp"
-#include <iostream>
+#include "prutengine/GameObject.hpp"
+#include "prutengine/math/Utilities.hpp"
+
+using namespace PrutEngine;
+using namespace PrutEngine::Math;
 
 GameObject::GameObject(){
     this->setScale(Vector3<float>(1,1,1));

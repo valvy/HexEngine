@@ -1,6 +1,9 @@
-#include "Shader.hpp"
+#include "prutengine/data/Shader.hpp"
 #include <fstream>
 #include <iostream>
+
+using namespace PrutEngine;
+
 Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
     std::fstream str(path, std::ios::in);
     if(str.good()){
