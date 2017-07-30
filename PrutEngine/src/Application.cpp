@@ -89,33 +89,6 @@ void Application::loop(){
         throw exception;
     }
 
-
-  /*  GLenum errors = GL_NO_ERROR;
-    while((errors = glGetError()) != GL_NO_ERROR){
-        switch(errors){
-            case GL_INVALID_ENUM:
-               // std::cout << "? \n";
-                LOG(ERROR) << "My first info log using default logger";
-                break;
-            case GL_INVALID_VALUE:
-                LOG(ERROR) << "found invalid value \n";
-                break;
-            case GL_INVALID_OPERATION:
-                LOG(ERROR) <<"found invalid operation \n";
-                break;
-            case GL_OUT_OF_MEMORY:
-                LOG(ERROR) << "Opengl experienced an out of memory exception \n";
-                break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:
-                LOG(ERROR) << "Invalid framebuffer operation \n";
-                break;
-            default:
-                LOG(ERROR) << "Found an error \n";
-                break;
-        }
-        
-    }*/
-
 	currentScene->update(time_per_frame);
     
 
