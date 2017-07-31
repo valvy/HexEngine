@@ -1,6 +1,6 @@
 #include "BasicApplication.hpp"
-
+#include <iostream>
 int main(int argc, char** argv){
-    BasicApplication* app = new BasicApplication();
-    //never reaches this 
+    BasicApplication app;
+    //This will never be called :(
 }

@@ -4,6 +4,7 @@
 #include "prutengine/math/Vector3.hpp"
 #include "prutengine/math/Vector2.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
+#include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 

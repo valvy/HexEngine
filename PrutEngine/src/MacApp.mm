@@ -150,7 +150,8 @@ Vector4<float> Application::getWindowSize() const{
 void Application::quit(){
     auto assetManager =  Application::getInstance()->getAssetManager();
     assetManager->clear();
-    delete Application::instance;
+    currentScene.reset();
+    //delete Application::instance;
     
 }
 

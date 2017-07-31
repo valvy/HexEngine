@@ -52,9 +52,9 @@ void AbstractScene::removeGameObject(std::shared_ptr<GameObject> obj){
 
 AbstractScene::~AbstractScene(){
     //delete gameobjects
-   // for(auto it : this->gameObjects){
-   //     delete it;
-    //}
+    for(auto it : this->gameObjects){
+        it.reset();
+    }
     this->gameObjects.clear();
     
     //delete camera

@@ -1,6 +1,6 @@
 #include "prutengine/GameObject.hpp"
 #include "prutengine/math/Utilities.hpp"
-
+#include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
@@ -9,7 +9,7 @@ GameObject::GameObject(){
 }
 
 GameObject::~GameObject(){
-    
+
 }
 
 void GameObject::loadTexture(std::string meshPath){
