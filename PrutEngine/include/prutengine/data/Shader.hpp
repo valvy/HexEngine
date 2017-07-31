@@ -9,7 +9,7 @@ namespace PrutEngine{
         private:
             GLuint shaderData;
         public:
-            Shader(std::string path,GLenum shaderType, unsigned short uniqueNumber);
+            Shader(std::string path,GLenum shaderType);
             GLuint getShader() const;
             virtual ~Shader();
             

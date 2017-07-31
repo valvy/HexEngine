@@ -12,71 +12,61 @@
 namespace PrutEngine{
     class AssetManager{
     private:
-        static unsigned short uniqueNumber;
         
-        static unsigned short getUniqueNumber();
+        std::vector<std::shared_ptr<Data::Shader>> loadedShaders;
+        std::vector<std::shared_ptr<Data::GLProgram>> loadedPrograms;
+        std::vector<std::shared_ptr<Data::Mesh>> loadedMeshes;
         
-        static std::vector<Data::Shader*> loadedShaders;
-        static std::vector<Data::GLProgram*> loadedPrograms;
-        static std::vector<Data::Mesh*> loadedMeshes;
+        std::vector<std::shared_ptr<Data::Texture>> loadedTextures;
         
-        static std::vector<Data::Texture*> loadedTextures;
+        std::shared_ptr<Data::Shader> loadShader(std::string path, GLenum type);
         
-        static unsigned short loadShader(std::string path, GLenum type);
-        
-        static std::vector<unsigned short> massLoadShader(std::pair<std::string,GLenum> head){
-            std::vector<unsigned short> result;
+        std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string,GLenum> head){
+            std::vector<std::shared_ptr<Data::Shader>> result;
             result.push_back(loadShader(head.first,head.second));
             return result;
         }
         
         template<typename... Arguments>
-        static std::vector<unsigned short> massLoadShader(std::pair<std::string, GLenum> head, Arguments... tail){
-            std::vector<unsigned short> result = AssetManager::loadShader(tail...);
+        std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string, GLenum> head, Arguments... tail){
+            std::vector<std::shared_ptr<Data::Shader>> result = AssetManager::loadShader(tail...);
             result.push_back(loadShader(head.first,head.second));
             return result;
             
         }
     public:
-        static void clear();
+        void clear();
         
-        static unsigned short loadMesh(std::string path);
+        std::shared_ptr<Data::Mesh> loadMesh(const std::string& path);
         
-        static GLuint getProgram(unsigned short memoryPosition);
-        
-        static Data::Mesh* getMesh(unsigned short memoryPosition);
-        static Data::Shader* getShader(unsigned short memoryPosition);
-        
-        static std::vector<GLuint> allPrograms();
+    
+        std::vector<GLuint> allPrograms();
         
         
-        static unsigned short loadTexture(std::string path);
-        static GLuint getTexture(unsigned short memoryPosition);
-        
-        
+        std::shared_ptr<Data::Texture> loadTexture(const std::string& path);
         
         template<typename... Arguments>
-        static unsigned short loadProgram(std::pair<std::string, GLenum> head, Arguments... shaders){
+        std::shared_ptr<Data::GLProgram> loadProgram(std::pair<std::string, GLenum> head, Arguments... shaders){
         
-            std::vector<unsigned short> usedShaders = AssetManager::massLoadShader(shaders...);
+            auto usedShaders = this->massLoadShader(shaders...);
             usedShaders.push_back(loadShader(head.first,head.second));
             std::string programName;
             
             for(auto it : usedShaders){
-                programName += getShader(it)->getDataLocation();
+                programName += it->getDataLocation();
             }
             //Check if the program is loaded
             for(auto it : loadedPrograms){
                 if(it->getDataLocation() == programName){
-                    return it->getMemoryPosition();
+                    return it;
                 }
             }
             
-            Data::GLProgram* program = new Data::GLProgram(programName, getUniqueNumber(), usedShaders);
+            auto program = std::shared_ptr<Data::GLProgram>(new Data::GLProgram(programName, usedShaders));
             loadedPrograms.push_back(program);
             
-            
-            return program->getMemoryPosition();
+            return program;
+            //return program->getMemoryPosition();
         }
     };
 }

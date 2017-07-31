@@ -5,15 +5,11 @@ namespace PrutEngine{
 	namespace Data{
 		class AbstractResource{
 		private:
-			unsigned short memoryPosition;
 			std::string dataLocation;
-			unsigned short amountOfRef;
 		public:
-			AbstractResource(std::string path, unsigned short uniqueNumber);
+			AbstractResource(const std::string& path);
+			~AbstractResource();
 			std::string getDataLocation() const;
-			bool removeRef();
-			unsigned short addRef();
-			unsigned short getMemoryPosition() const;
 		protected: 
 			
 

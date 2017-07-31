@@ -4,6 +4,7 @@
 #include "./AbstractScene.hpp"
 #include "./math/Vector2.hpp"
 #include "./math/Vector4.hpp"
+#include "prutengine/AssetManager.hpp"
 
 namespace PrutEngine{
 	/**
@@ -17,8 +18,8 @@ namespace PrutEngine{
 		/**
 		* the instance of the application (it's a singleton)
 		*/
-		static std::shared_ptr<Application> instance;
-		
+		static Application* instance;
+		std::shared_ptr<AssetManager> assetManager;
 		
 		float time_per_frame;
 
@@ -33,15 +34,17 @@ namespace PrutEngine{
 		* private constructor so it enforces only on instance
 		*/
 		Application();
-		void initialize();
+		void run();
 	public:
+		virtual ~Application();
+		std::shared_ptr<AssetManager> getAssetManager();
 		virtual void awake();
 		void loadScene(std::shared_ptr<AbstractScene> scene);
 		/**
 		* gets the instance of the application
 		* if instance is null it creates a new instance
 		*/
-		static std::shared_ptr<Application> getInstance();
+		static Application* getInstance();
 		/**
 		* Get's the resource path 
 		*/

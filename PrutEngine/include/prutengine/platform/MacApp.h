@@ -6,7 +6,7 @@
 NSApplication* application;
 
 @interface MacApp : NSWindow <NSApplicationDelegate>{
-	std::shared_ptr<PrutEngine::Application> appInstance;
+	PrutEngine::Application* appInstance;
 
 }
 

@@ -5,11 +5,15 @@
 BasicApplication::BasicApplication(){
     setInstance(this);
     loadScene(std::shared_ptr<PrutEngine::AbstractScene>(new BasicScene()));
-    initialize();
+    run();
 
 }
 
 
 void BasicApplication::loop(){
     update();
+}
+
+BasicApplication::~BasicApplication(){
+    std::cout << "Quitting\n";
 }

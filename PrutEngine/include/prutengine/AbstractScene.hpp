@@ -12,15 +12,15 @@ namespace PrutEngine{
     friend Application;	
     private:
         std::shared_ptr<Camera> cam;
-        std::vector<GameObject*> gameObjects;
+        std::vector<std::shared_ptr<GameObject>> gameObjects;
         
     protected:
         virtual void awake();
         virtual void update(float tpf);
         virtual void keyDown(unsigned short keycode);
-        void addGameObject(GameObject* obj);
-        void removeGameObject(GameObject* obj);
-        void setCamera(Camera* cam);
+        void addGameObject(std::shared_ptr<GameObject> obj);
+        void removeGameObject(std::shared_ptr<GameObject> obj);
+        void setCamera(std::shared_ptr<Camera> cam);
     public:
         AbstractScene();
         std::shared_ptr<Camera> getCamera() const;

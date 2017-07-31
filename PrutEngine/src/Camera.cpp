@@ -49,8 +49,9 @@ void Camera::update(float tpf){
                                                             Quaternion<GLfloat>::quaternionToMatrix(this->getQuaternion()),Math::perspective<GLfloat>(45, 4.0f / 3.0f , 1, 100));
     const Matrix4x4<GLfloat> position = Matrix4x4<GLfloat>::translate(Matrix4x4<GLfloat>::identityMatrix(), getPosition());
     
-    
-    for(const GLuint p : AssetManager::allPrograms()){
+    auto assetManager =  Application::getInstance()->getAssetManager();
+
+    for(const GLuint p : assetManager->allPrograms()){
         glUseProgram(p);
         glUniformMatrix4fv(glGetUniformLocation(p, "projection_matrix"), 1, GL_FALSE, &projection.getRawData()[0]);
         glUniformMatrix4fv(glGetUniformLocation(p, "cam_matrix"), 1, GL_TRUE, &position.getRawData()[0]);

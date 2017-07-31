@@ -5,7 +5,7 @@
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
-Texture::Texture(std::string name, unsigned short uniqueNumber) : AbstractResource(name,uniqueNumber){
+Texture::Texture(std::string name) : AbstractResource(name){
      std::fstream str(name, std::ios::in | std::ios::binary | std::ios::ate);
       if(str.good()){
           //Read the header.. (this contains things like image width/height.. or the kind of file (such if it's a bmp)

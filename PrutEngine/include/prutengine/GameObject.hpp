@@ -2,8 +2,9 @@
 #define PRUTENGINE_GAMEOBJECT_HPP
 #include "./math/Vector3.hpp"
 #include "./platform/OpenGL.hpp"
-#include "./AssetManager.hpp"
+#include "./Application.hpp"
 #include "./math/Quaternion.hpp"
+
 
 namespace PrutEngine{
     class AbstractScene;
@@ -14,9 +15,9 @@ namespace PrutEngine{
         Math::Quaternion<float> quaternion;
         Math::Vector3<float> scale;
         Math::Vector3<float> position;
-        unsigned short mesh;
-        unsigned short program;
-        unsigned short texture;
+        std::shared_ptr<Data::Mesh> mesh;
+        std::shared_ptr<Data::GLProgram> program;
+        std::shared_ptr<Data::Texture> texture;
         GLint pos_reference;
         
     protected:
@@ -26,8 +27,10 @@ namespace PrutEngine{
         virtual void onKeyDown(unsigned short keycode);
         template<typename... Arguments>
         void loadProgram(Arguments... shaders){
-            this->program = AssetManager::loadProgram(shaders...);
-            this->pos_reference = glGetUniformLocation(AssetManager::getProgram(program), "mv_matrix");
+            auto assetManager =  Application::getInstance()->getAssetManager();
+            this->program = assetManager->loadProgram(shaders...);
+            //AssetManager::loadProgram(shaders...);
+            this->pos_reference = glGetUniformLocation(program->getProgram(), "mv_matrix");
         }
     public:
         GameObject();

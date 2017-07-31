@@ -1,6 +1,6 @@
 #include "prutengine/Application.hpp"
 #include "prutengine/platform/OpenGL.hpp"
-#include "prutengine/AssetManager.hpp"
+
 #include "prutengine/math/Matrix4x4.hpp"
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/platform/Input.hpp"
@@ -10,16 +10,25 @@
 
 using namespace PrutEngine;
 
-std::shared_ptr<Application> Application::instance;
+Application* Application::instance;
 
 void Application::setInstance(Application* app){
-    instance = std::shared_ptr<Application>(app);
+    Application::instance = app;
     //instance->start();
 }
 
-
+Application::~Application(){
+    
+}
 Application::Application(){
 
+}
+
+std::shared_ptr<AssetManager> Application::getAssetManager(){
+    if(this->assetManager == nullptr){
+        this->assetManager = std::shared_ptr<AssetManager>(new AssetManager());
+    }
+    return this->assetManager;
 }
 
 void Application::loadScene(std::shared_ptr<AbstractScene> scene){
@@ -30,7 +39,7 @@ void Application::awake(){
     this->currentScene->awake();
 }
 
-std::shared_ptr<Application> Application::getInstance(){
+Application* Application::getInstance(){
 	if(instance == nullptr){
 	//	instance = std::shared_ptr<Application>(new Application());
       //  instance->start();//Make sure the gameobjects in the application can use this pointer

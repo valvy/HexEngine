@@ -5,7 +5,7 @@
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
-Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
+Shader::Shader(std::string path, GLenum shaderType) : AbstractResource(path){
     std::fstream str(path, std::ios::in);
     if(str.good()){
         std::string line;

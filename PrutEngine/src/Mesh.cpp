@@ -7,7 +7,7 @@
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
-Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(path,uniqueNumber){
+Mesh::Mesh(std::string path) : AbstractResource(path){
     using namespace PrutEngine::Math;
     glGenVertexArrays(1,&this->vao);
     glBindVertexArray(this->vao);

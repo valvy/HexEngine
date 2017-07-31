@@ -33,7 +33,7 @@ void AbstractScene::keyDown(unsigned short keycode){
     }  
 }
 
-void AbstractScene::setCamera(Camera* cam){
+void AbstractScene::setCamera(std::shared_ptr<Camera> cam){
     this->cam.reset();
     this->cam = std::shared_ptr<Camera>(cam);
 }
@@ -42,19 +42,19 @@ std::shared_ptr<Camera> AbstractScene::getCamera() const {
     return this->cam;
 }
 
-void AbstractScene::addGameObject(GameObject* obj){
+void AbstractScene::addGameObject(std::shared_ptr<GameObject> obj){
     this->gameObjects.push_back(obj);
 }
 
-void AbstractScene::removeGameObject(GameObject* obj){
+void AbstractScene::removeGameObject(std::shared_ptr<GameObject> obj){
     
 }
 
 AbstractScene::~AbstractScene(){
     //delete gameobjects
-    for(auto it : this->gameObjects){
-        delete it;
-    }
+   // for(auto it : this->gameObjects){
+   //     delete it;
+    //}
     this->gameObjects.clear();
     
     //delete camera

@@ -12,7 +12,7 @@ namespace PrutEngine{
         private:
             GLuint programData;
         public:
-            GLProgram(std::string name, unsigned short uniqueNumber,const std::vector<unsigned short> &shaders);
+            GLProgram(std::string name,const std::vector<std::shared_ptr<Shader>> &shaders);
             ~GLProgram();
             GLuint getProgram() const;
             

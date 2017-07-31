@@ -6,6 +6,7 @@ class BasicApplication : public PrutEngine::Application{
     public:
     BasicApplication();
     virtual void loop() override;
+    ~BasicApplication();
 };
 
 #endif

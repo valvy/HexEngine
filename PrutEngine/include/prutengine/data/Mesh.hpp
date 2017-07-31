@@ -14,7 +14,7 @@ namespace PrutEngine{
             int size;
             GLuint storeDataInVao(int attributeNr, int size, const std::vector<GLfloat> &data);
         public:
-            Mesh(std::string path, unsigned short uniqueNumber);
+            Mesh(std::string path);
             ~Mesh();
             int getSize() const;
             GLuint getVao() const;

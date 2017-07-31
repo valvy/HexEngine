@@ -13,7 +13,8 @@ GameObject::~GameObject(){
 }
 
 void GameObject::loadTexture(std::string meshPath){
-    this->texture = AssetManager::loadTexture(meshPath);
+    auto assetManager =  Application::getInstance()->getAssetManager();
+    this->texture = assetManager->loadTexture(meshPath);
 }
 
 
@@ -30,13 +31,13 @@ void GameObject::onKeyDown(unsigned short keyCode){
 
 
 void GameObject::update(float tpf){
-
+    auto assetManager =  Application::getInstance()->getAssetManager();
     
     //setup the program and mesh
-    glUseProgram(AssetManager::getProgram(this->program));
+    glUseProgram(program->getProgram());
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,AssetManager::getTexture(this->texture));
-    glBindVertexArray(AssetManager::getMesh(this->mesh)->getVao());
+    glBindTexture(GL_TEXTURE_2D,this->texture->getTexture());
+    glBindVertexArray(this->mesh->getVao());
     
     //Make the calculation
     Matrix4x4<GLfloat> mat = Matrix4x4<GLfloat>::identityMatrix();
@@ -50,7 +51,7 @@ void GameObject::update(float tpf){
     glUniformMatrix4fv(this->pos_reference, 1, GL_TRUE, &mat.getRawData()[0]);
     glEnableVertexAttribArray ( 0 );
     
-    glDrawArrays ( GL_TRIANGLES, 0, AssetManager::getMesh(this->mesh)->getSize());
+    glDrawArrays ( GL_TRIANGLES, 0, this->mesh->getSize());
     glDisableVertexAttribArray(0);
     glBindVertexArray(0);
     
@@ -61,7 +62,8 @@ void GameObject::rotate(const Vector3<float>& vec, float angle){
 }
 
 void GameObject::loadMesh(std::string meshPath){
-    this->mesh = AssetManager::loadMesh(meshPath);
+    auto assetManager =  Application::getInstance()->getAssetManager();
+    this->mesh = assetManager->loadMesh(meshPath);
    
 }
 

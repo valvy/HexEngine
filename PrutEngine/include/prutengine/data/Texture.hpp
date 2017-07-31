@@ -8,7 +8,7 @@ namespace PrutEngine{
         private:
             GLuint texture;
         public:
-            Texture(std::string name, unsigned short uniqueNumber);
+            Texture(std::string name);
             ~Texture();
             GLuint getTexture() const;
         };

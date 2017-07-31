@@ -148,9 +148,10 @@ Vector4<float> Application::getWindowSize() const{
 }
 
 void Application::quit(){
-    shouldStop = YES;
-    AssetManager::clear();
-    instance.reset();
+    auto assetManager =  Application::getInstance()->getAssetManager();
+    assetManager->clear();
+    delete Application::instance;
+    
 }
 
 std::string Application::getAppPath() const{
@@ -158,7 +159,7 @@ std::string Application::getAppPath() const{
 }
 
 
-void Application::initialize(){
+void Application::run(){
 	application = [NSApplication sharedApplication];
    	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];	
 	app = [[MacApp alloc] initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];	
