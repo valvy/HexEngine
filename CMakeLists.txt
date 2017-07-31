@@ -9,3 +9,4 @@ set(PrutEngine_version ${PrutEngine_MAJOR_VERSION}.${PrutEngine_MINOR_VERSION}.$
 set(PrutEngine_name PrutEngine)
 
 add_subdirectory(PrutEngine)
+add_subdirectory(examples)

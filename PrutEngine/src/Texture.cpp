@@ -1,6 +1,6 @@
 #include "prutengine/data/Texture.hpp"
 #include <fstream>
-#include <iostream>
+#include "prutengine/exceptions/AssetNotLoadedException.hpp"
 
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
@@ -61,7 +61,7 @@ Texture::Texture(std::string name, unsigned short uniqueNumber) : AbstractResour
 
       }else{
           str.close();
-          
+          throw Exceptions::AssetNotLoadedException(std::string("Could not find :") + name);
       }
 }
 

@@ -1,36 +1,40 @@
 #include "prutengine/Application.hpp"
-#include "prutengine/deprecated/TestScene.hpp"
 #include "prutengine/platform/OpenGL.hpp"
 #include "prutengine/AssetManager.hpp"
 #include "prutengine/math/Matrix4x4.hpp"
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/platform/Input.hpp"
 #include "prutengine/exceptions/RenderingException.hpp"
-#include "easylogging++.h"
+#include "prutengine/exceptions/NotYetInitializedException.hpp"
 
 
 using namespace PrutEngine;
 
 std::shared_ptr<Application> Application::instance;
 
-
-
-void Application::start(){
-    this->currentScene = std::unique_ptr<AbstractScene>(new TestScene());
+void Application::setInstance(Application* app){
+    instance = std::shared_ptr<Application>(app);
+    //instance->start();
 }
 
+
 Application::Application(){
-    glEnable(GL_CULL_FACE);
-    glFrontFace(GL_CW);
-    
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+
+}
+
+void Application::loadScene(std::shared_ptr<AbstractScene> scene){
+    this->currentScene = scene;
+}
+
+void Application::awake(){
+    this->currentScene->awake();
 }
 
 std::shared_ptr<Application> Application::getInstance(){
 	if(instance == nullptr){
-		instance = std::shared_ptr<Application>(new Application());
-        instance->start();//Make sure the gameobjects in the application can use this pointer
+	//	instance = std::shared_ptr<Application>(new Application());
+      //  instance->start();//Make sure the gameobjects in the application can use this pointer
+      throw Exceptions::NotYetInitializedException("Instance is null");
 	}
 	return instance;
 }
@@ -47,7 +51,7 @@ void Application::keyDown(unsigned short keyCode){
 
 
 
-void Application::loop(){
+void Application::update(){
     clock_t timer;
     timer = clock();
     
@@ -83,7 +87,6 @@ void Application::loop(){
                 errorMsg = "Found an error with code " + std::to_string(error);
                 break;
             }
-         LOG(WARNING) << errorMsg;
          exception.addError(errorMsg);
         }while((error = glGetError()) != GL_NO_ERROR);
         throw exception;

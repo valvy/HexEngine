@@ -1,10 +1,9 @@
 #include "prutengine/data/Mesh.hpp"
 #include <fstream>
-#include "easylogging++.h"
 #include <regex>
 #include "prutengine/math/Vector3.hpp"
 #include "prutengine/math/Vector2.hpp"
-
+#include "prutengine/exceptions/AssetNotLoadedException.hpp"
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
@@ -80,7 +79,8 @@ Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(pat
                        );
                 
                 if(matches != 9){
-                     LOG(WARNING)  <<"error\n";
+                   //  LOG(WARNING)  <<"error\n";
+                   throw Exceptions::AssetNotLoadedException("Invalid input detected!");
                 }
                 verticesList.push_back(vertices);
             }
@@ -143,7 +143,7 @@ Mesh::Mesh(std::string path, unsigned short uniqueNumber) : AbstractResource(pat
         this->size = verticesList.size() * 3;
     }
     else{
-        LOG(WARNING)  << "Error could not find file \n";
+        throw Exceptions::AssetNotLoadedException("Could not find the file!");
     }
     
   

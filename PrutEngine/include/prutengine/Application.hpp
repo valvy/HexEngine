@@ -13,19 +13,30 @@ namespace PrutEngine{
 	*/
 	class Application{
 	private:
-		std::unique_ptr<AbstractScene> currentScene;
+		std::shared_ptr<AbstractScene> currentScene;
 		/**
 		* the instance of the application (it's a singleton)
 		*/
 		static std::shared_ptr<Application> instance;
-		void start();
+		
 		
 		float time_per_frame;
+
+	protected:
+		/**
+		* Loops the program
+		*/
+		void setInstance(Application* instance);
+		void update();
+	
 		/**
 		* private constructor so it enforces only on instance
 		*/
 		Application();
+		void initialize();
 	public:
+		virtual void awake();
+		void loadScene(std::shared_ptr<AbstractScene> scene);
 		/**
 		* gets the instance of the application
 		* if instance is null it creates a new instance
@@ -40,10 +51,7 @@ namespace PrutEngine{
 		
 		void keyDown(unsigned short keycode);
 		
-		/**
-		* Loops the program
-		*/
-		void loop();	
+		virtual void loop() = 0;
 		/**
 		* Cleans up the data and stops the program
 		*/

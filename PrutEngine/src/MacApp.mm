@@ -4,7 +4,6 @@
 #import "prutengine/AssetManager.hpp"
 #import "prutengine/exceptions/PrutEngineException.hpp"
 #import "prutengine/platform/Input.hpp"
-#include "easylogging++.h"
 
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -45,9 +44,14 @@ BOOL shouldStop = NO;
         [self setAcceptsMouseMovedEvents:YES];
         [self makeKeyWindow];
         [self setOpaque:YES];
-
+         glEnable(GL_CULL_FACE);
+        glFrontFace(GL_CW);
+    
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
     
         appInstance = Application::getInstance();
+        appInstance->awake();
 
 	}
 	return self;
@@ -66,8 +70,6 @@ BOOL shouldStop = NO;
             [[glView openGLContext] flushBuffer];
         }
     } catch(const PrutEngine::Exceptions::PrutEngineException exception){
-        LOG(ERROR) << exception.getMsg();
-        
         appInstance->quit();
 
     }
@@ -155,13 +157,19 @@ std::string Application::getAppPath() const{
    return [[[NSBundle mainBundle]resourcePath]UTF8String];
 }
 
-INITIALIZE_EASYLOGGINGPP
 
-int main(int argc, char** argv){
+void Application::initialize(){
 	application = [NSApplication sharedApplication];
    	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];	
 	app = [[MacApp alloc] initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];	
 	[application setDelegate:app];
 	[application run];
 }
+
+
+
+/*
+int main(int argc, char** argv){
+
+}*/
 #endif

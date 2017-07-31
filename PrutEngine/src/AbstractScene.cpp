@@ -7,6 +7,10 @@ using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
 AbstractScene::AbstractScene(){
+   // this->cam = std::shared_ptr<Camera>(new Camera(Vector3<float>(0,0,0)));
+}
+
+void AbstractScene::awake(){
     this->cam = std::shared_ptr<Camera>(new Camera(Vector3<float>(0,0,0)));
 }
 

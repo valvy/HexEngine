@@ -1,7 +1,7 @@
 #include "prutengine/data/Shader.hpp"
 #include <fstream>
-#include <iostream>
-#include "easylogging++.h"
+#include "prutengine/exceptions/AssetNotLoadedException.hpp"
+
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
@@ -35,7 +35,7 @@ Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber)
                 GLchar log[infoLen + 1];
                 glGetShaderInfoLog(result, infoLen, nullptr, log);
                 std::string errorMsg(log);
-                LOG(WARNING) << errorMsg;
+                 throw Exceptions::AssetNotLoadedException(errorMsg);
                 // delete[] log;
                 // throw std::string(errorMsg);
             }
@@ -43,7 +43,7 @@ Shader::Shader(std::string path, GLenum shaderType, unsigned short uniqueNumber)
         
         this->shaderData = result;
     }else{
-        LOG(WARNING) << "file could not be loaded";
+       throw Exceptions::AssetNotLoadedException("Could not find file");
     }
     
 }

@@ -1,7 +1,7 @@
-PROJECT(Engine VERSION ${PrutEngine_version})
+PROJECT(PRUT_ENGINE VERSION ${PrutEngine_version})
 
 SET(
-    ENGINE_SOURCES
+    PRUT_ENGINE_SOURCES
     src/AbstractResource.cpp
     src/AbstractScene.cpp
     src/Application.cpp
@@ -9,23 +9,20 @@ SET(
     src/Camera.cpp
     src/GameObject.cpp
     src/GLProgram.cpp
-    src/TestObject.cpp
-    src/TestScene.cpp
     src/MacApp.mm
     src/Mesh.cpp
     src/Shader.cpp
     src/Texture.cpp
     src/RenderingException.cpp
-    src/easylogging++.cpp
+    src/NotYetInitializedException.cpp
+    src/AssetNotLoadedException.cpp
 )
 ADD_DEFINITIONS( "-g -Wall   -O0" )
 
-include_directories(${Engine_SOURCE_DIR}/include )
-add_executable(PrutEngine ${ENGINE_SOURCES} )
+include_directories(${PRUT_ENGINE_SOURCE_DIR}/include )
+add_library(PrutEngine SHARED ${PRUT_ENGINE_SOURCES} )
 
-add_custom_command(TARGET PrutEngine POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/Resources $<TARGET_FILE_DIR:PrutEngine>)
+
 
 if(APPLE)
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)

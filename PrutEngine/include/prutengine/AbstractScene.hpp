@@ -15,6 +15,7 @@ namespace PrutEngine{
         std::vector<GameObject*> gameObjects;
         
     protected:
+        virtual void awake();
         virtual void update(float tpf);
         virtual void keyDown(unsigned short keycode);
         void addGameObject(GameObject* obj);
