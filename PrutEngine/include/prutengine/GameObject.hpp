@@ -1,6 +1,5 @@
 #ifndef PRUTENGINE_GAMEOBJECT_HPP
 #define PRUTENGINE_GAMEOBJECT_HPP
-#include "./math/Vector3.hpp"
 #include "./platform/OpenGL.hpp"
 #include "./Application.hpp"
 #include "./math/Quaternion.hpp"

@@ -13,11 +13,11 @@ namespace PrutEngine{
     class AssetManager{
     private:
         
-        std::vector<std::shared_ptr<Data::Shader>> loadedShaders;
-        std::vector<std::shared_ptr<Data::GLProgram>> loadedPrograms;
-        std::vector<std::shared_ptr<Data::Mesh>> loadedMeshes;
+        std::vector<std::shared_ptr<Data::Shader> > loadedShaders;
+        std::vector<std::shared_ptr<Data::GLProgram> > loadedPrograms;
+        std::vector<std::shared_ptr<Data::Mesh> > loadedMeshes;
         
-        std::vector<std::shared_ptr<Data::Texture>> loadedTextures;
+        std::vector<std::shared_ptr<Data::Texture> > loadedTextures;
         
         std::shared_ptr<Data::Shader> loadShader(std::string path, GLenum type);
         

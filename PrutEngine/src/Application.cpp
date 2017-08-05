@@ -41,8 +41,6 @@ void Application::awake(){
 
 Application* Application::getInstance(){
 	if(instance == nullptr){
-	//	instance = std::shared_ptr<Application>(new Application());
-      //  instance->start();//Make sure the gameobjects in the application can use this pointer
       throw Exceptions::NotYetInitializedException("Instance is null");
 	}
 	return instance;

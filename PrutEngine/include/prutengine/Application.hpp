@@ -2,8 +2,9 @@
 #define PRUTENGINE_APPLICATION_HPP
 #include <memory>
 #include "./AbstractScene.hpp"
-#include "./math/Vector2.hpp"
-#include "./math/Vector4.hpp"
+#include "./math/Vector.hpp"
+//#include "./math/Vector2.hpp"
+//#include "./math/Vector4.hpp"
 #include "prutengine/AssetManager.hpp"
 
 namespace PrutEngine{

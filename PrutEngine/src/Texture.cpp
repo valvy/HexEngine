@@ -47,7 +47,7 @@ Texture::Texture(std::string name) : AbstractResource(name){
           
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
           
-          
+         
           glTexImage2D(GL_TEXTURE_2D, // target
                        0,  // level, 0 = base, no minimap,
                        GL_RGBA, // internalformat
@@ -58,7 +58,7 @@ Texture::Texture(std::string name) : AbstractResource(name){
                        GL_UNSIGNED_BYTE, // type
                        pixels);
           
-
+          
       }else{
           str.close();
           throw Exceptions::AssetNotLoadedException(std::string("Could not find :") + name);

@@ -1,6 +1,9 @@
 #ifndef PRUTENGINE_MAC_APP_H
 #define PRUTENGINE_MAC_APP_H
 #ifdef __APPLE__
+#include "TargetConditionals.h"
+#if TARGET_IPHONE_SIMULATOR
+#elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
 #import "../Application.hpp"
 NSApplication* application;
@@ -16,5 +19,7 @@ NSApplication* application;
 
 @end
 
+
+#endif
 #endif
 #endif

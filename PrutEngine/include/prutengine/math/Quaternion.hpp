@@ -1,7 +1,8 @@
 #ifndef PRUTENGINE_MATH_QUATERNION_HPP
 #define PRUTENGINE_MATH_QUATERNION_HPP
-#include "./Vector3.hpp"
-#include "./Vector4.hpp"
+//#include "./Vector3.hpp"
+//#include "./Vector4.hpp"
+#include "./Vector.hpp"
 #include "./Matrix4x4.hpp"
 #include <math.h>
 
@@ -24,8 +25,8 @@ namespace PrutEngine{
             }
             
             Quaternion(const Vector4<T> vec){
-                this->imaginary = Vector3<T>(vec.y,vec.z,vec.w);
-                this->real = vec.x;
+                this->imaginary = Vector3<T>(vec.getY(),vec.getZ(),vec.getW());
+                this->real = vec.getX();
             }
             
             bool operator==(const Quaternion<T> &quaternion){
@@ -41,17 +42,18 @@ namespace PrutEngine{
             static Vector3<T> multiply(const Quaternion<T> &quat, const Vector3<T>& vec){
                 Quaternion tmp;
                 tmp.real = 0;
-                tmp.imaginary = Vector3<T>::unitVector(vec);
+                tmp.imaginary = vec.unitVector();
+                //Vector3<T>::unitVector(vec);
                 tmp = Quaternion<T>::multiply(quat, Quaternion::multiply(tmp, Quaternion::conjugate(quat)));
                 return tmp.imaginary;
             }
             
             static Quaternion<T> multiply(const Quaternion<T> &quat1, const Quaternion<T> &quat2){
                 return Quaternion<T>(Vector4<T>(
-                                                quat1.real * quat2.real - quat1.imaginary.x * quat2.imaginary.x - quat1.imaginary.y * quat2.imaginary.y - quat1.imaginary.z * quat2.imaginary.z,
-                                                quat1.real * quat2.imaginary.x + quat1.imaginary.x * quat2.real + quat1.imaginary.y * quat2.imaginary.z - quat1.imaginary.z * quat2.imaginary.y,
-                                                quat1.real * quat2.imaginary.y - quat1.imaginary.x * quat2.imaginary.z + quat1.imaginary.y * quat2.real + quat1.imaginary.z * quat2.imaginary.x,
-                                                quat1.real * quat2.imaginary.z + quat1.imaginary.x * quat2.imaginary.y - quat1.imaginary.y * quat2.imaginary.x + quat1.imaginary.z * quat2.real
+                                                quat1.real * quat2.real - quat1.imaginary.getX() * quat2.imaginary.getX() - quat1.imaginary.getY() * quat2.imaginary.getY() - quat1.imaginary.getZ() * quat2.imaginary.getZ(),
+                                                quat1.real * quat2.imaginary.getX() + quat1.imaginary.getX() * quat2.real + quat1.imaginary.getY() * quat2.imaginary.getZ() - quat1.imaginary.getZ() * quat2.imaginary.getY(),
+                                                quat1.real * quat2.imaginary.getY() - quat1.imaginary.getX() * quat2.imaginary.getZ() + quat1.imaginary.getY() * quat2.real + quat1.imaginary.getZ() * quat2.imaginary.getX(),
+                                                quat1.real * quat2.imaginary.getZ() + quat1.imaginary.getX() * quat2.imaginary.getY() - quat1.imaginary.getY() * quat2.imaginary.getX() + quat1.imaginary.getZ() * quat2.real
                                                     ));
             }
             
@@ -68,17 +70,17 @@ namespace PrutEngine{
             static Quaternion<T> conjugate(const Quaternion<T> &quat){
                 return Quaternion<T>(Vector4<T>(
                                             quat.real,
-                                            -quat.imaginary.x,
-                                            -quat.imaginary.y,
-                                            -quat.imaginary.z
+                                            -quat.imaginary.getX(),
+                                            -quat.imaginary.getY(),
+                                            -quat.imaginary.getZ()
                                 ));
             }
             
             T normalize(){
                 return 1 / sqrt(real * real +
-                                imaginary.x * imaginary.x +
-                                imaginary.y * imaginary.y +
-                                imaginary.z * imaginary.z
+                                imaginary.getX() * imaginary.getX() +
+                                imaginary.getY() * imaginary.getY() +
+                                imaginary.getZ() * imaginary.getZ()
                                 );
             }
             
@@ -86,12 +88,13 @@ namespace PrutEngine{
                 Quaternion tmp(q);
                 T normalize = tmp.normalize();
                 tmp.real *= normalize;
-                tmp.imaginary.x *= normalize;
-                tmp.imaginary.y *= normalize;
-                tmp.imaginary.z *= normalize;
-                const T qx = tmp.imaginary.x;
-                const T qy = tmp.imaginary.y;
-                const T qz = tmp.imaginary.z;
+                tmp.imaginary.setX(tmp.imaginary.getX() * normalize);
+                tmp.imaginary.setY(tmp.imaginary.getY() * normalize);
+                tmp.imaginary.setZ(tmp.imaginary.getZ() * normalize);
+
+                const T qx = tmp.imaginary.getX();
+                const T qy = tmp.imaginary.getY();
+                const T qz = tmp.imaginary.getZ();
                 const T qw = tmp.real;
                 return Matrix4x4<T>(
                             Vector4<T>(1 - 2*qy*qy - 2*qz*qz, 2*qx*qy - 2*qz*qw, 2*qx*qz + 2*qy*qw, 0),
@@ -101,25 +104,30 @@ namespace PrutEngine{
                 
             }
             
-            static Quaternion<T> rotate(const Quaternion<T> &q, const Vector3<T> &rot, T angle){
-                if(rot.x == 0 && rot.y == 0 && rot.z == 0){
+            static Quaternion<T> rotate(const Quaternion<T> &q, const Vector<T, 3> &rot, T angle){
+              //  return Quaternion();
+                if(rot.getX() == 0 && rot.getY() == 0 && rot.getZ() == 0){
                     return Quaternion();
                 }
                 
-                Vector3<T> unitv = Vector3<T>::unitVector(rot);
+                Vector<T, 3> unitv = rot.unitVector();
+                //Vector3<T>::unitVector(rot);
                 Quaternion tmp(q);
                 T normalize = tmp.normalize();
                 tmp.real *= normalize;
-                tmp.imaginary.x *= normalize;
-                tmp.imaginary.y *= normalize;
-                tmp.imaginary.z *= normalize;
+                tmp.imaginary.setX(tmp.imaginary.getX() * normalize);
+                tmp.imaginary.setY(tmp.imaginary.getY() * normalize);
+                tmp.imaginary.setZ(tmp.imaginary.getZ() * normalize);
+              //  tmp.imaginary.x *= normalize;
+              //  tmp.imaginary.y *= normalize;
+              //  tmp.imaginary.z *= normalize;
                 const T degrees = (angle * Math::PI) / 180;
                 const T halfSin = sin(degrees / 2);
                 
                 return Quaternion::multiply(Quaternion(Vector4<T>(cos(degrees / 2),
-                                                                halfSin * unitv.x,
-                                                                halfSin * unitv.y,
-                                                                halfSin * unitv.z)), tmp);
+                                                                halfSin * unitv.getX(),
+                                                                halfSin * unitv.getY(),
+                                                                halfSin * unitv.getZ())), tmp);
             }
 
         };

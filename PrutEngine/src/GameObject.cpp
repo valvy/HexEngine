@@ -19,9 +19,12 @@ void GameObject::loadTexture(std::string meshPath){
 
 
 void GameObject::translate(const Vector3<float>& vec, float speed){
-    this->position.x += vec.x * speed;
-    this->position.y += vec.y * speed;
-    this->position.z += vec.z * speed;
+    this->position.setX(this->position.getX() + vec.getX() * speed);
+    this->position.setY(this->position.getY() + vec.getY() * speed);
+    this->position.setZ(this->position.getZ() + vec.getZ() * speed);
+    //this->position.x += vec.x * speed;
+    //this->position.y += vec.y * speed;
+    //this->position.z += vec.z * speed;
 }
 
 void GameObject::onKeyDown(unsigned short keyCode){

@@ -21,6 +21,6 @@ BasicObject::BasicObject(const Vector3<float> &position) : GameObject(){
 void BasicObject::update(float tpf){
    // if(visible){
         GameObject::update(tpf);
-        this->rotate(Vector3<float>(5,90,0), 50 * tpf);
+        this->rotate(Vector3<float>(5,90,0), 50.0f * tpf);
     //}
 }

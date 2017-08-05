@@ -1,7 +1,8 @@
 #ifndef PRUTENGINE_MATH_MATRIX4X4_HPP
 #define PRUTENGINE_MATH_MATRIX4X4_HPP
-#include "./Vector4.hpp"
-#include "./Vector3.hpp"
+//#include "./Vector4.hpp"
+//#include "./Vector3.hpp"
+#include "./Vector.hpp"
 #include <cmath>
 #include <vector>
 #include "Utilities.hpp"
@@ -66,9 +67,10 @@ namespace PrutEngine{
             */
             static Matrix4x4<T> translate(Matrix4x4<T> mat, Vector3<T> vector){
                 Matrix4x4<T> result(mat);
-                result.row1.w += vector.x;
-                result.row2.w += vector.y;
-                result.row3.w += vector.z;
+                result.row1.setW(result.row1.getW() + vector.getX());
+                result.row2.setW(result.row2.getW() + vector.getY());
+                result.row3.setW(result.row3.getW() + vector.getZ());
+
                 return result;
             
             }
@@ -76,18 +78,18 @@ namespace PrutEngine{
 
             static Matrix4x4<T> setPosition(Matrix4x4<T> mat, Vector3<T> vector){
                 Matrix4x4<T> result(mat);
-                result.row1.w = vector.x;
-                result.row2.w = vector.y;
-                result.row3.w = vector.z;
+                result.row1.setW(vector.getX());
+                result.row2.setW(vector.getY());
+                result.row3.setW(vector.getZ());
                 return result;
             }
             
             static Matrix4x4<T> transpose(Matrix4x4 mat){
                 Matrix4x4<T> result;
-                result.row1 = Vector4<T>(mat.row1.x, mat.row2.x, mat.row3.x,mat.row4.x);
-                result.row2 = Vector4<T>(mat.row1.y, mat.row2.y,mat.row3.y,mat.row4.y);
-                result.row3 = Vector4<T>(mat.row1.z, mat.row2.z, mat.row3.z,mat.row4.z);
-                result.row4 = Vector4<T>(mat.row1.w, mat.row2.w,mat.row3.w,mat.row4.w);
+                result.row1 = Vector4<T>(mat.row1.getX(), mat.row2.getX(), mat.row3.getX(),mat.row4.getX());
+                result.row2 = Vector4<T>(mat.row1.getY(), mat.row2.getY(),mat.row3.getY(),mat.row4.getY());
+                result.row3 = Vector4<T>(mat.row1.getZ(), mat.row2.getZ(), mat.row3.getZ(),mat.row4.getZ());
+                result.row4 = Vector4<T>(mat.row1.getW(), mat.row2.getW(),mat.row3.getW(),mat.row4.getW());
                 return result;
                 
             }
@@ -95,9 +97,11 @@ namespace PrutEngine{
             
             static Vector3<T> multiply(const Matrix4x4<T>& mat, const Vector3<T> vec){
                 return Vector3<T>(
-                                mat.row1.x * vec.x + mat.row1.y * vec.y + mat.row1.z * vec.z,
-                                mat.row2.x * vec.x + mat.row2.y * vec.y + mat.row2.z * vec.z,
-                                mat.row3.x * vec.x + mat.row3.y * vec.y + mat.row3.z * vec.z);
+                                mat.row1.getX() * vec.getX() + mat.row1.getY() * vec.getY() + mat.row1.getZ() * vec.getZ(),
+                                mat.row2.getX() * vec.getX() + mat.row2.getY() * vec.getY() + mat.row2.getZ() * vec.getZ(
+
+                                ),
+                                mat.row3.getX() * vec.getX() + mat.row3.getY() * vec.getY() + mat.row3.getZ() * vec.getZ());
             }
             
             /*!
@@ -107,29 +111,30 @@ namespace PrutEngine{
             static Matrix4x4<T> multiply(const Matrix4x4<T>& first,const Matrix4x4<T>& other){
                 //generate temporary matrix
                 Matrix4x4<T> result;
-                //Row 1
-                result.row1.x = first.row1.x * other.row1.x + first.row1.y * other.row2.x + first.row1.z * other.row3.x + first.row1.w * other.row4.x;
-                result.row1.y = first.row1.x * other.row1.y + first.row1.y * other.row2.y + first.row1.z * other.row3.y + first.row1.w * other.row4.y;
-                result.row1.z = first.row1.x * other.row1.z + first.row1.y * other.row2.z + first.row1.z * other.row3.z + first.row1.w * other.row4.z;
-                result.row1.w = first.row1.x * other.row1.w + first.row1.y * other.row2.w + first.row1.z * other.row3.w + first.row1.w * other.row4.w;
                 
+                //Row 1
+                result.row1.setX(first.row1.getX() * other.row1.getX() + first.row1.getY() * other.row2.getX() + first.row1.getZ() * other.row3.getX() + first.row1.getW() * other.row4.getX());
+                result.row1.setY(first.row1.getX() * other.row1.getY() + first.row1.getY() * other.row2.getY() + first.row1.getZ() * other.row3.getY() + first.row1.getW() * other.row4.getY());
+                result.row1.setZ(first.row1.getX() * other.row1.getZ() + first.row1.getY() * other.row2.getZ() + first.row1.getZ() * other.row3.getZ() + first.row1.getW() * other.row4.getZ());
+                result.row1.setW(first.row1.getX() * other.row1.getW() + first.row1.getY() * other.row2.getW() + first.row1.getZ() * other.row3.getW() + first.row1.getW() * other.row4.getW());
+
                 //Row2
-                result.row2.x = first.row2.x * other.row1.x + first.row2.y * other.row2.x + first.row2.z * other.row3.x + first.row2.w * other.row4.x;
-                result.row2.y = first.row2.x * other.row1.y + first.row2.y * other.row2.y + first.row2.z * other.row3.y + first.row2.w * other.row4.y;
-                result.row2.z = first.row2.x * other.row1.z + first.row2.y * other.row2.z + first.row2.z * other.row3.z + first.row2.w * other.row4.z;
-                result.row2.w = first.row2.x * other.row1.w + first.row2.y * other.row2.w + first.row2.z * other.row3.w + first.row2.w * other.row4.w;
+                result.row2.setX(first.row2.getX() * other.row1.getX() + first.row2.getY() * other.row2.getX() + first.row2.getZ() * other.row3.getX() + first.row2.getW() * other.row4.getX());
+                result.row2.setY(first.row2.getX() * other.row1.getY() + first.row2.getY() * other.row2.getY() + first.row2.getZ() * other.row3.getY() + first.row2.getW() * other.row4.getY());
+                result.row2.setZ(first.row2.getX() * other.row1.getZ() + first.row2.getY() * other.row2.getZ() + first.row2.getZ() * other.row3.getZ() + first.row2.getW() * other.row4.getZ());
+                result.row2.setW(first.row2.getX() * other.row1.getW() + first.row2.getY() * other.row2.getW() + first.row2.getZ() * other.row3.getW() + first.row2.getW() * other.row4.getW());
                 
                 //Row3
-                result.row3.x = first.row3.x * other.row1.x + first.row3.y * other.row2.x + first.row3.z * other.row3.x + first.row3.w * other.row4.x;
-                result.row3.y = first.row3.x * other.row1.y + first.row3.y * other.row2.y + first.row3.z * other.row3.y + first.row3.w * other.row4.y;
-                result.row3.z = first.row3.x * other.row1.z + first.row3.y * other.row2.z + first.row3.z * other.row3.z + first.row3.w * other.row4.z;
-                result.row3.w = first.row3.x * other.row1.w + first.row3.y * other.row2.w + first.row3.z * other.row3.w + first.row3.w * other.row4.w;
+                result.row3.setX(first.row3.getX() * other.row1.getX() + first.row3.getY() * other.row2.getX() + first.row3.getZ() * other.row3.getX() + first.row3.getW() * other.row4.getX());
+                result.row3.setY(first.row3.getX() * other.row1.getY() + first.row3.getY() * other.row2.getY() + first.row3.getZ() * other.row3.getY() + first.row3.getW() * other.row4.getY());
+                result.row3.setZ(first.row3.getX() * other.row1.getZ() + first.row3.getY() * other.row2.getZ() + first.row3.getZ() * other.row3.getZ() + first.row3.getW() * other.row4.getZ());
+                result.row3.setW(first.row3.getX() * other.row1.getW() + first.row3.getY() * other.row2.getW() + first.row3.getZ() * other.row3.getW() + first.row3.getW() * other.row4.getW());
                 
                 //Row4
-                result.row4.x = first.row4.x * other.row1.x + first.row4.y * other.row2.x + first.row4.z * other.row3.x + first.row4.w * other.row4.x;
-                result.row4.y = first.row4.x * other.row1.y + first.row4.y * other.row2.y + first.row4.z * other.row3.y + first.row4.w * other.row4.y;
-                result.row4.z = first.row4.x * other.row1.z + first.row4.y * other.row2.z + first.row4.z * other.row3.z + first.row4.w * other.row4.z;
-                result.row4.w = first.row4.x * other.row1.w + first.row4.y * other.row2.w + first.row4.z * other.row3.w + first.row4.w * other.row4.w;
+                result.row4.setX(first.row4.getX() * other.row1.getX() + first.row4.getY() * other.row2.getX() + first.row4.getZ() * other.row3.getX() + first.row4.getW() * other.row4.getX());
+                result.row4.setY(first.row4.getX() * other.row1.getY() + first.row4.getY() * other.row2.getY() + first.row4.getZ() * other.row3.getY() + first.row4.getW() * other.row4.getY());
+                result.row4.setZ(first.row4.getX() * other.row1.getZ() + first.row4.getY() * other.row2.getZ() + first.row4.getZ() * other.row3.getZ() + first.row4.getW() * other.row4.getZ());
+                result.row4.setW(first.row4.getX() * other.row1.getW() + first.row4.getY() * other.row2.getW() + first.row4.getZ() * other.row3.getW() + first.row4.getW() * other.row4.getW());
                 
                 return result;
             }
@@ -168,7 +173,7 @@ namespace PrutEngine{
             *  @param axis, The axis you wish to rotate around
             */
             static Matrix4x4<T> rotate(T angle, Axis axis){
-                angle = angle * Math::PI / 180; //convert degrees to radians
+                /*angle = angle * Math::PI / 180; //convert degrees to radians
                 Matrix4x4<T> result;
                 switch(axis){
                     case Axis::X:
@@ -184,28 +189,23 @@ namespace PrutEngine{
                         result.row2.y = -sin(angle); result.row2.y = cos(angle);
                         return result;
                 }
+                return result;*/
+                throw "Not supported";
 
             }
             
 
-            void print(){
-                std::cout <<"\n\n";
-                row1.print();
-                row2.print();
-                row3.print();
-                row4.print();
-            }
-            
+
             /*!
             *  Get all the data in an Vector
             *  @return rawData The vector with all the row data
             */
             std::vector<T> getRawData() const{
                 return{
-                    row1.x,row1.y,row1.z,row1.w,
-                    row2.x,row2.y,row2.z,row2.w,
-                    row3.x,row3.y,row3.z,row3.w,
-                    row4.x,row4.y,row4.z,row4.w
+                    row1.getX(),row1.getY(),row1.getZ(),row1.getW(),
+                    row2.getX(),row2.getY(),row2.getZ(),row2.getW(),
+                    row3.getX(),row3.getY(),row3.getZ(),row3.getW(),
+                    row4.getX(),row4.getY(),row4.getZ(),row4.getW()
                 };
             }
             
@@ -216,9 +216,14 @@ namespace PrutEngine{
             */
             static Matrix4x4<T> scale(const Matrix4x4<T>& mat, const Vector3<T>& s){
                 Matrix4x4<T> tmp(mat);
-                tmp.row1.x *= s.x;
-                tmp.row2.y *= s.y;
-                tmp.row3.z *= s.z;
+                //T x, y , z;
+                const T x = tmp.row1.getX() * s.getX();
+                const T y = tmp.row2.getY() * s.getY();
+                const T z = tmp.row3.getZ() * s.getZ();
+                tmp.row1.setX(x);
+                tmp.row2.setY(y);
+                tmp.row3.setZ(z);
+
                 return tmp;
             }
             

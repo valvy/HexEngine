@@ -1,10 +1,8 @@
 #include "prutengine/data/Mesh.hpp"
 #include <fstream>
 #include <regex>
-#include "prutengine/math/Vector3.hpp"
-#include "prutengine/math/Vector2.hpp"
+#include "prutengine/math/Vector.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
-#include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
@@ -52,32 +50,30 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
                     ));
             }
             if(dat.substr(0,2) == "vt"){
-                Vector2<float> tmp;
-                sscanf(dat.c_str(), "vt %f %f", &tmp.x, &tmp.y);
-                texture.push_back(tmp);
+                float x, y;
+                sscanf(dat.c_str(), "vt %f %f", &x, &y);
+                texture.push_back(Vector2<float>(x,y));
             }
-         /*   else if(dat.substr(0,2) == "vn"){
-                Vector3<float> tmp;
-                sscanf(dat.c_str(), "vn %f %f %f", &tmp.x, &tmp.y, &tmp.z);
-                
-        
-                normals.push_back(tmp);
-            }
-            */
             else if(dat.substr(0,2) == "f "){
                 Vector3<Vector3<int>> vertices;
-                int matches = sscanf(dat.c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",
-                       &vertices.x.x,
-                       &vertices.x.y,
-                       &vertices.x.z,
-                       &vertices.y.x,
-                       &vertices.y.y,
-                       &vertices.y.z,
-                       &vertices.z.x,
-                       &vertices.z.y,
-                       &vertices.z.z
-
+                int a,b,c,d,e,f,g,h, i;
+                const int matches = sscanf(dat.c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",
+                   &a,&b,&c,&d,&e,&f,&g,&h, &i
+                   /*    &vertices.getX().getX(),
+                       &vertices.getX().getY(),
+                       &vertices.getX().getZ(),
+                       &vertices.getY().getX(),
+                       &vertices.getY().getY(),
+                       &vertices.getY().getZ(),
+                       &vertices.getZ().getX(),
+                       &vertices.getZ().getY(),
+                       &vertices.getZ().getZ()
+                    */
                        );
+                vertices.setX(Vector3<int>(a,b,c));
+                vertices.setY(Vector3<int>(d,e,f));
+                vertices.setZ(Vector3<int>(g,h,i));
+
                 
                 if(matches != 9){
                    //  LOG(WARNING)  <<"error\n";
@@ -93,49 +89,49 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
         
         //setup vbo's
         for(auto vertices : verticesList){
-            Vector3<float> v = vertex[vertices.x.x - 1];
+            Vector3<float> v = vertex[vertices.getX().getX() - 1];
          
-            Vector2<float> uv = texture[vertices.x.y -1];
-            Vector3<float> norm = normals[vertices.x.z -1];
-            rawVertexData.push_back(v.x);
-            rawVertexData.push_back(v.y);
-            rawVertexData.push_back(v.z);
+            Vector2<float> uv = texture[vertices.getX().getY() -1];
+            Vector3<float> norm = normals[vertices.getX().getZ() -1];
+            rawVertexData.push_back(v.getX());
+            rawVertexData.push_back(v.getY());
+            rawVertexData.push_back(v.getZ());
             
-            rawUVData.push_back(uv.x);
-            rawUVData.push_back(uv.y);
+            rawUVData.push_back(uv.getX());
+            rawUVData.push_back(uv.getY());
 
-            rawNormalData.push_back(norm.x);
-            rawNormalData.push_back(norm.y);
-            rawNormalData.push_back(norm.z);
+            rawNormalData.push_back(norm.getX());
+            rawNormalData.push_back(norm.getY());
+            rawNormalData.push_back(norm.getZ());
             
             
-            v = vertex[vertices.y.x - 1];
-            uv = texture[vertices.y.y -1];
-            norm = normals[vertices.y.z -1];
-            rawVertexData.push_back(v.x);
-            rawVertexData.push_back(v.y);
-            rawVertexData.push_back(v.z);
+            v = vertex[vertices.getY().getX() - 1];
+            uv = texture[vertices.getY().getY() -1];
+            norm = normals[vertices.getY().getZ() -1];
+            rawVertexData.push_back(v.getX());
+            rawVertexData.push_back(v.getY());
+            rawVertexData.push_back(v.getZ());
             
-            rawUVData.push_back(uv.x);
-            rawUVData.push_back(uv.y);
+            rawUVData.push_back(uv.getX());
+            rawUVData.push_back(uv.getY());
             
-            rawNormalData.push_back(norm.x);
-            rawNormalData.push_back(norm.y);
-            rawNormalData.push_back(norm.z);
+            rawNormalData.push_back(norm.getX());
+            rawNormalData.push_back(norm.getY());
+            rawNormalData.push_back(norm.getZ());
             
-            v = vertex[vertices.z.x - 1];
-            uv = texture[vertices.z.y -1];
-            norm = normals[vertices.z.z -1];
-            rawVertexData.push_back(v.x);
-            rawVertexData.push_back(v.y);
-            rawVertexData.push_back(v.z);
+            v = vertex[vertices.getZ().getX() - 1];
+            uv = texture[vertices.getZ().getY() -1];
+            norm = normals[vertices.getZ().getZ() -1];
+            rawVertexData.push_back(v.getX());
+            rawVertexData.push_back(v.getY());
+            rawVertexData.push_back(v.getZ());
             
-            rawUVData.push_back(uv.x);
-            rawUVData.push_back(uv.y);
+            rawUVData.push_back(uv.getX());
+            rawUVData.push_back(uv.getY());
             
-            rawNormalData.push_back(norm.x);
-            rawNormalData.push_back(norm.y);
-            rawNormalData.push_back(norm.z);
+            rawNormalData.push_back(norm.getX());
+            rawNormalData.push_back(norm.getY());
+            rawNormalData.push_back(norm.getZ());
         }
         
         this->vboVertex = this->storeDataInVao(0,3, rawVertexData);

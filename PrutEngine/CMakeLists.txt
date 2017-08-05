@@ -10,6 +10,7 @@ SET(
     src/GameObject.cpp
     src/GLProgram.cpp
     src/MacApp.mm
+    src/IOSApp.mm
     src/Mesh.cpp
     src/Shader.cpp
     src/Texture.cpp
@@ -25,8 +26,10 @@ add_library(PrutEngine SHARED ${PRUT_ENGINE_SOURCES} )
 
 
 if(APPLE)
+    set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
 	FIND_PACKAGE(OpenGL REQUIRED)
+    
 	INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
 	TARGET_LINK_LIBRARIES(PrutEngine ${COCOA_LIBRARY} ${OPENGL_LIBRARIES})
 else()
