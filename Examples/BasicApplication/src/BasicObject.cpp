@@ -18,6 +18,8 @@ BasicObject::BasicObject(const Vector3f &position) : GameObject(){
     this->loadTexture(path + "/Assets/Textures/cube.bmp");
 }
 
+
+
 void BasicObject::update(float tpf){
    // if(visible){
         GameObject::update(tpf);

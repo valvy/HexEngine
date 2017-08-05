@@ -29,7 +29,12 @@ namespace PrutEngine{
             auto assetManager =  Application::getInstance()->getAssetManager();
             this->program = assetManager->loadProgram(shaders...);
             //AssetManager::loadProgram(shaders...);
-            this->pos_reference = glGetUniformLocation(program->getProgram(), "mv_matrix");
+            const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+
+            if(engine == Graphics_Engine::OpenGL){
+                this->pos_reference = glGetUniformLocation(program->getProgram(), "mv_matrix");
+            }
+            
         }
     public:
         GameObject();

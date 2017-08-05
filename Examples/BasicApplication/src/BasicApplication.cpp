@@ -1,7 +1,7 @@
 #include "BasicApplication.hpp"
 #include "BasicScene.hpp"
 #include <iostream>
-
+#include <prutengine/exceptions/PrutEngineException.hpp>
 BasicApplication::BasicApplication(){
     setInstance(this);
     loadScene(std::shared_ptr<PrutEngine::AbstractScene>(new BasicScene()));
@@ -18,7 +18,13 @@ PrutEngine::Graphics_Engine BasicApplication::setRenderer(){
 }
 
 void BasicApplication::loop(){
-    update();
+    try{
+        update();
+    }catch(const PrutEngine::Exceptions::PrutEngineException exception){
+        std::cout << "Program crashed with following exception: ";
+        std::cout << exception.getMsg() << "\n";
+        this->quit();
+    }
 }
 
 BasicApplication::~BasicApplication(){

@@ -8,6 +8,9 @@ namespace PrutEngine{
             AssetNotLoadedException(const std::string& msg);
             AssetNotLoadedException(const char* msg);
         };
+
+
+        void AssertAssetNotLoaded(const bool assertion, const std::string error);
     }
 }
 #endif

@@ -2,12 +2,12 @@
 #include "prutengine/GameObject.hpp"
 #include "prutengine/Camera.hpp"
 #include "prutengine/Application.hpp"
-
+#include "prutengine/exceptions/NotYetInitializedException.hpp"
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
 AbstractScene::AbstractScene(){
-   // this->cam = std::shared_ptr<Camera>(new Camera(Vector3<float>(0,0,0)));
+  
 }
 
 void AbstractScene::awake(){
@@ -16,6 +16,9 @@ void AbstractScene::awake(){
 
 
 void AbstractScene::update(float tpf){
+    if(this->cam == nullptr){
+        throw Exceptions::NotYetInitializedException("The camera is not yet initialized..");
+    }
     this->cam->update(tpf);
 
 	for(auto it : this->gameObjects){

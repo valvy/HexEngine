@@ -182,8 +182,7 @@ void Application::quit(){
     auto assetManager =  Application::getInstance()->getAssetManager();
     assetManager->clear();
     currentScene.reset();
-    //delete Application::instance;
-    
+    shouldStop = YES;
 }
 
 Graphics_Engine Application::getCurrentGraphicsEngine() const {
@@ -197,7 +196,7 @@ std::string Application::getAppPath() const{
 bool Application::canUseAppleMetal() const {
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
     return false;
-    //return (version.majorVersion >= 10 && version.minorVersion >= 12);
+    return (version.majorVersion >= 10 && version.minorVersion >= 12);
 }
 
 void Application::run(){

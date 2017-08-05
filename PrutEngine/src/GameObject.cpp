@@ -1,6 +1,7 @@
 #include "prutengine/GameObject.hpp"
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/math/Matrix.hpp"
+#include "prutengine/exceptions/AssetNotLoadedException.hpp"
 #include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -23,9 +24,6 @@ void GameObject::translate(const Vector<float,3>& vec, float speed){
     this->position.setX(this->position.getX() + vec.getX() * speed);
     this->position.setY(this->position.getY() + vec.getY() * speed);
     this->position.setZ(this->position.getZ() + vec.getZ() * speed);
-    //this->position.x += vec.x * speed;
-    //this->position.y += vec.y * speed;
-    //this->position.z += vec.z * speed;
 }
 
 void GameObject::onKeyDown(unsigned short keyCode){
@@ -33,13 +31,17 @@ void GameObject::onKeyDown(unsigned short keyCode){
 }
 
 
-
 void GameObject::update(float tpf){
+    using namespace PrutEngine::Exceptions;
     auto assetManager =  Application::getInstance()->getAssetManager(); 
     const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }
+    AssertAssetNotLoaded(this->texture == nullptr, "No texture was loaded..");
+    AssertAssetNotLoaded(this->mesh == nullptr, "No mesh was loaded");
+    AssertAssetNotLoaded(this->program == nullptr, "No program was compiled");
+
     //setup the program and mesh
     glUseProgram(program->getProgram());
     glActiveTexture(GL_TEXTURE0);

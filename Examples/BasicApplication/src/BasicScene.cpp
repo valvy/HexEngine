@@ -3,7 +3,8 @@
 #include <prutengine/Camera.hpp>
 #include "prutengine/Application.hpp"
 #include "prutengine/math/Utilities.hpp"
-
+#include "prutengine/platform/Input.hpp"
+#include "prutengine/Application.hpp"
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
@@ -30,6 +31,9 @@ void BasicScene::awake(){
 
 void BasicScene::keyDown(unsigned short keycode){
     AbstractScene::keyDown(keycode);
+    if(keycode == PrutEngine::KeyCodes::ESCAPE_KEY){
+        Application::getInstance()->quit();
+    }
 
    
 }
