@@ -6,16 +6,16 @@
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
-Camera::Camera(const Vector3<float>& startPos){
+Camera::Camera(const Vector<float,3>& startPos){
     this->setPosition(startPos);
-    this->rotate(Vector3<float>(0,1,0), 0);
+    this->rotate(Vector<float,3>(0,1,0), 0);
 }
 
-void Camera::setPosition(const Vector3<float> &position){
+void Camera::setPosition(const Vector<float,3> &position){
     GameObject::setPosition(position);
 }
 
-void Camera::rotate(const Vector3<float>& vec, float angle){
+void Camera::rotate(const Vector<float,3>& vec, float angle){
     GameObject::rotate(vec,angle);
 }
 
@@ -23,7 +23,7 @@ void Camera::setQuaternion(const Quaternion<float>& quat){
     GameObject::setQuaternion(quat);
 }
 
-void Camera::translate(const Vector3<float>& vec, float speed){
+void Camera::translate(const Vector<float,3>& vec, float speed){
     GameObject::translate(vec,speed);
 }
 
@@ -39,7 +39,7 @@ Quaternion<float> Camera::getQuaternion() const{
     return GameObject::getQuaternion();
 }
 
-Vector3<float> Camera::getPosition() const{
+Vector<float,3> Camera::getPosition() const{
     return GameObject::getPosition();
 }
 

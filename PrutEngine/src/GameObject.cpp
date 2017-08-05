@@ -5,7 +5,7 @@ using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
 GameObject::GameObject(){
-    this->setScale(Vector3<float>(1,1,1));
+    this->setScale(Vector<float,3>(1,1,1));
 }
 
 GameObject::~GameObject(){
@@ -18,7 +18,7 @@ void GameObject::loadTexture(std::string meshPath){
 }
 
 
-void GameObject::translate(const Vector3<float>& vec, float speed){
+void GameObject::translate(const Vector<float,3>& vec, float speed){
     this->position.setX(this->position.getX() + vec.getX() * speed);
     this->position.setY(this->position.getY() + vec.getY() * speed);
     this->position.setZ(this->position.getZ() + vec.getZ() * speed);
@@ -60,7 +60,7 @@ void GameObject::update(float tpf){
     
 }
 
-void GameObject::rotate(const Vector3<float>& vec, float angle){
+void GameObject::rotate(const Vector<float,3>& vec, float angle){
     this->quaternion = Quaternion<float>::rotate(quaternion, vec,angle);
 }
 
@@ -74,19 +74,19 @@ Quaternion<float> GameObject::getQuaternion() const{
     return this->quaternion;
 }
 
-Vector3<float> GameObject::getScale() const{
+Vector<float,3> GameObject::getScale() const{
     return this->scale;
 }
 
-Vector3<float> GameObject::getPosition() const{
+Vector<float,3> GameObject::getPosition() const{
     return this->position;
 }
 
-void GameObject::setPosition(const Vector3<float> &position){
+void GameObject::setPosition(const Vector<float,3> &position){
     this->position = position;
 }
 
-void GameObject::setScale(const Vector3<float> &scale){
+void GameObject::setScale(const Vector<float,3> &scale){
     this->scale = scale;
 }
 

@@ -51,7 +51,7 @@ namespace PrutEngine{
 		*/
 		std::string getAppPath() const;
 		
-		Math::Vector4<float> getWindowSize() const;
+		Math::Vector<float, 4> getWindowSize() const;
 		
 		void keyDown(unsigned short keycode);
 		

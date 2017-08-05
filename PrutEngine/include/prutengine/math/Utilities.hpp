@@ -19,11 +19,11 @@ namespace PrutEngine{
                 return Matrix4x4<T>();
             }
             
-            Vector4<T> r1((2 * near) / (right * left),0.0,(right + left) / (right - left), 0);
+            Vector<T,4> r1((2 * near) / (right * left),0.0,(right + left) / (right - left), 0);
             
-            Vector4<T> r2(0, (2 * near) / (top - bottom), (top + bottom) / (top - bottom), 0.0);
-            Vector4<T> r3(0,0, (near + far) / (near - far), -(2 * near * far) / (near - far));
-            Vector4<T> r4(0,0,-1.0,0);
+            Vector<T,4> r2(0, (2 * near) / (top - bottom), (top + bottom) / (top - bottom), 0.0);
+            Vector<T,4> r3(0,0, (near + far) / (near - far), -(2 * near * far) / (near - far));
+            Vector<T,4> r4(0,0,-1.0,0);
             
             
             return Matrix4x4<T>(r1, r2,r3,r4);
@@ -38,10 +38,10 @@ namespace PrutEngine{
             T C = (2.0f * near * far) / (near - far);
             
             return Matrix4x4<T>(
-                Vector4<T>(A,0,0,0),
-                Vector4<T>(0,q,0,0),
-                Vector4<T>(0,0,B,-1),
-                Vector4<T>(0,0,C,0));
+                Vector<T,4>(A,0,0,0),
+                Vector<T,4>(0,q,0,0),
+                Vector<T,4>(0,0,B,-1),
+                Vector<T,4>(0,0,C,0));
         }
         
         template<typename T>
@@ -50,10 +50,10 @@ namespace PrutEngine{
             
             
             return Matrix4x4<T>(
-                                Vector4<T>(2.0f / (right - left), 0.0f, 0.0f,0.0f),
-                                Vector4<T>(0.0f, 2.0f / (top - bottom) ,0.0f, 0.0f),
-                                Vector4<T>(0.0f,0.0f, 2.0f / (near - far),0.0f),
-                                Vector4<T>((left + right) / (left - right), (bottom + top) / (bottom - top), (near + far) / (far - near), 1.0f));
+                                Vector<T, 4>(2.0f / (right - left), 0.0f, 0.0f,0.0f),
+                                Vector<T, 4>(0.0f, 2.0f / (top - bottom) ,0.0f, 0.0f),
+                                Vector<T, 4>(0.0f,0.0f, 2.0f / (near - far),0.0f),
+                                Vector<T, 4>((left + right) / (left - right), (bottom + top) / (bottom - top), (near + far) / (far - near), 1.0f));
             
         }
 

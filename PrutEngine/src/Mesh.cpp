@@ -1,8 +1,11 @@
 #include "prutengine/data/Mesh.hpp"
 #include <fstream>
 #include <regex>
+//#include "prutengine/math/Vector3.hpp"
 #include "prutengine/math/Vector.hpp"
+//#include "prutengine/math/Vector2.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
+#include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
@@ -22,10 +25,10 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
         }
         str.close();
         
-        std::vector<Vector3<float>> vertex;
-        std::vector<Vector2<float>> texture;
-        std::vector<Vector3<float>> normals;
-        std::vector<Vector3<Vector3<int>>> verticesList;
+        std::vector<Vector<float,3>> vertex;
+        std::vector<Vector<float,2>> texture;
+        std::vector<Vector<float,3>> normals;
+        std::vector<Vector<Vector<int,3>,3>> verticesList;
         //Put the data in arrays
         for(std::string dat : data){
             if(dat.substr(0,1) == "#"){
@@ -36,14 +39,14 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
             std::smatch match;
             std::regex_match(dat, match, tokenThree);
             if(match[1] == "v"){
-                vertex.push_back(Vector3<float>(
+                vertex.push_back(Vector<float,3>(
                     std::stof(match[2]),
                     std::stof(match[3]),
                     std::stof(match[4])
                     ));
             }
             else if(match[1] == "vn"){
-                normals.push_back(Vector3<float>(
+                normals.push_back(Vector<float,3>(
                     std::stof(match[2]),
                     std::stof(match[3]),
                     std::stof(match[4])
@@ -52,10 +55,10 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
             if(dat.substr(0,2) == "vt"){
                 float x, y;
                 sscanf(dat.c_str(), "vt %f %f", &x, &y);
-                texture.push_back(Vector2<float>(x,y));
+                texture.push_back(Vector<float,2>(x,y));
             }
             else if(dat.substr(0,2) == "f "){
-                Vector3<Vector3<int>> vertices;
+                Vector<Vector<int,3>,3> vertices;
                 int a,b,c,d,e,f,g,h, i;
                 const int matches = sscanf(dat.c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",
                    &a,&b,&c,&d,&e,&f,&g,&h, &i
@@ -70,9 +73,9 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
                        &vertices.getZ().getZ()
                     */
                        );
-                vertices.setX(Vector3<int>(a,b,c));
-                vertices.setY(Vector3<int>(d,e,f));
-                vertices.setZ(Vector3<int>(g,h,i));
+                vertices.setX(Vector<int,3>(a,b,c));
+                vertices.setY(Vector<int,3>(d,e,f));
+                vertices.setZ(Vector<int,3>(g,h,i));
 
                 
                 if(matches != 9){
@@ -89,10 +92,10 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
         
         //setup vbo's
         for(auto vertices : verticesList){
-            Vector3<float> v = vertex[vertices.getX().getX() - 1];
+            Vector<float,3> v = vertex[vertices.getX().getX() - 1];
          
-            Vector2<float> uv = texture[vertices.getX().getY() -1];
-            Vector3<float> norm = normals[vertices.getX().getZ() -1];
+            Vector<float,2> uv = texture[vertices.getX().getY() -1];
+            Vector<float,3> norm = normals[vertices.getX().getZ() -1];
             rawVertexData.push_back(v.getX());
             rawVertexData.push_back(v.getY());
             rawVertexData.push_back(v.getZ());

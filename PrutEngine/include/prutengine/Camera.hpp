@@ -10,13 +10,13 @@ namespace PrutEngine{
         virtual void onScroll(float velocityX, float velocityY);
         virtual void onKeyDown(unsigned short keycode);
     public:
-        Camera(const Math::Vector3<float>& startPos);
+        Camera(const Math::Vector<float,3>& startPos);
         
-        void setPosition(const Math::Vector3<float> &position);
-        void rotate(const Math::Vector3<float>& vec, float angle);
-        void translate(const Math::Vector3<float>& vec, float speed);
+        void setPosition(const Math::Vector<float,3> &position);
+        void rotate(const Math::Vector<float,3>& vec, float angle);
+        void translate(const Math::Vector<float,3>& vec, float speed);
         
-        Math::Vector3<float> getPosition()const;
+        Math::Vector<float,3> getPosition()const;
         
         void setQuaternion(const Math::Quaternion<float>& quat);
         

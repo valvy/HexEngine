@@ -5,7 +5,7 @@
 
 using namespace PrutEngine::Math;
 
-BasicObject::BasicObject(const Vector3<float> &position) : GameObject(){
+BasicObject::BasicObject(const Vector3f &position) : GameObject(){
     
     this->setPosition(position);
     visible = true;
@@ -21,6 +21,6 @@ BasicObject::BasicObject(const Vector3<float> &position) : GameObject(){
 void BasicObject::update(float tpf){
    // if(visible){
         GameObject::update(tpf);
-        this->rotate(Vector3<float>(5,90,0), 50.0f * tpf);
+        this->rotate(Vector3f(5,90,0), 50.0f * tpf);
     //}
 }

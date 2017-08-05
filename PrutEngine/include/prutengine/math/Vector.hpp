@@ -2,7 +2,7 @@
 #define PRUTENGINE_MATH_VECTOR_HPP
 #include <array>
 #include <cmath>
-
+#include <iostream>
 namespace PrutEngine{
     namespace Math{
         namespace Globals{
@@ -15,11 +15,28 @@ namespace PrutEngine{
 
         template<typename T, size_t size>
         class Vector{
-            private:
-
             protected:
             std::array<T, size> data;
+            private:
+            void setArguments(const size_t& pos, const T& end){
+                data[pos] = end;
+            }
+            template<typename... Arguments>
+            void setArguments(const size_t& pos, const T& fst, Arguments... tail ){
+            
+                data[pos] = fst;
+                setArguments(pos + 1,tail...);
+            }
+ 
             public:
+            template<typename... Arguments>
+            Vector(Arguments... tail){
+                this->setArguments(0, tail...);
+            }
+
+            Vector(){
+
+            }
 
             Vector<T,size> operator*(const T& number){
                 for(size_t i = 0; i < size; i++){
@@ -30,6 +47,8 @@ namespace PrutEngine{
             Vector<T,size>& operator*=(const T& number){
                 
             }
+
+
 
             void set(const Vector<T,size>& dat){
                 for(size_t i = 0; i < size; i++){
@@ -59,95 +78,55 @@ namespace PrutEngine{
             }
 
             void setX(const T& x){
+                static_assert(size >=  Globals::VECTOR_X_POSITION + 1, "This vector doesn't contain a X value");
                 this->data[Globals::VECTOR_X_POSITION] = x;
             }
 
             void setY(const T& y){
+                static_assert(size >=  Globals::VECTOR_Y_POSITION + 1, "This vector doesn't contain a Y value");
                 this->data[Globals::VECTOR_Y_POSITION] = y;
             }
             
             void setZ(const T& z){
+                static_assert(size >=  Globals::VECTOR_Z_POSITION + 1, "This vector doesn't contain a Z value");
                 this->data[Globals::VECTOR_Z_POSITION] = z;
             }
 
             void setW(const T& w){
+                static_assert(size >=  Globals::VECTOR_W_POSITION + 1, "This vector doesn't contain a W value");
                 this->data[Globals::VECTOR_W_POSITION] = w;
             }
 
             T getX() const {
+                static_assert(size >=  Globals::VECTOR_X_POSITION + 1, "This vector doesn't contain a X value");
                 return this->data[Globals::VECTOR_X_POSITION];
             }
 
             T getY() const {
+                static_assert(size >=  Globals::VECTOR_Y_POSITION + 1, "This vector doesn't contain a Y value");
                 return this->data[Globals::VECTOR_Y_POSITION];
             }
 
             T getZ() const {
+                static_assert(size >=  Globals::VECTOR_Z_POSITION + 1, "This vector doesn't contain a Z value");
                 return this->data[Globals::VECTOR_Z_POSITION];
             }
 
             T getW() const {
+                static_assert(size >=  Globals::VECTOR_W_POSITION + 1, "This vector doesn't contain a W value");
                 return this->data[Globals::VECTOR_W_POSITION];
             }
 
 
 
         };
-
-        template<typename T>
-        struct Vector2 : public Vector<T, 2>{
-            Vector2(){
-                this->data[Globals::VECTOR_X_POSITION] = 0;
-                this->data[Globals::VECTOR_Y_POSITION] = 0;
-            }
-
-            Vector2(const T& x,const T& y){
-                this->data[Globals::VECTOR_X_POSITION] = x;
-                this->data[Globals::VECTOR_Y_POSITION] = y;
-            }
-
-            Vector2(const Vector2<T>& vector){
-                this->set(vector);
-            }
-        };
+       
+        typedef Vector<float, 2> Vector2f;
         
-        template<typename T>
-        struct Vector3 : public Vector<T, 3>{
-            Vector3(){
-             //   this->data[Globals::VECTOR_X_POSITION] = 0;
-             //   this->data[Globals::VECTOR_Y_POSITION] = 0;
-             //   this->data[Globals::VECTOR_Z_POSITION] = 0;
-            }
+        typedef Vector<float, 3> Vector3f;
 
-            Vector3(const T& x, const T& y, const T& z){
-                this->data[Globals::VECTOR_X_POSITION] = x;
-                this->data[Globals::VECTOR_Y_POSITION] = y;
-                this->data[Globals::VECTOR_Z_POSITION] = z;
-            }
+        typedef Vector<float, 4> Vector4f;
 
-            Vector3(const Vector3<T>& vector){
-                this->set(vector);
-            }
-        };
-
-        template<typename T>
-        struct Vector4 : public Vector<T, 4>{
-            Vector4(){
-                this->data[Globals::VECTOR_X_POSITION] = 0;
-                this->data[Globals::VECTOR_Y_POSITION] = 0;
-                this->data[Globals::VECTOR_Z_POSITION] = 0;
-                this->data[Globals::VECTOR_W_POSITION] = 0;
-            }
-
-            Vector4(const T& x, const T& y, const T& z, const T& w){
-                this->data[Globals::VECTOR_X_POSITION] = x;
-                this->data[Globals::VECTOR_Y_POSITION] = y;
-                this->data[Globals::VECTOR_Z_POSITION] = z;
-                this->data[Globals::VECTOR_W_POSITION] = w;
-            }
-
-        
-        };
         
     }
 }

@@ -12,14 +12,14 @@ BasicScene::BasicScene(){
 }
 
 void BasicScene::awake(){
-    this->setCamera(std::shared_ptr<Camera>(new Camera(Vector3<float>(0,0,9))));
+    this->setCamera(std::shared_ptr<Camera>(new Camera(Vector3f(0,0,9))));
     float offset = 0;
-    auto obj = std::shared_ptr<GameObject>(new BasicObject(Vector3<float>(0,0,0)));
-    obj->rotate(Vector3<float>(0,90,0),50);
+    auto obj = std::shared_ptr<GameObject>(new BasicObject(Vector3f(0,0,0)));
+    obj->rotate(Vector3f(0,90,0),50);
     this->addGameObject(obj);
     for(int x = 0; x < 11; x++){
         for(int y = 0; y < 11; y++){
-            this->addGameObject(std::shared_ptr<GameObject>(new BasicObject(Vector3<float>((x * 2.1f) -13,
+            this->addGameObject(std::shared_ptr<GameObject>(new BasicObject(Vector3f((x * 2.1f) -13,
                                                        (y * 2.1f) -20 + offset,
                                                        3))));
         }

@@ -12,8 +12,8 @@ namespace PrutEngine{
         friend AbstractScene;
     private:
         Math::Quaternion<float> quaternion;
-        Math::Vector3<float> scale;
-        Math::Vector3<float> position;
+        Math::Vector<float,3> scale;
+        Math::Vector<float,3> position;
         std::shared_ptr<Data::Mesh> mesh;
         std::shared_ptr<Data::GLProgram> program;
         std::shared_ptr<Data::Texture> texture;
@@ -33,14 +33,14 @@ namespace PrutEngine{
         }
     public:
         GameObject();
-        void rotate(const Math::Vector3<float>& vec, float angle);
-        void translate(const Math::Vector3<float>& vec, float speed);
-        void setPosition(const Math::Vector3<float> &position);
-        void setScale(const Math::Vector3<float> &scale);
+        void rotate(const Math::Vector<float,3>& vec, float angle);
+        void translate(const Math::Vector<float,3>& vec, float speed);
+        void setPosition(const Math::Vector<float,3> &position);
+        void setScale(const Math::Vector<float,3> &scale);
         void setQuaternion(const Math::Quaternion<float> &quat);
         Math::Quaternion<float> getQuaternion() const;
-        Math::Vector3<float> getScale() const;
-        Math::Vector3<float> getPosition() const;
+        Math::Vector<float,3> getScale() const;
+        Math::Vector<float,3> getPosition() const;
         virtual ~GameObject();
         
         

@@ -10,12 +10,12 @@ namespace PrutEngine{
     namespace Math{
         template<typename T>
         struct Quaternion{
-            Vector3<T> imaginary;
+            Vector<T,3> imaginary;
             T real;
             
         public:
             Quaternion(){
-                this->imaginary = Vector3<T>(0,1,0);
+                this->imaginary = Vector<T,3>(0,1,0);
                 this->real = 0;
             }
             
@@ -24,8 +24,8 @@ namespace PrutEngine{
                 this->real = quaternion.real;
             }
             
-            Quaternion(const Vector4<T> vec){
-                this->imaginary = Vector3<T>(vec.getY(),vec.getZ(),vec.getW());
+            Quaternion(const Vector<T,4> vec){
+                this->imaginary = Vector<T,3>(vec.getY(),vec.getZ(),vec.getW());
                 this->real = vec.getX();
             }
             
@@ -39,7 +39,7 @@ namespace PrutEngine{
                 return *this;
             }
             
-            static Vector3<T> multiply(const Quaternion<T> &quat, const Vector3<T>& vec){
+            static Vector<T,3> multiply(const Quaternion<T> &quat, const Vector<T,3>& vec){
                 Quaternion tmp;
                 tmp.real = 0;
                 tmp.imaginary = vec.unitVector();
@@ -49,7 +49,7 @@ namespace PrutEngine{
             }
             
             static Quaternion<T> multiply(const Quaternion<T> &quat1, const Quaternion<T> &quat2){
-                return Quaternion<T>(Vector4<T>(
+                return Quaternion<T>(Vector<T,4>(
                                                 quat1.real * quat2.real - quat1.imaginary.getX() * quat2.imaginary.getX() - quat1.imaginary.getY() * quat2.imaginary.getY() - quat1.imaginary.getZ() * quat2.imaginary.getZ(),
                                                 quat1.real * quat2.imaginary.getX() + quat1.imaginary.getX() * quat2.real + quat1.imaginary.getY() * quat2.imaginary.getZ() - quat1.imaginary.getZ() * quat2.imaginary.getY(),
                                                 quat1.real * quat2.imaginary.getY() - quat1.imaginary.getX() * quat2.imaginary.getZ() + quat1.imaginary.getY() * quat2.real + quat1.imaginary.getZ() * quat2.imaginary.getX(),
@@ -68,7 +68,7 @@ namespace PrutEngine{
             }
             
             static Quaternion<T> conjugate(const Quaternion<T> &quat){
-                return Quaternion<T>(Vector4<T>(
+                return Quaternion<T>(Vector<T,4>(
                                             quat.real,
                                             -quat.imaginary.getX(),
                                             -quat.imaginary.getY(),
@@ -97,10 +97,10 @@ namespace PrutEngine{
                 const T qz = tmp.imaginary.getZ();
                 const T qw = tmp.real;
                 return Matrix4x4<T>(
-                            Vector4<T>(1 - 2*qy*qy - 2*qz*qz, 2*qx*qy - 2*qz*qw, 2*qx*qz + 2*qy*qw, 0),
-                            Vector4<T>(2*qx*qy + 2*qz*qw, 1 - 2*qx*qx - 2*qz*qz, 2*qy*qz - 2*qx*qw, 0),
-                            Vector4<T>(2*qx*qz - 2*qy*qw, 2*qy*qz + 2*qx*qw, 1 - 2*qx*qx - 2*qy*qy, 0),
-                            Vector4<T>(0,0,0,1));
+                            Vector<T,4>(1 - 2*qy*qy - 2*qz*qz, 2*qx*qy - 2*qz*qw, 2*qx*qz + 2*qy*qw, 0),
+                            Vector<T,4>(2*qx*qy + 2*qz*qw, 1 - 2*qx*qx - 2*qz*qz, 2*qy*qz - 2*qx*qw, 0),
+                            Vector<T,4>(2*qx*qz - 2*qy*qw, 2*qy*qz + 2*qx*qw, 1 - 2*qx*qx - 2*qy*qy, 0),
+                            Vector<T,4>(0,0,0,1));
                 
             }
             
@@ -124,7 +124,7 @@ namespace PrutEngine{
                 const T degrees = (angle * Math::PI) / 180;
                 const T halfSin = sin(degrees / 2);
                 
-                return Quaternion::multiply(Quaternion(Vector4<T>(cos(degrees / 2),
+                return Quaternion::multiply(Quaternion(Vector<T,4>(cos(degrees / 2),
                                                                 halfSin * unitv.getX(),
                                                                 halfSin * unitv.getY(),
                                                                 halfSin * unitv.getZ())), tmp);

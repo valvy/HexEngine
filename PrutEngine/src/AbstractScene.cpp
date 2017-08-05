@@ -11,7 +11,7 @@ AbstractScene::AbstractScene(){
 }
 
 void AbstractScene::awake(){
-    this->cam = std::shared_ptr<Camera>(new Camera(Vector3<float>(0,0,0)));
+    this->cam = std::shared_ptr<Camera>(new Camera(Vector<float,3>(0,0,0)));
 }
 
 

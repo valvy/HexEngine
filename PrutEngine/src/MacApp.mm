@@ -144,10 +144,10 @@ BOOL shouldStop = NO;
 MacApp* app;
 
 
-Vector4<float> Application::getWindowSize() const{
+Vector<float, 4> Application::getWindowSize() const{
     NSSize s = [app frame].size;
     NSPoint p = [app frame].origin;
-    return Vector4<float>(p.x, p.y, s.width,s.height);
+    return Vector<float, 4>(p.x, p.y, s.width,s.height);
 }
 
 void Application::quit(){

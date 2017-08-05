@@ -1,7 +1,5 @@
 #ifndef PRUTENGINE_MATH_MATRIX4X4_HPP
 #define PRUTENGINE_MATH_MATRIX4X4_HPP
-//#include "./Vector4.hpp"
-//#include "./Vector3.hpp"
 #include "./Vector.hpp"
 #include <cmath>
 #include <vector>
@@ -25,24 +23,24 @@ namespace PrutEngine{
             *  All the rows stored in a Vector4, this is done so there are never any problems
             *  With the length and order of the Matrix
             */
-            Vector4<T> row1,row2,row3,row4;
+            Vector<T,4> row1,row2,row3,row4;
             
             /*!
             *  Initializes the matrix with a identity matrix. (all zeroes except the ones diagonal)
             */
             Matrix4x4(){
-                row1 = Vector4<T>(1,0,0,0);
-                row2 = Vector4<T>(0,1,0,0);
-                row3 = Vector4<T>(0,0,1,0);
-                row4 = Vector4<T>(0,0,0,1);
+                row1 = Vector<T,4>(1,0,0,0);
+                row2 = Vector<T,4>(0,1,0,0);
+                row3 = Vector<T,4>(0,0,1,0);
+                row4 = Vector<T,4>(0,0,0,1);
             }
             
             static Matrix4x4<T> identityMatrix(){
                 return Matrix4x4<T>(
-                                    Vector4<T>(1,0,0,0),
-                                    Vector4<T>(0,1,0,0),
-                                    Vector4<T>(0,0,1,0),
-                                    Vector4<T>(0,0,0,1));
+                                    Vector<T,4>(1,0,0,0),
+                                    Vector<T,4>(0,1,0,0),
+                                    Vector<T,4>(0,0,1,0),
+                                    Vector<T,4>(0,0,0,1));
             }
             
 
@@ -54,7 +52,7 @@ namespace PrutEngine{
                 this->row4 = other.row4;
             }
             
-            Matrix4x4(Vector4<T> r1, Vector4<T> r2, Vector4<T> r3, Vector4<T> r4){
+            Matrix4x4(Vector<T,4> r1, Vector<T,4> r2, Vector<T,4> r3, Vector<T,4> r4){
                 this->row1 = r1;
                 this->row2 = r2;
                 this->row3 = r3;
@@ -65,7 +63,7 @@ namespace PrutEngine{
             *  Translates the matrix to
             *  @param vector, The vector you wish to translate to
             */
-            static Matrix4x4<T> translate(Matrix4x4<T> mat, Vector3<T> vector){
+            static Matrix4x4<T> translate(Matrix4x4<T> mat, Vector<T,3> vector){
                 Matrix4x4<T> result(mat);
                 result.row1.setW(result.row1.getW() + vector.getX());
                 result.row2.setW(result.row2.getW() + vector.getY());
@@ -76,7 +74,7 @@ namespace PrutEngine{
             }
             
 
-            static Matrix4x4<T> setPosition(Matrix4x4<T> mat, Vector3<T> vector){
+            static Matrix4x4<T> setPosition(Matrix4x4<T> mat, Vector<T,3> vector){
                 Matrix4x4<T> result(mat);
                 result.row1.setW(vector.getX());
                 result.row2.setW(vector.getY());
@@ -86,17 +84,17 @@ namespace PrutEngine{
             
             static Matrix4x4<T> transpose(Matrix4x4 mat){
                 Matrix4x4<T> result;
-                result.row1 = Vector4<T>(mat.row1.getX(), mat.row2.getX(), mat.row3.getX(),mat.row4.getX());
-                result.row2 = Vector4<T>(mat.row1.getY(), mat.row2.getY(),mat.row3.getY(),mat.row4.getY());
-                result.row3 = Vector4<T>(mat.row1.getZ(), mat.row2.getZ(), mat.row3.getZ(),mat.row4.getZ());
-                result.row4 = Vector4<T>(mat.row1.getW(), mat.row2.getW(),mat.row3.getW(),mat.row4.getW());
+                result.row1 = Vector<T,4>(mat.row1.getX(), mat.row2.getX(), mat.row3.getX(),mat.row4.getX());
+                result.row2 = Vector<T,4>(mat.row1.getY(), mat.row2.getY(),mat.row3.getY(),mat.row4.getY());
+                result.row3 = Vector<T,4>(mat.row1.getZ(), mat.row2.getZ(), mat.row3.getZ(),mat.row4.getZ());
+                result.row4 = Vector<T,4>(mat.row1.getW(), mat.row2.getW(),mat.row3.getW(),mat.row4.getW());
                 return result;
                 
             }
 
             
-            static Vector3<T> multiply(const Matrix4x4<T>& mat, const Vector3<T> vec){
-                return Vector3<T>(
+            static Vector<T,3> multiply(const Matrix4x4<T>& mat, const Vector<T,3> vec){
+                return Vector<T,3>(
                                 mat.row1.getX() * vec.getX() + mat.row1.getY() * vec.getY() + mat.row1.getZ() * vec.getZ(),
                                 mat.row2.getX() * vec.getX() + mat.row2.getY() * vec.getY() + mat.row2.getZ() * vec.getZ(
 
@@ -214,7 +212,7 @@ namespace PrutEngine{
             *  Scales the matrix with given vector
             *  @param s The vector you wish to scale with
             */
-            static Matrix4x4<T> scale(const Matrix4x4<T>& mat, const Vector3<T>& s){
+            static Matrix4x4<T> scale(const Matrix4x4<T>& mat, const Vector<T,3>& s){
                 Matrix4x4<T> tmp(mat);
                 //T x, y , z;
                 const T x = tmp.row1.getX() * s.getX();
