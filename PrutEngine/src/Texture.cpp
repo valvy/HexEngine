@@ -1,13 +1,17 @@
 #include "prutengine/data/Texture.hpp"
 #include <fstream>
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
-
+#include "prutengine/Application.hpp"
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
 Texture::Texture(std::string name) : AbstractResource(name){
-     std::fstream str(name, std::ios::in | std::ios::binary | std::ios::ate);
-      if(str.good()){
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
+    std::fstream str(name, std::ios::in | std::ios::binary | std::ios::ate);
+    if(str.good()){
           //Read the header.. (this contains things like image width/height.. or the kind of file (such if it's a bmp)
           unsigned char header[54];
           
@@ -71,5 +75,10 @@ GLuint Texture::getTexture() const{
 }
 
 Texture::~Texture(){
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     glDeleteTextures(1, &this->texture);
 }

@@ -1,11 +1,15 @@
 #include "prutengine/data/Shader.hpp"
 #include <fstream>
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
-
+#include "prutengine/Application.hpp"
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
 Shader::Shader(std::string path, GLenum shaderType) : AbstractResource(path){
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     std::fstream str(path, std::ios::in);
     if(str.good()){
         std::string line;
@@ -53,6 +57,10 @@ GLuint Shader::getShader() const{
 }
 
 Shader::~Shader(){
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     glDeleteShader(this->shaderData);
 }
 

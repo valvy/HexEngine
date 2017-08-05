@@ -44,7 +44,12 @@ Vector<float,3> Camera::getPosition() const{
 }
 
 void Camera::update(float tpf){
-
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
+    
     const Matrix4x4<GLfloat> projection = Matrix4x4<GLfloat>::multiply(
                                                             Quaternion<GLfloat>::quaternionToMatrix(this->getQuaternion()),Math::perspective<GLfloat>(45, 4.0f / 3.0f , 1, 100));
     const Matrix4x4<GLfloat> position = Matrix4x4<GLfloat>::translate(Matrix4x4<GLfloat>::identityMatrix(), getPosition());

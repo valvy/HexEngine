@@ -1,18 +1,24 @@
 #include "prutengine/data/Mesh.hpp"
 #include <fstream>
 #include <regex>
-//#include "prutengine/math/Vector3.hpp"
 #include "prutengine/math/Vector.hpp"
-//#include "prutengine/math/Vector2.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
+#include "prutengine/Application.hpp"
 #include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
 Mesh::Mesh(std::string path) : AbstractResource(path){
     using namespace PrutEngine::Math;
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    
+    if(engine == Graphics_Engine::AppleMetal){
+        std::cout << "test\n";
+        return;
+    }
     glGenVertexArrays(1,&this->vao);
     glBindVertexArray(this->vao);
+    
     
     std::fstream str(path, std::ios::in);
     if(str.good()){
@@ -163,6 +169,10 @@ GLuint Mesh::storeDataInVao(int attributeNr, int size,const std::vector<GLfloat>
 }
 
 Mesh::~Mesh(){
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     glDeleteVertexArrays(1, &this->vao);
     glDeleteBuffers(1,&this->vboVertex);
     glDeleteBuffers(1,&this->vboUV);

@@ -6,6 +6,11 @@ using namespace PrutEngine;
 using namespace PrutEngine::Data;
 GLProgram::GLProgram(std::string name, const std::vector<std::shared_ptr<Shader>> &shaders) : AbstractResource(name){
     auto assetManager =  Application::getInstance()->getAssetManager();
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     this->programData = glCreateProgram();
     for(auto sh : shaders){
         glAttachShader(this->programData,sh->getShader());
@@ -19,5 +24,10 @@ GLuint GLProgram::getProgram() const{
 }
 
 GLProgram::~GLProgram(){
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     glDeleteProgram(this->programData);
 }

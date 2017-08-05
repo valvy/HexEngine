@@ -1,5 +1,6 @@
 #include "prutengine/GameObject.hpp"
 #include "prutengine/math/Utilities.hpp"
+#include "prutengine/math/Matrix.hpp"
 #include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -34,8 +35,11 @@ void GameObject::onKeyDown(unsigned short keyCode){
 
 
 void GameObject::update(float tpf){
-    auto assetManager =  Application::getInstance()->getAssetManager();
-    
+    auto assetManager =  Application::getInstance()->getAssetManager(); 
+    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    if(engine == Graphics_Engine::AppleMetal){
+        return;
+    }
     //setup the program and mesh
     glUseProgram(program->getProgram());
     glActiveTexture(GL_TEXTURE0);

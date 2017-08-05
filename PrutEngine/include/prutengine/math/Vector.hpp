@@ -2,7 +2,7 @@
 #define PRUTENGINE_MATH_VECTOR_HPP
 #include <array>
 #include <cmath>
-#include <iostream>
+
 namespace PrutEngine{
     namespace Math{
         namespace Globals{
@@ -35,7 +35,7 @@ namespace PrutEngine{
             }
 
             Vector(){
-
+                static_assert(size != 0, "You can't have a vector with a size of zero!");
             }
 
             Vector<T,size> operator*(const T& number){

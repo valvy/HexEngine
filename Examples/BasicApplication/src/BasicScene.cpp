@@ -14,6 +14,7 @@ BasicScene::BasicScene(){
 void BasicScene::awake(){
     this->setCamera(std::shared_ptr<Camera>(new Camera(Vector3f(0,0,9))));
     float offset = 0;
+ //return;
     auto obj = std::shared_ptr<GameObject>(new BasicObject(Vector3f(0,0,0)));
     obj->rotate(Vector3f(0,90,0),50);
     this->addGameObject(obj);

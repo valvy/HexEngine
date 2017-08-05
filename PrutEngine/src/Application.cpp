@@ -8,7 +8,20 @@
 #include "prutengine/exceptions/NotYetInitializedException.hpp"
 
 
+
 using namespace PrutEngine;
+
+	std::ostream& operator<<(std::ostream& out, const Graphics_Engine value){
+		switch(value){
+			case Graphics_Engine::AppleMetal:
+			out << std::string("Apple Metal");
+			break;
+			default:
+			out << std::string("OpenGL");
+			break;
+		}
+		return out;
+	}
 
 Application* Application::instance;
 
@@ -20,6 +33,7 @@ void Application::setInstance(Application* app){
 Application::~Application(){
     
 }
+
 Application::Application(){
 
 }

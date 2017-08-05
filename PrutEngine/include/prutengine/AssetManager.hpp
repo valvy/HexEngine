@@ -47,7 +47,7 @@ namespace PrutEngine{
         
         template<typename... Arguments>
         std::shared_ptr<Data::GLProgram> loadProgram(std::pair<std::string, GLenum> head, Arguments... shaders){
-        
+            
             auto usedShaders = this->massLoadShader(shaders...);
             usedShaders.push_back(loadShader(head.first,head.second));
             std::string programName;

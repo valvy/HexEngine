@@ -7,22 +7,56 @@
 #import "prutengine/AssetManager.hpp"
 #import "prutengine/exceptions/PrutEngineException.hpp"
 #import "prutengine/platform/Input.hpp"
-
+#include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
 @implementation MacApp
 
 @synthesize glView;
-
+@synthesize metalView;
 BOOL shouldStop = NO;
+Graphics_Engine currentEngine;
 
 -(id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag{
 	if(self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag]){
+        appInstance = Application::getInstance();
+        currentEngine = appInstance->setRenderer();
         [self setTitle:[[NSProcessInfo processInfo] processName]];
         [self setAcceptsMouseMovedEvents:YES];
         
-        //Setup an opengl window with opengl 3_2+
+        switch(currentEngine){
+            case Graphics_Engine::AppleMetal:{
+                [self setupAppleMetal: contentRect];
+                break;
+            }
+            default:
+            [self setupOpenGL: contentRect];
+        }
+        [self makeKeyAndOrderFront:self];
+        [self setAcceptsMouseMovedEvents:YES];
+        [self makeKeyWindow];
+        [self setOpaque:YES];
+        appInstance->awake();
+
+	}
+	return self;
+}
+
+
+-(void) setupAppleMetal: (NSRect)contentRect{
+
+    MTKView* metalView = [[MTKView alloc] initWithFrame:contentRect device:MTLCreateSystemDefaultDevice()];
+
+    [metalView setClearColor:MTLClearColorMake(0, 0, 0, 1)];
+    [metalView setColorPixelFormat:MTLPixelFormatBGRA8Unorm];
+    [metalView setDepthStencilPixelFormat:MTLPixelFormatDepth32Float];
+   // [metalView setDelegate:self];
+    [self setContentView:metalView];
+}
+
+-(void) setupOpenGL:(NSRect)contentRect {
+       //Setup an opengl window with opengl 3_2+
         NSOpenGLPixelFormatAttribute pixelFormatAttributes[] ={
             NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
                 NSOpenGLPFAColorSize    , 24                           ,
@@ -43,21 +77,12 @@ BOOL shouldStop = NO;
         //Do stuff required to make a fullscreen window
         [self setContentView:glView];
         [glView prepareOpenGL];
-        [self makeKeyAndOrderFront:self];
-        [self setAcceptsMouseMovedEvents:YES];
-        [self makeKeyWindow];
-        [self setOpaque:YES];
-         glEnable(GL_CULL_FACE);
+
+        glEnable(GL_CULL_FACE);
         glFrontFace(GL_CW);
     
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
-    
-        appInstance = Application::getInstance();
-        appInstance->awake();
-
-	}
-	return self;
 }
 
 -(void) drawLoop:(NSTimer*) timer{
@@ -69,8 +94,11 @@ BOOL shouldStop = NO;
         if([self isVisible]){
             
             appInstance->loop();
-            [glView update];
-            [[glView openGLContext] flushBuffer];
+            if(currentEngine == Graphics_Engine::OpenGL){
+                [glView update];
+                [[glView openGLContext] flushBuffer];
+            }
+
         }
     } catch(const PrutEngine::Exceptions::PrutEngineException exception){
         appInstance->quit();
@@ -158,10 +186,19 @@ void Application::quit(){
     
 }
 
+Graphics_Engine Application::getCurrentGraphicsEngine() const {
+    return currentEngine;
+}
+
 std::string Application::getAppPath() const{
    return [[[NSBundle mainBundle]resourcePath]UTF8String];
 }
 
+bool Application::canUseAppleMetal() const {
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    return false;
+    //return (version.majorVersion >= 10 && version.minorVersion >= 12);
+}
 
 void Application::run(){
 	application = [NSApplication sharedApplication];

@@ -9,8 +9,10 @@ SET(
     src/Camera.cpp
     src/GameObject.cpp
     src/GLProgram.cpp
-    src/MacApp.mm
-    src/IOSApp.mm
+    src/platform/apple/MacApp.mm
+    src/platform/apple/IOSApp.mm
+  #  src/platform/apple/MetalRenderer.mm
+  #  src/platform/apple/MetalViewController.mm
     src/Mesh.cpp
     src/Shader.cpp
     src/Texture.cpp
@@ -26,12 +28,20 @@ add_library(PrutEngine SHARED ${PRUT_ENGINE_SOURCES} )
 
 
 if(APPLE)
-    set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
 	FIND_PACKAGE(OpenGL REQUIRED)
-    
-	INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
-	TARGET_LINK_LIBRARIES(PrutEngine ${COCOA_LIBRARY} ${OPENGL_LIBRARIES})
+    FIND_LIBRARY(METAL_LIBRARY Metal)
+    FIND_LIBRARY(METALKIT_LIBRARY MetalKit)
+
+	INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR} ${METAL_INCLUDE_DIR})
+    TARGET_LINK_LIBRARIES(
+        PrutEngine 
+        ${COCOA_LIBRARY}  
+        ${METAL_LIBRARY}  
+        ${METALKIT_LIBRARY}
+        ${OPENGL_LIBRARIES}
+        
+    )
 else()
 
 endif()

@@ -3,11 +3,32 @@
 #include <memory>
 #include "./AbstractScene.hpp"
 #include "./math/Vector.hpp"
-//#include "./math/Vector2.hpp"
-//#include "./math/Vector4.hpp"
 #include "prutengine/AssetManager.hpp"
-
+#include <ostream>
 namespace PrutEngine{
+
+	enum class Graphics_Engine{
+		OpenGL = 0,
+		AppleMetal
+
+		
+	} ;
+
+/*
+	std::ostream& operator<<(std::ostream& out, const Graphics_Engine value){
+		switch(value){
+			case Graphics_Engine::AppleMetal:
+			out << std::string("Apple Metal");
+			break;
+			default:
+			out << std::string("OpenGL");
+			break;
+		}
+		return out;
+	}*/
+
+	//std::ostream& operator<<(std::ostream& out, const Graphics_Engine value)
+
 	/**
 	* This class manages all the input of the Hex application.
 	* Starting point of the model view controller.
@@ -30,6 +51,8 @@ namespace PrutEngine{
 		*/
 		void setInstance(Application* instance);
 		void update();
+		bool canUseAppleMetal() const ;
+		
 	
 		/**
 		* private constructor so it enforces only on instance
@@ -37,6 +60,8 @@ namespace PrutEngine{
 		Application();
 		void run();
 	public:
+		virtual Graphics_Engine setRenderer() = 0;
+
 		virtual ~Application();
 		std::shared_ptr<AssetManager> getAssetManager();
 		virtual void awake();
@@ -50,7 +75,7 @@ namespace PrutEngine{
 		* Get's the resource path 
 		*/
 		std::string getAppPath() const;
-		
+		Graphics_Engine getCurrentGraphicsEngine() const;
 		Math::Vector<float, 4> getWindowSize() const;
 		
 		void keyDown(unsigned short keycode);

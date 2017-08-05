@@ -9,6 +9,13 @@ BasicApplication::BasicApplication(){
 
 }
 
+PrutEngine::Graphics_Engine BasicApplication::setRenderer(){
+    using PrutEngine::Graphics_Engine;
+    if(this->canUseAppleMetal()){
+        return Graphics_Engine::AppleMetal;
+    }
+    return Graphics_Engine::OpenGL;
+}
 
 void BasicApplication::loop(){
     update();
