@@ -1,1 +1,1 @@
-add_subdirectory(BasicApplication)
+ADD_SUBDIRECTORY(BasicApplication)
