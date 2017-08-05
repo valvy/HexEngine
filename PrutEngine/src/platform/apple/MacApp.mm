@@ -201,11 +201,13 @@ bool Application::canUseAppleMetal() const {
 }
 
 void Application::run(){
-	application = [NSApplication sharedApplication];
-   	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];	
-	app = [[MacApp alloc] initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];	
-	[application setDelegate:app];
-	[application run];
+    @autoreleasepool{
+        application = [NSApplication sharedApplication];
+        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];	
+        app = [[MacApp alloc] initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];	
+        [application setDelegate:app];
+        [application run];
+    }
 }
 
 

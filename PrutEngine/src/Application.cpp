@@ -11,17 +11,7 @@
 
 using namespace PrutEngine;
 
-	std::ostream& operator<<(std::ostream& out, const Graphics_Engine value){
-		switch(value){
-			case Graphics_Engine::AppleMetal:
-			out << std::string("Apple Metal");
-			break;
-			default:
-			out << std::string("OpenGL");
-			break;
-		}
-		return out;
-	}
+
 
 Application* Application::instance;
 
@@ -63,11 +53,7 @@ Application* Application::getInstance(){
 
 
 void Application::keyDown(unsigned short keyCode){
-    if(keyCode == KeyCodes::ESCAPE_KEY){
-        this->quit();
-    }else{
-        this->currentScene->keyDown(keyCode);
-    }
+    this->currentScene->keyDown(keyCode);
 }
 
 
