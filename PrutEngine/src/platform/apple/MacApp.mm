@@ -45,7 +45,7 @@ Graphics_Engine currentEngine;
 
 
 -(void) setupAppleMetal: (NSRect)contentRect{
-
+    std::cout <<"Setting up experimental Metal support\n";
     MTKView* metalView = [[MTKView alloc] initWithFrame:contentRect device:MTLCreateSystemDefaultDevice()];
 
     [metalView setClearColor:MTLClearColorMake(0, 0, 0, 1)];
@@ -195,7 +195,6 @@ std::string Application::getAppPath() const{
 
 bool Application::canUseAppleMetal() const {
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    return false;
     return (version.majorVersion >= 10 && version.minorVersion >= 12);
 }
 

@@ -13,7 +13,6 @@ Mesh::Mesh(std::string path) : AbstractResource(path){
     const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
     
     if(engine == Graphics_Engine::AppleMetal){
-        std::cout << "test\n";
         return;
     }
     glGenVertexArrays(1,&this->vao);
