@@ -7,8 +7,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
+#import "./MetalViewController.h"
+
 #import "../Application.hpp"
-NSApplication* application;
+
 
 @interface MacApp : NSWindow <NSApplicationDelegate>{
 	PrutEngine::Application* appInstance;
@@ -19,6 +21,7 @@ NSApplication* application;
 
 @property (nonatomic,retain) MTKView* metalView;
 
+@property (nonatomic, retain) MetalViewController* metalController;
 
 -(void) setupAppleMetal: (NSRect)contentRect ;
 -(void) setupOpenGL: (NSRect)contentRect ;

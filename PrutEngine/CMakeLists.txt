@@ -4,19 +4,27 @@ IF(APPLE)
 	FIND_PACKAGE(OpenGL REQUIRED)
     FIND_LIBRARY(METAL_LIBRARY Metal REQUIRED)
     FIND_LIBRARY(METALKIT_LIBRARY MetalKit REQUIRED)
+    FIND_LIBRARY(MODELIO_LIBRARY ModelIO REQUIRED)
 	INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR} ${METAL_INCLUDE_DIR})
   
     SET( 
         PRUT_ENGINE_PLATFORM_SOURCES
         src/platform/apple/MacApp.mm
         src/platform/apple/IOSApp.mm
+         src/platform/apple/MetalRenderer.mm
+        src/platform/apple/MetalViewController.mm
     )
 
+    SET_SOURCE_FILES_PROPERTIES(
+        src/platform/apple/MetalRenderer.mm 
+        PROPERTIES COMPILE_FLAGS -fobjc-arc
+    )
     SET(
         PRUT_ENGINE_PLATFORM_LIBRARIES
         ${COCOA_LIBRARY}  
         ${METAL_LIBRARY}  
         ${METALKIT_LIBRARY}
+        ${MODELIO_LIBRARY}
         ${OPENGL_LIBRARIES}
     )
 

@@ -1,4 +1,4 @@
-#ifdef __APPLE__
+
 #ifndef ShaderTypes_h
 #define ShaderTypes_h
 
@@ -51,4 +51,3 @@ typedef struct
 } Uniforms;
 
 #endif /* ShaderTypes_h */
-#endif

@@ -397,7 +397,7 @@ matrix_make(float m00, float m10, float m20, float m30,
 matrix_float3x3 __attribute__((__overloadable__))
 matrix_make(vector_float3 col0, vector_float3 col1, vector_float3 col2)
 {
-    return (matrix_float3x3){ col0, col1, col2 };
+    return (matrix_float3x3){ {col0, col1, col2} };
 }
 
 matrix_float3x3 matrix3x3_upper_left(matrix_float4x4 m)

@@ -11,10 +11,15 @@
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
+NSApplication* application;
+
 @implementation MacApp
 
 @synthesize glView;
 @synthesize metalView;
+
+@synthesize metalController;
+
 BOOL shouldStop = NO;
 Graphics_Engine currentEngine;
 
@@ -33,6 +38,7 @@ Graphics_Engine currentEngine;
             default:
             [self setupOpenGL: contentRect];
         }
+        [self center];
         [self makeKeyAndOrderFront:self];
         [self setAcceptsMouseMovedEvents:YES];
         [self makeKeyWindow];
@@ -46,13 +52,19 @@ Graphics_Engine currentEngine;
 
 -(void) setupAppleMetal: (NSRect)contentRect{
     std::cout <<"Setting up experimental Metal support\n";
-    MTKView* metalView = [[MTKView alloc] initWithFrame:contentRect device:MTLCreateSystemDefaultDevice()];
+    metalView = [[MTKView alloc] initWithFrame:contentRect device:MTLCreateSystemDefaultDevice()];
 
+    metalController = [[MetalViewController alloc] init];;
     [metalView setClearColor:MTLClearColorMake(0, 0, 0, 1)];
     [metalView setColorPixelFormat:MTLPixelFormatBGRA8Unorm];
     [metalView setDepthStencilPixelFormat:MTLPixelFormatDepth32Float];
-   // [metalView setDelegate:self];
+    [metalController setView:self.metalView];
+    [metalView setDelegate:metalController];
+    
+    
     [self setContentView:metalView];
+
+    [metalController viewDidLoad];
 }
 
 -(void) setupOpenGL:(NSRect)contentRect {
@@ -97,6 +109,8 @@ Graphics_Engine currentEngine;
             if(currentEngine == Graphics_Engine::OpenGL){
                 [glView update];
                 [[glView openGLContext] flushBuffer];
+            } else if (currentEngine == Graphics_Engine::AppleMetal){
+                [metalView draw];
             }
 
         }

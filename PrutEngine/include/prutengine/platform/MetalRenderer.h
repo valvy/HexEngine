@@ -1,4 +1,4 @@
-#ifdef __APPLE__
+
 #import <simd/simd.h>
 #import <ModelIO/ModelIO.h>
 #import <Metal/Metal.h>
@@ -27,5 +27,5 @@
 
 @end
 
-#endif
+
 
