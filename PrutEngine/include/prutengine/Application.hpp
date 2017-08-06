@@ -3,6 +3,7 @@
 #include <memory>
 #include "./AbstractScene.hpp"
 #include "./math/Vector.hpp"
+#include "./GraphicsController.hpp"
 #include "prutengine/AssetManager.hpp"
 #include <ostream>
 namespace PrutEngine{
@@ -42,7 +43,7 @@ namespace PrutEngine{
 		*/
 		static Application* instance;
 		std::shared_ptr<AssetManager> assetManager;
-		
+		std::shared_ptr<GraphicsController> graphicsController;
 		float time_per_frame;
 
 	protected:
@@ -76,6 +77,8 @@ namespace PrutEngine{
 		*/
 		std::string getAppPath() const;
 		Graphics_Engine getCurrentGraphicsEngine() const;
+		
+		std::shared_ptr<GraphicsController> getGraphicsController() const;
 		Math::Vector<float, 4> getWindowSize() const;
 		
 		void keyDown(unsigned short keycode);

@@ -208,7 +208,7 @@ std::string Application::getAppPath() const{
 }
 
 bool Application::canUseAppleMetal() const {
-    return false;
+    //return false;
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
     return (version.majorVersion >= 10 && version.minorVersion >= 12);
 }

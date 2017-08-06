@@ -10,26 +10,42 @@ SET(BASIC_APPLICATION_SOURCES
     src/Main.cpp
 )
 
-FIND_LIBRARY(METAL_LIBRARY Metal REQUIRED)
-FIND_LIBRARY(METALKIT_LIBRARY MetalKit REQUIRED)
-FIND_LIBRARY(MODELIO_LIBRARY ModelIO REQUIRED)
+SET(BASIC_APPLICATION_HEADERS
+    ./include/BasicApplication.hpp
+    ./include/BasicObject.hpp
+    ./include/BasicScene.hpp
+)
 
-SET(BASIC_APPLICATION_METAL_SHADERS
-    src/Shaders.metal
-) 
+IF(APPLE)
+    SET(BASIC_APPLICATION_METAL_SHADERS
+        src/Shaders.metal
+    ) 
 
+  
 SET_SOURCE_FILES_PROPERTIES(
     src/Shaders.metal
     PROPERTIES LANGUAGE adfs
 )
+ENDIF()
+
+
+
+
+
+
 
 
 INCLUDE_DIRECTORIES( ${METAL_INCLUDE_DIR})
 ADD_EXECUTABLE(
     BasicApplication 
     ${BASIC_APPLICATION_SOURCES}
+    ${BASIC_APPLICATION_HEADERS}
     ${BASIC_APPLICATION_METAL_SHADERS}
 )
+
+#set_target_properties(
+#    BasicApplication 
+#    PROPERTIES XCODE_ATTRIBUTE$<METAL_COMPILER>"/")
 
 INCLUDE_DIRECTORIES(
     ${PRUT_ENGINE_SOURCE_DIR}/include
@@ -44,8 +60,5 @@ ADD_CUSTOM_COMMAND(
 TARGET_LINK_LIBRARIES(
     BasicApplication 
     ${PRUT_ENGINE_BUILD_DIR}
-    ${METAL_LIBRARY}  
-    ${METALKIT_LIBRARY}
-    ${MODELIO_LIBRARY}
     PrutEngine
 )

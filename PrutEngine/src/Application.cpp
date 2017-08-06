@@ -56,7 +56,9 @@ void Application::keyDown(unsigned short keyCode){
     this->currentScene->keyDown(keyCode);
 }
 
-
+std::shared_ptr<GraphicsController> Application::getGraphicsController() const{
+    return this->graphicsController;
+}
 
 void Application::update(){
     clock_t timer;

@@ -11,7 +11,7 @@ IF(APPLE)
         PRUT_ENGINE_PLATFORM_SOURCES
         src/platform/apple/MacApp.mm
         src/platform/apple/IOSApp.mm
-         src/platform/apple/MetalRenderer.mm
+        src/platform/apple/MetalRenderer.mm
         src/platform/apple/MetalViewController.mm
     )
 
@@ -19,6 +19,7 @@ IF(APPLE)
         src/platform/apple/MetalRenderer.mm 
         PROPERTIES COMPILE_FLAGS -fobjc-arc
     )
+
     SET(
         PRUT_ENGINE_PLATFORM_LIBRARIES
         ${COCOA_LIBRARY}  
@@ -30,6 +31,36 @@ IF(APPLE)
 
 ENDIF()
 
+SET(PRUT_ENGINE_HEADERS
+  ./include/prutengine/AbstractScene.hpp
+  ./include/prutengine/Application.hpp
+  ./include/prutengine/AssetManager.hpp
+  ./include/prutengine/Camera.hpp
+  ./include/prutengine/GameObject.hpp
+  ./include/prutengine/GraphicsController.hpp
+  ./include/prutengine/data/AbstractResource.hpp
+  ./include/prutengine/data/GLProgram.hpp
+  ./include/prutengine/data/Mesh.hpp
+  ./include/prutengine/data/shader.hpp
+  ./include/prutengine/data/Texture.hpp
+  ./include/prutengine/exceptions/AssetNotLoadedException.hpp
+  ./include/prutengine/exceptions/NotYetInitializedException.hpp
+  ./include/prutengine/exceptions/PrutEngineException.hpp
+  ./include/prutengine/exceptions/RenderingException.hpp
+  ./include/prutengine/math/Matrix.hpp
+  ./include/prutengine/math/Matrix4x4.hpp
+  ./include/prutengine/math/Quaternion.hpp
+  ./include/prutengine/math/Utilities.hpp
+  ./include/prutengine/math/Vector.hpp
+  ./include/prutengine/platform/Input.hpp
+  ./include/prutengine/platform/IOSApp.h
+  ./include/prutengine/platform/MacApp.h
+  ./include/prutengine/platform/MetalRenderer.h
+  ./include/prutengine/platform/MetalShaderTypes.h
+  ./include/prutengine/platform/MetalViewController.h
+  ./include/prutengine/platform/OpenGL.hpp
+)
+
 SET(
     PRUT_ENGINE_SOURCES
     ${PRUT_ENGINE_PLATFORM_SOURCES}
@@ -40,6 +71,7 @@ SET(
     src/Camera.cpp
     src/GameObject.cpp
     src/GLProgram.cpp
+    src/GraphicsController.cpp
     src/Mesh.cpp
     src/Shader.cpp
     src/Texture.cpp
@@ -50,7 +82,7 @@ SET(
 ADD_DEFINITIONS( "-g -Wall  -O0" )
 
 INCLUDE_DIRECTORIES(${PRUT_ENGINE_SOURCE_DIR}/include )
-ADD_LIBRARY(PrutEngine SHARED ${PRUT_ENGINE_SOURCES} )
+ADD_LIBRARY(PrutEngine SHARED ${PRUT_ENGINE_SOURCES} ${PRUT_ENGINE_HEADERS} )
 
 TARGET_LINK_LIBRARIES(
     PrutEngine 
