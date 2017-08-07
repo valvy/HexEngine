@@ -2,7 +2,7 @@
 #include "BasicScene.hpp"
 #include <iostream>
 #include <prutengine/exceptions/PrutEngineException.hpp>
-#include <prutengine/platform/MetalShaderTypes.h>
+#include <prutengine/platform/apple/MetalShaderTypes.h>
 BasicApplication::BasicApplication(){
     setInstance(this);
     loadScene(std::shared_ptr<PrutEngine::AbstractScene>(new BasicScene()));

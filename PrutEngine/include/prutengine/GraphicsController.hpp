@@ -3,11 +3,24 @@
 #include <functional>
 namespace PrutEngine{
 
-    class Application;
+    //class Application;
+
+    #ifdef __APPLE__
+	namespace Platform{class MacRenderer; };
+	#endif
 
     class GraphicsController{
-        friend Application;        
-        std::function<void()> function;
+        //friend Application;        
+        #ifdef __APPLE__
+        friend Platform::MacRenderer;
+        #endif
+        
+        private:
+        std::function<void()> drawGraphics;
+        
+        public:
+        void draw();
+
     };
 }
 

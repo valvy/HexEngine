@@ -49,7 +49,11 @@ void AssetManager::clear(){
     loadedMeshes.clear();
 }
 
-
+#ifndef __APPLE__
+std::string AssetManager::getAppPath() const{
+    return "";
+}
+#endif
 
 std::shared_ptr<Shader> AssetManager::loadShader(std::string path, GLenum type){
     //Check if the shader already exists

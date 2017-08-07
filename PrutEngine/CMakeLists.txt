@@ -9,14 +9,16 @@ IF(APPLE)
   
     SET( 
         PRUT_ENGINE_PLATFORM_SOURCES
-        src/platform/apple/MacApp.mm
-        src/platform/apple/IOSApp.mm
         src/platform/apple/MetalRenderer.mm
         src/platform/apple/MetalViewController.mm
+        src/platform/apple/AppDelegate.mm
+        src/platform/apple/AbstractWindow.mm
+        src/platform/apple/OpenGLWindow.mm
+        src/platform/apple/Miscellaneous.mm
     )
 
     SET_SOURCE_FILES_PROPERTIES(
-        src/platform/apple/MetalRenderer.mm 
+        ${PRUT_ENGINE_PLATFORM_SOURCES}
         PROPERTIES COMPILE_FLAGS -fobjc-arc
     )
 
@@ -29,9 +31,21 @@ IF(APPLE)
         ${OPENGL_LIBRARIES}
     )
 
+    SET(
+        PRUT_ENGINE_PLATFORM_HEADERS
+        ./include/prutengine/platform/apple/AbstractWindow.h
+        ./include/prutengine/platform/apple/AppDelegate.h
+        #./include/prutengine/platform/apple/MacApp.h
+        ./include/prutengine/platform/apple/MetalRenderer.h
+        ./include/prutengine/platform/apple/MetalShaderTypes.h
+        ./include/prutengine/platform/apple/MetalViewController.h
+        ./include/prutengine/platform/apple/OpenGLWindow.h
+    )
+
 ENDIF()
 
 SET(PRUT_ENGINE_HEADERS
+    ${PRUT_ENGINE_PLATFORM_HEADERS}
   ./include/prutengine/AbstractScene.hpp
   ./include/prutengine/Application.hpp
   ./include/prutengine/AssetManager.hpp
@@ -53,11 +67,7 @@ SET(PRUT_ENGINE_HEADERS
   ./include/prutengine/math/Utilities.hpp
   ./include/prutengine/math/Vector.hpp
   ./include/prutengine/platform/Input.hpp
-  ./include/prutengine/platform/IOSApp.h
-  ./include/prutengine/platform/MacApp.h
-  ./include/prutengine/platform/MetalRenderer.h
-  ./include/prutengine/platform/MetalShaderTypes.h
-  ./include/prutengine/platform/MetalViewController.h
+    
   ./include/prutengine/platform/OpenGL.hpp
 )
 

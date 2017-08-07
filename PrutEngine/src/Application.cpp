@@ -7,8 +7,6 @@
 #include "prutengine/exceptions/RenderingException.hpp"
 #include "prutengine/exceptions/NotYetInitializedException.hpp"
 
-
-
 using namespace PrutEngine;
 
 
@@ -28,10 +26,13 @@ Application::Application(){
 
 }
 
+
+
 std::shared_ptr<AssetManager> Application::getAssetManager(){
     if(this->assetManager == nullptr){
         this->assetManager = std::shared_ptr<AssetManager>(new AssetManager());
     }
+
     return this->assetManager;
 }
 
@@ -44,9 +45,8 @@ void Application::awake(){
 }
 
 Application* Application::getInstance(){
-	if(instance == nullptr){
-      throw Exceptions::NotYetInitializedException("Instance is null");
-	}
+
+    Exceptions::assertNotYetInitialized(instance == nullptr,"instance is null");
 	return instance;
 }
 
@@ -56,14 +56,23 @@ void Application::keyDown(unsigned short keyCode){
     this->currentScene->keyDown(keyCode);
 }
 
-std::shared_ptr<GraphicsController> Application::getGraphicsController() const{
+std::shared_ptr<GraphicsController> Application::getGraphicsController(){
+    if(this->graphicsController == nullptr){
+        this->graphicsController = std::shared_ptr<GraphicsController>(new GraphicsController());
+    }
     return this->graphicsController;
 }
 
 void Application::update(){
+
+    Exceptions::assertNotYetInitialized(currentScene == nullptr,"No scene is null");
+
     clock_t timer;
     timer = clock();
     const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    //this->graphicsController->draw();
+
+    
     if(engine == Graphics_Engine::OpenGL){
         static const GLfloat background[] = { 0.0f, 0.25f, 0.0f, 1.0f };
         static const GLfloat depth = 1.0f;

@@ -8,6 +8,8 @@ namespace PrutEngine{
             NotYetInitializedException(const std::string& msg);
             NotYetInitializedException(const char* msg);
         };
+
+        void assertNotYetInitialized(const bool assertation, const std::string& msg);
     }
 }
 #endif

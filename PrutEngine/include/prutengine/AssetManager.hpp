@@ -39,7 +39,8 @@ namespace PrutEngine{
         
         std::shared_ptr<Data::Mesh> loadMesh(const std::string& path);
         
-    
+        std::string getAppPath() const;
+
         std::vector<GLuint> allPrograms();
         
         

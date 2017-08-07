@@ -3,7 +3,7 @@
 #include <string>
 namespace PrutEngine{
     namespace Exceptions{
-        class PrutEngineException{
+        class PrutEngineException : public std::exception{
             std::string msg;
             public:
             PrutEngineException(std::string msg){

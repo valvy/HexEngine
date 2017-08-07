@@ -2,6 +2,16 @@
 #import <simd/simd.h>
 #import <ModelIO/ModelIO.h>
 #import <Metal/Metal.h>
+#import <functional>
+namespace PrutEngine{
+    namespace Platform{
+        class MacRenderer{
+            public:
+            MacRenderer();
+            void setDrawFunction(std::function<void()> drawFunc);
+        };
+    }
+}
 
 // Protocol abstracting the platform specific view in order to keep the Renderer
 //   class independent from platform

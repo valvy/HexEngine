@@ -9,7 +9,8 @@ BasicObject::BasicObject(const Vector3f &position) : GameObject(){
     
     this->setPosition(position);
     visible = true;
-    const std::string path = PrutEngine::Application::getInstance()->getAppPath();
+    const std::string path = PrutEngine::Application::getInstance()->getAssetManager()->getAppPath();
+
     this->loadMesh(path + "/Assets/Meshes/Hex.obj");
     
     this->loadProgram(

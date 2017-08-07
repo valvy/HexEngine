@@ -1,9 +1,9 @@
-#ifdef __APPLE__
+/*#ifdef __APPLE__
 #include "TargetConditionals.h"
 #if TARGET_IPHONE_SIMULATOR
 #elif TARGET_OS_MAC
 #import <string>
-#import "prutengine/platform/MacApp.h"
+#import "prutengine/platform/apple/MacApp.h"
 #import "prutengine/AssetManager.hpp"
 #import "prutengine/exceptions/PrutEngineException.hpp"
 #import "prutengine/platform/Input.hpp"
@@ -223,11 +223,6 @@ void Application::run(){
     }
 }
 
-
-
-/*
-int main(int argc, char** argv){
-
-}*/
 #endif
 #endif
+*/

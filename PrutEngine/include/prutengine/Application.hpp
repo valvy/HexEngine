@@ -11,24 +11,13 @@ namespace PrutEngine{
 	enum class Graphics_Engine{
 		OpenGL = 0,
 		AppleMetal
-
-		
 	} ;
 
-/*
-	std::ostream& operator<<(std::ostream& out, const Graphics_Engine value){
-		switch(value){
-			case Graphics_Engine::AppleMetal:
-			out << std::string("Apple Metal");
-			break;
-			default:
-			out << std::string("OpenGL");
-			break;
-		}
-		return out;
-	}*/
-
-	//std::ostream& operator<<(std::ostream& out, const Graphics_Engine value)
+	#ifdef __APPLE__
+	namespace Platform{
+		class MacFriend;
+	}
+	#endif
 
 	/**
 	* This class manages all the input of the Hex application.
@@ -36,6 +25,9 @@ namespace PrutEngine{
 	* @author Heiko van der Heijden
 	*/
 	class Application{
+		#ifdef __APPLE__
+		friend Platform::MacFriend;
+		#endif
 	private:
 		std::shared_ptr<AbstractScene> currentScene;
 		/**
@@ -45,7 +37,7 @@ namespace PrutEngine{
 		std::shared_ptr<AssetManager> assetManager;
 		std::shared_ptr<GraphicsController> graphicsController;
 		float time_per_frame;
-
+		void keyDown(unsigned short keycode);
 	protected:
 		/**
 		* Loops the program
@@ -54,18 +46,19 @@ namespace PrutEngine{
 		void update();
 		bool canUseAppleMetal() const ;
 		
-	
+		virtual void loop() = 0;
 		/**
 		* private constructor so it enforces only on instance
 		*/
 		Application();
 		void run();
+		virtual void awake();
 	public:
 		virtual Graphics_Engine setRenderer() = 0;
 
 		virtual ~Application();
 		std::shared_ptr<AssetManager> getAssetManager();
-		virtual void awake();
+	
 		void loadScene(std::shared_ptr<AbstractScene> scene);
 		/**
 		* gets the instance of the application
@@ -75,15 +68,15 @@ namespace PrutEngine{
 		/**
 		* Get's the resource path 
 		*/
-		std::string getAppPath() const;
+		//std::string getAppPath() const;
 		Graphics_Engine getCurrentGraphicsEngine() const;
 		
-		std::shared_ptr<GraphicsController> getGraphicsController() const;
-		Math::Vector<float, 4> getWindowSize() const;
+		std::shared_ptr<GraphicsController> getGraphicsController();
+		Math::Vector4f getWindowSize() const;
 		
-		void keyDown(unsigned short keycode);
 		
-		virtual void loop() = 0;
+		
+		
 		/**
 		* Cleans up the data and stops the program
 		*/

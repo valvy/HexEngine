@@ -1,4 +1,4 @@
-#ifndef PRUTENGINE_MAC_APP_H
+/*#ifndef PRUTENGINE_MAC_APP_H
 #define PRUTENGINE_MAC_APP_H
 #ifdef __APPLE__
 #include "TargetConditionals.h"
@@ -9,13 +9,12 @@
 #import <MetalKit/MetalKit.h>
 #import "./MetalViewController.h"
 
-#import "../Application.hpp"
+#import "../../Application.hpp"
 
 
 @interface MacApp : NSWindow <NSApplicationDelegate>{
 	PrutEngine::Application* appInstance;
 }
-
 
 @property (nonatomic, retain) NSOpenGLView* glView;
 
@@ -33,3 +32,4 @@
 #endif
 #endif
 #endif
+*/

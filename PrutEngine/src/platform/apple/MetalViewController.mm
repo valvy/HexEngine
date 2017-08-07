@@ -1,5 +1,5 @@
-#import "prutengine/platform/MetalViewController.h"
-#import "prutengine/platform/MetalRenderer.h"
+#import "prutengine/platform/apple/MetalViewController.h"
+#import "prutengine/platform/apple/MetalRenderer.h"
 
 @implementation MetalViewController
 {
