@@ -6,7 +6,7 @@ using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
 Texture::Texture(std::string name) : AbstractResource(name){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }
@@ -75,7 +75,7 @@ GLuint Texture::getTexture() const{
 }
 
 Texture::~Texture(){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     
     if(engine == Graphics_Engine::AppleMetal){
         return;

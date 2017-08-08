@@ -6,7 +6,7 @@ using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
 Shader::Shader(std::string path, GLenum shaderType) : AbstractResource(path){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }
@@ -57,7 +57,7 @@ GLuint Shader::getShader() const{
 }
 
 Shader::~Shader(){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }

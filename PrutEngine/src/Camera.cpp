@@ -44,7 +44,7 @@ Vector<float,3> Camera::getPosition() const{
 }
 
 void Camera::update(float tpf){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     
     if(engine == Graphics_Engine::AppleMetal){
         return;

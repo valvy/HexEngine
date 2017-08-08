@@ -6,7 +6,7 @@ using namespace PrutEngine;
 using namespace PrutEngine::Data;
 GLProgram::GLProgram(std::string name, const std::vector<std::shared_ptr<Shader>> &shaders) : AbstractResource(name){
     auto assetManager =  Application::getInstance()->getAssetManager();
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     
     if(engine == Graphics_Engine::AppleMetal){
         return;
@@ -24,7 +24,7 @@ GLuint GLProgram::getProgram() const{
 }
 
 GLProgram::~GLProgram(){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     
     if(engine == Graphics_Engine::AppleMetal){
         return;

@@ -10,7 +10,7 @@ using namespace PrutEngine::Data;
 
 Mesh::Mesh(std::string path) : AbstractResource(path){
     using namespace PrutEngine::Math;
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     
     if(engine == Graphics_Engine::AppleMetal){
         return;
@@ -168,7 +168,7 @@ GLuint Mesh::storeDataInVao(int attributeNr, int size,const std::vector<GLfloat>
 }
 
 Mesh::~Mesh(){
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }

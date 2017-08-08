@@ -1,15 +1,6 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface AbstractWindow : NSWindow{
-    BOOL shouldStop;
-    
-}
-
-
-
--(void) closeWindow;
-
--(BOOL) getShouldStop;
+@interface AbstractWindow : NSWindow
 
 @end

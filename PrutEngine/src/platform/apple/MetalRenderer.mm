@@ -11,27 +11,14 @@
 #import <MetalKit/MetalKit.h>
 #import "prutengine/Application.hpp"
 #import "prutengine/platform/apple/MetalRenderer.h"
-#import <iostream>
+#import "prutengine/platform/apple/AppDelegate.h"
+#import <memory>
 
 // Include header shared between C code here, which executes Metal API commands, and .metal files
 #import "prutengine/platform/apple/MetalShaderTypes.h"
 
-using namespace PrutEngine::Platform;
 
-MacRenderer::MacRenderer(){
 
-}
-
-void MacRenderer::setDrawFunction(std::function<void()> drawFunc){
-    
-    const std::shared_ptr<GraphicsController> controller = Application::getInstance()->getGraphicsController();//->drawGraphics = drawFunc;
-    if(controller == nullptr){
-     
-        
-    }else {
-        controller->drawGraphics = drawFunc;
-    }
-}
 // The max number of command buffers in flight
 static const NSUInteger kMaxBuffersInFlight = 3;
 
@@ -41,6 +28,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 // Main class performing the rendering
 @implementation Renderer
 {
+    std::unique_ptr<PrutEngine::Platform::MacFriend> macFriend;
     dispatch_semaphore_t _inFlightSemaphore;
     id <MTLDevice> _device;
     id <MTLCommandQueue> _commandQueue;
@@ -86,6 +74,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     self = [super init];
     if(self)
     {
+        macFriend = std::unique_ptr<PrutEngine::Platform::MacFriend>(new PrutEngine::Platform::MacFriend());
         _device = device;
         _renderDestination = renderDestinationProvider;
         _inFlightSemaphore = dispatch_semaphore_create(kMaxBuffersInFlight);
@@ -98,16 +87,10 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 
 - (void)_loadMetal
 {
-    // Create and load our basic Metal state objects
-    
-    // Load all the shader files with a metal file extension in the project
+    macFriend->awake();
+
     _defaultLibrary = [_device newDefaultLibrary];
-    
-    // Calculate our uniform buffer size.  We allocate kMaxBuffersInFlight instances for uniform
-    //   storage in a single buffer.  This allows us to update uniforms in a ring (i.e. triple
-    //   buffer the uniforms) so that the GPU reads from one slot in the ring wil the CPU writes
-    //   to another.  Also uniform storage must be aligned (to 256 bytes) to meet the requirements
-    //   to be an argument in the constant address space of our shading functions.
+
     NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
     
     // Create and allocate our uniform buffer object.  Indicate shared storage so that both the
@@ -241,7 +224,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
    // NSImage *controlImage = [[NSImage alloc] initWithContentsOfFile:@""];
     //NSBitmapImageRep *imageRep = [[controlImage representations] objectAtIndex:0];
     
-    std::cout << [[[NSBundle mainBundle]resourcePath]UTF8String] << "\n";
+    
     
     NSURL *baseURL = [NSURL fileURLWithPath:@"/Users/heikovanderheijden/Desktop/PrutEngine/build/examples/BasicApplication/Debug/Assets/Textures/cube.bmp"];
     _colorMap = [textureLoader newTextureWithContentsOfURL:baseURL options:textureLoaderOptions error:&error];
@@ -266,9 +249,10 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 
 - (void)_updateGameState
 {
+    macFriend->loop();
     // Update any game state (including updating dynamically changing Metal buffer)
     
-    Uniforms * uniforms = (Uniforms*)_uniformBufferAddress;
+    /*Uniforms * uniforms = (Uniforms*)_uniformBufferAddress;
     
     vector_float3 ambientLightColor = {0.02, 0.02, 0.02};
     uniforms->ambientLightColor = ambientLightColor;
@@ -293,7 +277,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     uniforms->normalMatrix = matrix3x3_upper_left(uniforms->modelViewMatrix);
     uniforms->normalMatrix = matrix_invert(matrix_transpose(uniforms->normalMatrix));
     
-    _rotation += .01;
+    _rotation += .01;*/
 }
 
 - (void)drawRectResized:(CGSize)size
@@ -416,7 +400,7 @@ matrix_make(float m00, float m10, float m20, float m30,
 matrix_float3x3 __attribute__((__overloadable__))
 matrix_make(vector_float3 col0, vector_float3 col1, vector_float3 col2)
 {
-    return (matrix_float3x3){ col0, col1, col2 };
+    return (matrix_float3x3){ {col0, col1, col2} };
 }
 
 matrix_float3x3 matrix3x3_upper_left(matrix_float4x4 m)

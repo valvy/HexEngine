@@ -60,27 +60,29 @@
 
 -(void) drawLoop:(NSTimer*) timer{
   try{
-        if([self getShouldStop]){
-            NSLog(@"test");
-           // [self performClose:self];
+        if(macFriend->shouldStop()){
+            [glView clearGLContext];
             [timer invalidate];
+            [self close];
             return;
         }
-        if([self isVisible]){
+        else if([self isVisible]){
             macFriend->loop();
             [glView update];
             [[glView openGLContext] flushBuffer];
 
         }
     } catch(const PrutEngine::Exceptions::PrutEngineException exception){
-        [self closeWindow];
         PrutEngine::Application::getInstance()->quit();
+        [glView clearGLContext];
+        [timer invalidate];
+        [self close];
         std::exit(EXIT_FAILURE);
     }
 }
 
 -(void)keyDown:(NSEvent*) event{
-    if(!shouldStop){
+    if(!macFriend->shouldStop()){
         macFriend->keyDown([event keyCode]);
     }
 }

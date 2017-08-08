@@ -6,6 +6,7 @@
 #import "prutengine/exceptions/PrutEngineException.hpp"
 #import "prutengine/platform/Input.hpp"
 #import "prutengine/platform/apple/OpenGLWindow.h"
+#import "prutengine/platform/apple/MetalWindow.h"
 
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -27,9 +28,20 @@ void Platform::MacFriend::keyDown(unsigned short keydown){
     this->application->keyDown(keydown);
 }
 
+bool Platform::MacFriend::shouldStop() const{
+    return this->application->shouldStop;
+}
+
 @implementation AppDelegate
 
 @synthesize window;
+
+- (id) initWithRenderer:(Graphics_Engine) graphics_engine {
+    if(self = [super init]){
+        engine = graphics_engine;
+    }
+    return self;
+}
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication{
     return YES;
@@ -59,8 +71,11 @@ void Platform::MacFriend::keyDown(unsigned short keydown){
 }
 
 - (void) setupWindow{
-    window = [[OpenGLWindow alloc]initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];
-    
+    if(engine == Graphics_Engine::OpenGL){
+        window = [[OpenGLWindow alloc]initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];
+    } else if(engine == Graphics_Engine::AppleMetal){
+        window = [[MetalWindow alloc]initWithContentRect:NSMakeRect(0, 0, 600, 600) styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |  NSWindowStyleMaskMiniaturizable   backing:NSBackingStoreBuffered defer:YES];
+    }
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification{
@@ -70,8 +85,6 @@ void Platform::MacFriend::keyDown(unsigned short keydown){
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification{
     Application::getInstance()->quit();
-    [window closeWindow];
-    
 }
 
 - (NSRect) getWindowSize{
@@ -88,36 +101,22 @@ Vector4f Application::getWindowSize() const{
     return Vector4f(p.x, p.y, s.width,s.height);
 }
 
-void Application::quit(){
-    assetManager->clear();
-    currentScene.reset();
-    std::exit(EXIT_SUCCESS);
-}
-
-Graphics_Engine Application::getCurrentGraphicsEngine() const {
-    return Graphics_Engine::OpenGL;
-}
-
-//std::string Application::getAppPath() const{
-//   return [[[NSBundle mainBundle]resourcePath]UTF8String];
-//}
 
 bool Application::canUseAppleMetal() const {
-    //
-    
-    return false;
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
     return (version.majorVersion >= 10 && version.minorVersion >= 12);
 }
 
 
 void Application::run(){
-  @autoreleasepool{
-        NSApplication* application = [NSApplication sharedApplication];
-        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];	
-        app = [[AppDelegate alloc]init]; 
-        [application setDelegate:app];
-        [application run];
+    this->graphicsController = std::shared_ptr<GraphicsController>(new GraphicsController(this->setRenderer()));
+    @autoreleasepool{
+      
+      NSApplication* application = [NSApplication sharedApplication];
+      [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+      app = [[AppDelegate alloc]init];
+      [application setDelegate:app];
+      [application run];
   }
 
 }

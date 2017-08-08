@@ -15,6 +15,7 @@ IF(APPLE)
         src/platform/apple/AbstractWindow.mm
         src/platform/apple/OpenGLWindow.mm
         src/platform/apple/Miscellaneous.mm
+        src/platform/apple/MetalWindow.mm
     )
 
     SET_SOURCE_FILES_PROPERTIES(
@@ -36,6 +37,7 @@ IF(APPLE)
         ./include/prutengine/platform/apple/AbstractWindow.h
         ./include/prutengine/platform/apple/AppDelegate.h
         #./include/prutengine/platform/apple/MacApp.h
+        ./include/prutengine/platform/apple/MetalWindow.h
         ./include/prutengine/platform/apple/MetalRenderer.h
         ./include/prutengine/platform/apple/MetalShaderTypes.h
         ./include/prutengine/platform/apple/MetalViewController.h
@@ -74,20 +76,21 @@ SET(PRUT_ENGINE_HEADERS
 SET(
     PRUT_ENGINE_SOURCES
     ${PRUT_ENGINE_PLATFORM_SOURCES}
-    src/AbstractResource.cpp
+    src/data/AbstractResource.cpp
     src/AbstractScene.cpp
     src/Application.cpp
     src/AssetManager.cpp
     src/Camera.cpp
     src/GameObject.cpp
-    src/GLProgram.cpp
+    src/data/GLProgram.cpp
     src/GraphicsController.cpp
-    src/Mesh.cpp
-    src/Shader.cpp
-    src/Texture.cpp
-    src/RenderingException.cpp
-    src/NotYetInitializedException.cpp
-    src/AssetNotLoadedException.cpp
+    src/data/Mesh.cpp
+    src/data/Shader.cpp
+    src/data/Texture.cpp
+    src/exceptions/RenderingException.cpp
+    src/exceptions/NotYetInitializedException.cpp
+    src/exceptions/AssetNotLoadedException.cpp
+    src/platform/OpenGL.cpp
 )
 ADD_DEFINITIONS( "-g -Wall  -O0" )
 

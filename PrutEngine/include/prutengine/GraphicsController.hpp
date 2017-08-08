@@ -3,7 +3,10 @@
 #include <functional>
 namespace PrutEngine{
 
-    //class Application;
+    enum class Graphics_Engine{
+        OpenGL = 0,
+        AppleMetal
+    } ;
 
     #ifdef __APPLE__
 	namespace Platform{class MacRenderer; };
@@ -14,12 +17,14 @@ namespace PrutEngine{
         #ifdef __APPLE__
         friend Platform::MacRenderer;
         #endif
-        
         private:
-        std::function<void()> drawGraphics;
-        
+        std::function<void()> preDrawfunction;
+        Graphics_Engine usedEngine;
         public:
-        void draw();
+        Graphics_Engine getCurrentGraphicsEngine() const;
+        
+        GraphicsController(const Graphics_Engine& engine);
+        void preDraw();
 
     };
 }

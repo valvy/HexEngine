@@ -9,7 +9,7 @@
 #include <metal_stdlib>
 #include <simd/simd.h>
 // Include header shared between this Metal shader code and C code executing Metal API commands
-#import <prutengine/platform/MetalShaderTypes.h>
+#import <prutengine/platform/apple/MetalShaderTypes.h>
 
 using namespace metal;
 

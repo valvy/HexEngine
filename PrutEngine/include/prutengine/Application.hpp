@@ -8,10 +8,7 @@
 #include <ostream>
 namespace PrutEngine{
 
-	enum class Graphics_Engine{
-		OpenGL = 0,
-		AppleMetal
-	} ;
+
 
 	#ifdef __APPLE__
 	namespace Platform{
@@ -33,6 +30,7 @@ namespace PrutEngine{
 		/**
 		* the instance of the application (it's a singleton)
 		*/
+		bool shouldStop = false;
 		static Application* instance;
 		std::shared_ptr<AssetManager> assetManager;
 		std::shared_ptr<GraphicsController> graphicsController;
@@ -65,13 +63,8 @@ namespace PrutEngine{
 		* if instance is null it creates a new instance
 		*/
 		static Application* getInstance();
-		/**
-		* Get's the resource path 
-		*/
-		//std::string getAppPath() const;
-		Graphics_Engine getCurrentGraphicsEngine() const;
 		
-		std::shared_ptr<GraphicsController> getGraphicsController();
+		std::shared_ptr<GraphicsController> getGraphicsController() const ;
 		Math::Vector4f getWindowSize() const;
 		
 		

@@ -22,4 +22,15 @@
 #include <GL/glx.h>
 #endif
 
+
+namespace PrutEngine{
+    namespace Platform{
+        void clearAndCheckErrors();
+        
+        
+    }
+}
+
+
+
 #endif

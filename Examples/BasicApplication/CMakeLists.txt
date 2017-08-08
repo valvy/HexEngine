@@ -22,10 +22,10 @@ IF(APPLE)
     ) 
 
   
-#SET_SOURCE_FILES_PROPERTIES(
-#    src/Shaders.metal
-#    PROPERTIES LANGUAGE C++
-#)
+SET_SOURCE_FILES_PROPERTIES(
+    src/Shaders.metal
+    PROPERTIES LANGUAGE C++
+)
 ENDIF()
 
 

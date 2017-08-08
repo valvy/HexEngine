@@ -28,8 +28,7 @@ namespace PrutEngine{
         void loadProgram(Arguments... shaders){
             auto assetManager =  Application::getInstance()->getAssetManager();
             this->program = assetManager->loadProgram(shaders...);
-            //AssetManager::loadProgram(shaders...);
-            const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+            const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
 
             if(engine == Graphics_Engine::OpenGL){
                 this->pos_reference = glGetUniformLocation(program->getProgram(), "mv_matrix");

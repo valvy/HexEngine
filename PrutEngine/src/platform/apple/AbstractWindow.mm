@@ -2,12 +2,4 @@
 
 @implementation AbstractWindow
 
-
--(void) closeWindow{
-    shouldStop = YES;
-}
-
--(BOOL) getShouldStop{
-    return shouldStop;
-}
 @end

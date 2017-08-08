@@ -34,7 +34,7 @@ void GameObject::onKeyDown(unsigned short keyCode){
 void GameObject::update(float tpf){
     using namespace PrutEngine::Exceptions;
     auto assetManager =  Application::getInstance()->getAssetManager(); 
-    const Graphics_Engine engine = Application::getInstance()->getCurrentGraphicsEngine();
+    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }
