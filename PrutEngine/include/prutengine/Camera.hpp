@@ -7,7 +7,6 @@ namespace PrutEngine{
         friend AbstractScene;
     protected:
         virtual void update(float tpf);
-        virtual void onScroll(float velocityX, float velocityY);
         virtual void onKeyDown(unsigned short keycode);
     public:
         Camera(const Math::Vector<float,3>& startPos);

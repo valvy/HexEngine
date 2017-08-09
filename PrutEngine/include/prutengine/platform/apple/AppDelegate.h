@@ -14,6 +14,7 @@ namespace PrutEngine{
             void awake();
             void keyDown(unsigned short keydown);
             bool shouldStop() const;
+            void disableLoadShader();
         };
     }
 }

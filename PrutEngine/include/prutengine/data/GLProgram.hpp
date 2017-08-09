@@ -7,12 +7,20 @@
 namespace PrutEngine{
     namespace Data{
         class Shader;
+        
+        class GraphicsProgram : public AbstractResource{
+            protected:
+            std::vector<std::shared_ptr<Shader>> shaders;
+            public:
+            GraphicsProgram(const std::string& name, const std::vector<std::shared_ptr<Shader>>& shaders);
+            
+        };
 
-        class GLProgram : public AbstractResource{
+        class GLProgram : public GraphicsProgram{
         private:
             GLuint programData;
         public:
-            GLProgram(std::string name,const std::vector<std::shared_ptr<Shader> > &shaders);
+            GLProgram(const std::string& name,const std::vector<std::shared_ptr<Shader>> &shaders);
             ~GLProgram();
             GLuint getProgram() const;
             

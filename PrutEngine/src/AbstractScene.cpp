@@ -24,8 +24,6 @@ void AbstractScene::update(float tpf){
 	for(auto it : this->gameObjects){
         it->update(tpf);
 	}
-    
-
 }
 
 

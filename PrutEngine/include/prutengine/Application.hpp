@@ -49,11 +49,10 @@ namespace PrutEngine{
 		* private constructor so it enforces only on instance
 		*/
 		Application();
+        virtual Graphics_Engine setRenderer() = 0;
 		void run();
 		virtual void awake();
 	public:
-		virtual Graphics_Engine setRenderer() = 0;
-
 		virtual ~Application();
 		std::shared_ptr<AssetManager> getAssetManager();
 	
@@ -66,9 +65,6 @@ namespace PrutEngine{
 		
 		std::shared_ptr<GraphicsController> getGraphicsController() const ;
 		Math::Vector4f getWindowSize() const;
-		
-		
-		
 		
 		/**
 		* Cleans up the data and stops the program

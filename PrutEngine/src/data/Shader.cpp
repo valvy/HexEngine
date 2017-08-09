@@ -5,62 +5,60 @@
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
-Shader::Shader(std::string path, GLenum shaderType) : AbstractResource(path){
-    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
-    if(engine == Graphics_Engine::AppleMetal){
-        return;
-    }
-    std::fstream str(path, std::ios::in);
-    if(str.good()){
-        std::string line;
-        std::string code;
-        
-        //Load all data in the string
-        while(!str.eof()){
-            std::getline(str,line);
-            code += line + '\n';
-        }
-        str.close();
-        
-        //attemt to compile the shader
-        GLuint result = glCreateShader(shaderType);
-        const char *c_str = code.c_str();
-        glShaderSource(result,1, &c_str, nullptr);
-        glCompileShader(result);
-        
-        
-        //Check for compile errors
-        GLint compiled;
-        glGetShaderiv(result, GL_COMPILE_STATUS, &compiled);
-        if(!compiled){
-            GLint infoLen= 0;
-            glGetShaderiv(result, GL_INFO_LOG_LENGTH, &infoLen);
-            if(infoLen > 1){
-                GLchar log[infoLen + 1];
-                glGetShaderInfoLog(result, infoLen, nullptr, log);
-                std::string errorMsg(log);
-                 throw Exceptions::AssetNotLoadedException(errorMsg);
-                // delete[] log;
-                // throw std::string(errorMsg);
-            }
-        }
-        
-        this->shaderData = result;
-    }else{
-       throw Exceptions::AssetNotLoadedException("Could not find file");
-    }
+
+ShaderData::ShaderData(Graphics_Engine type){
+    this->type = type;
+}
+Graphics_Engine ShaderData::getType() const{
+    return this->type;
+}
+
+ShaderData::~ShaderData(){
     
 }
 
-GLuint Shader::getShader() const{
+GLShaderData::~GLShaderData(){
+    glDeleteShader(this->dat);
+}
+
+GLShaderData::GLShaderData(GLuint dat) : ShaderData::ShaderData(Graphics_Engine::OpenGL){
+    this->dat = dat;
+}
+
+GLuint GLShaderData::getShader() const{
+    return this->dat;
+}
+
+Shader::Shader(const std::string& path, const Shader_Types& shaderType) : AbstractResource(path){
+    this->shaderType = shaderType;
+    Application::getInstance()->getGraphicsController()->loadShader(path,shaderType,this);
+}
+void Shader::setShader(ShaderData* dat){
+    this->shaderData = std::shared_ptr<ShaderData>(dat);
+}
+
+std::shared_ptr<ShaderData> Shader::getData() const{
     return this->shaderData;
 }
 
-Shader::~Shader(){
-    const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
-    if(engine == Graphics_Engine::AppleMetal){
-        return;
+Shader_Types Shader::getShaderType() const{
+    return this->shaderType;
+}
+
+GLuint Shader::getShader() const{
+    if(shaderData != nullptr){
+        if(shaderData->getType() == Graphics_Engine::OpenGL){
+            ShaderData* dat = shaderData.get();
+            GLShaderData* glDat = static_cast<GLShaderData*>(dat);
+            return glDat->getShader();
+        }
     }
-    glDeleteShader(this->shaderData);
+    throw Exceptions::PrutEngineException("error");
+    
+}
+
+Shader::~Shader(){
+    this->shaderData.reset();
+   
 }
 

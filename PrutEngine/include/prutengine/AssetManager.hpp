@@ -19,16 +19,16 @@ namespace PrutEngine{
         
         std::vector<std::shared_ptr<Data::Texture> > loadedTextures;
         
-        std::shared_ptr<Data::Shader> loadShader(std::string path, GLenum type);
+        std::shared_ptr<Data::Shader> loadShader(const std::string& path, Shader_Types type);
         
-        std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string,GLenum> head){
+        std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string,Shader_Types> head){
             std::vector<std::shared_ptr<Data::Shader>> result;
             result.push_back(loadShader(head.first,head.second));
             return result;
         }
         
         template<typename... Arguments>
-        std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string, GLenum> head, Arguments... tail){
+        std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string, Shader_Types> head, Arguments... tail){
             std::vector<std::shared_ptr<Data::Shader>> result = AssetManager::loadShader(tail...);
             result.push_back(loadShader(head.first,head.second));
             return result;
@@ -47,7 +47,7 @@ namespace PrutEngine{
         std::shared_ptr<Data::Texture> loadTexture(const std::string& path);
         
         template<typename... Arguments>
-        std::shared_ptr<Data::GLProgram> loadProgram(std::pair<std::string, GLenum> head, Arguments... shaders){
+        std::shared_ptr<Data::GLProgram> loadProgram(std::pair<std::string, Shader_Types> head, Arguments... shaders){
             
             auto usedShaders = this->massLoadShader(shaders...);
             usedShaders.push_back(loadShader(head.first,head.second));

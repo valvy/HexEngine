@@ -1,7 +1,67 @@
 #include "prutengine/platform/OpenGL.hpp"
 #include "prutengine/exceptions/RenderingException.hpp"
+#include "prutengine/data/Shader.hpp"
+#include <fstream>
+
+#include "prutengine/exceptions/AssetNotLoadedException.hpp"
 using namespace PrutEngine;
 
+
+constexpr GLenum convertShaderToGL(const Shader_Types& shaderType){
+    switch (shaderType) {
+        case Shader_Types::Vertex_Shader:
+        return GL_VERTEX_SHADER;
+        case Shader_Types::Fragment_Shader:
+        return GL_FRAGMENT_SHADER;
+        break;
+    }
+    throw Exceptions::PrutEngineException("Could not convert shader");
+    
+}
+
+
+void Platform::loadShader(std::string path, Shader_Types type, Data::Shader* shader){
+    std::fstream str(path, std::ios::in);
+    if(str.good()){
+        std::string line;
+        std::string code;
+        
+        //Load all data in the string
+        while(!str.eof()){
+            std::getline(str,line);
+            code += line + '\n';
+        }
+        str.close();
+        
+        //attemt to compile the shader
+        GLuint result = glCreateShader(convertShaderToGL(type));
+        const char *c_str = code.c_str();
+        glShaderSource(result,1, &c_str, nullptr);
+        glCompileShader(result);
+        
+        
+        //Check for compile errors
+        GLint compiled;
+        glGetShaderiv(result, GL_COMPILE_STATUS, &compiled);
+        if(!compiled){
+            GLint infoLen= 0;
+            glGetShaderiv(result, GL_INFO_LOG_LENGTH, &infoLen);
+            if(infoLen > 1){
+                GLchar log[infoLen + 1];
+                glGetShaderInfoLog(result, infoLen, nullptr, log);
+                std::string errorMsg(log);
+                throw Exceptions::AssetNotLoadedException(errorMsg);
+                // delete[] log;
+                // throw std::string(errorMsg);
+            }
+        }
+        
+        shader->setShader(new Data::GLShaderData(result));
+        //this->shaderData = result;
+    }else{
+        throw Exceptions::AssetNotLoadedException("Could not find file");
+    }
+}
 
 void Platform::clearAndCheckErrors(){
     static const GLfloat background[] = { 0.0f, 0.25f, 0.0f, 1.0f };

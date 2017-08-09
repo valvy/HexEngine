@@ -27,9 +27,6 @@ void Camera::translate(const Vector<float,3>& vec, float speed){
     GameObject::translate(vec,speed);
 }
 
-void Camera::onScroll(float velocityX, float velocityY){
-    //virtual
-}
 
 void Camera::onKeyDown(unsigned short keycode){
     //virtual

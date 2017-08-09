@@ -1,7 +1,6 @@
 #import "prutengine/platform/apple/AppDelegate.h"
 #import "prutengine/Application.hpp"
 #import <string>
-#import "prutengine/platform/apple/MacApp.h"
 #import "prutengine/AssetManager.hpp"
 #import "prutengine/exceptions/PrutEngineException.hpp"
 #import "prutengine/platform/Input.hpp"
@@ -30,6 +29,10 @@ void Platform::MacFriend::keyDown(unsigned short keydown){
 
 bool Platform::MacFriend::shouldStop() const{
     return this->application->shouldStop;
+}
+
+void Platform::MacFriend::disableLoadShader(){
+    this->application->getGraphicsController()->loadShaderFunction = std::function<void(std::string path, Shader_Types type, Data::Shader* shader)>([](std::string path, Shader_Types type, Data::Shader* shader){});
 }
 
 @implementation AppDelegate
@@ -109,12 +112,12 @@ bool Application::canUseAppleMetal() const {
 
 
 void Application::run(){
-    this->graphicsController = std::shared_ptr<GraphicsController>(new GraphicsController(this->setRenderer()));
+    const auto rend = this->setRenderer();
+    this->graphicsController = std::shared_ptr<GraphicsController>(new GraphicsController(rend));
     @autoreleasepool{
-      
       NSApplication* application = [NSApplication sharedApplication];
       [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-      app = [[AppDelegate alloc]init];
+      app = [[AppDelegate alloc]initWithRenderer:rend];
       [application setDelegate:app];
       [application run];
   }

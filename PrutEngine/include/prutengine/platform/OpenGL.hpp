@@ -15,18 +15,25 @@
 #endif
 #endif
 
-
+#include "../GraphicsController.hpp"
 
 #ifdef __linux__
 #include <GL/glew.h>
 #include <GL/glx.h>
 #endif
+#include <string>
+
 
 
 namespace PrutEngine{
+    
+    namespace Data{
+        class Shader;
+    }
+    
     namespace Platform{
         void clearAndCheckErrors();
-        
+        void loadShader(std::string path, Shader_Types type, Data::Shader* shader);
         
     }
 }

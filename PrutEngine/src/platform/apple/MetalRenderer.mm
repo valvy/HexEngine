@@ -13,11 +13,64 @@
 #import "prutengine/platform/apple/MetalRenderer.h"
 #import "prutengine/platform/apple/AppDelegate.h"
 #import <memory>
+#import <cstdlib>
 
 // Include header shared between C code here, which executes Metal API commands, and .metal files
 #import "prutengine/platform/apple/MetalShaderTypes.h"
 
 
+using namespace Prutengine;
+
+Data::MetalShaderData::MetalShaderData(id<MTLFunction> mtlFunction) : ShaderData(PrutEngine::Graphics_Engine::AppleMetal){
+    this->metalFunction = mtlFunction;
+    //[library newFunctionWithName:[NSString stringWithUTF8String:path.c_str()]];
+}
+
+id <MTLFunction> Data::MetalShaderData::getMetalFunction() const{
+    return this->metalFunction;
+}
+
+
+
+Data::MetalPipeline::MetalPipeline(const std::string& name,const std::vector<std::shared_ptr<PrutEngine::Data::Shader>> &shaders,Renderer* renderer) : GraphicsProgram(name, shaders) {
+    MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
+    pipelineStateDescriptor.label = [NSString stringWithUTF8String:name.c_str()];
+    pipelineStateDescriptor.sampleCount = [renderer getRenderDestinationProvider].sampleCount;
+    
+    
+    
+    for(auto sh : shaders){
+        MetalShaderData* tmp = static_cast<MetalShaderData*>(sh->getData().get());
+        if(sh->getShaderType() == PrutEngine::Shader_Types::Fragment_Shader){
+            pipelineStateDescriptor.fragmentFunction = tmp->getMetalFunction();//sh->getShaderData()->getMetalFunction();
+        } else if (sh->getShaderType() == PrutEngine::Shader_Types::Vertex_Shader){
+            pipelineStateDescriptor.vertexFunction = tmp->getMetalFunction();
+        }
+    }
+    
+    pipelineStateDescriptor.vertexDescriptor = [renderer getVertexDescriptor];
+    pipelineStateDescriptor.colorAttachments[0].pixelFormat = [renderer getRenderDestinationProvider].colorPixelFormat;
+    
+    //renderDestination.colorPixelFormat;
+    pipelineStateDescriptor.depthAttachmentPixelFormat = [renderer getRenderDestinationProvider].depthStencilPixelFormat;
+    
+    //renderDestination.depthStencilPixelFormat;
+    pipelineStateDescriptor.stencilAttachmentPixelFormat = [renderer getRenderDestinationProvider].depthStencilPixelFormat;
+    //renderDestination.depthStencilPixelFormat;
+    
+    NSError *error = NULL;
+    this->pipeline = [[renderer getDevice]newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
+    if (!this->pipeline){
+        NSLog(@"Failed to created pipeline state, error %@", error);
+        std::exit(-1);
+    }
+    
+}
+
+
+id <MTLRenderPipelineState> Data::MetalPipeline::getPipeline() const{
+    return this->pipeline;
+}
 
 // The max number of command buffers in flight
 static const NSUInteger kMaxBuffersInFlight = 3;
@@ -36,16 +89,16 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     
     // Metal objects
     id <MTLBuffer> _dynamicUniformBuffer;
-    id <MTLRenderPipelineState> _pipelineState;
+    //id <MTLRenderPipelineState> _pipelineState;
     id <MTLDepthStencilState> _depthState;
     id <MTLTexture> _colorMap;
-    
+    std::shared_ptr<Data::MetalPipeline> pipe;
     // Metal vertex descriptor specifying how vertices will by laid out for input into our render
     //   pipeline and how we'll layout our Model IO verticies
     MTLVertexDescriptor *_mtlVertexDescriptor;
     
     // The object controlling the ultimate render destination
-    __weak id<RenderDestinationProvider> _renderDestination;
+    __strong id<RenderDestinationProvider> _renderDestination;
     
     // Offset within _dynamicUniformBuffer to set for the current frame
     uint32_t _uniformBufferOffset;
@@ -75,6 +128,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     if(self)
     {
         macFriend = std::unique_ptr<PrutEngine::Platform::MacFriend>(new PrutEngine::Platform::MacFriend());
+          macFriend->disableLoadShader();
         _device = device;
         _renderDestination = renderDestinationProvider;
         _inFlightSemaphore = dispatch_semaphore_create(kMaxBuffersInFlight);
@@ -85,10 +139,24 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     return self;
 }
 
+-(MTLVertexDescriptor *) getVertexDescriptor{
+    return _mtlVertexDescriptor;
+}
+
+-(id<MTLDevice>) getDevice{
+    return _device;
+}
+
+-(id<RenderDestinationProvider>) getRenderDestinationProvider{
+    return _renderDestination;
+}
+
 - (void)_loadMetal
 {
+    using namespace PrutEngine::Data;
+    using namespace PrutEngine;
     macFriend->awake();
-
+  
     _defaultLibrary = [_device newDefaultLibrary];
 
     NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
@@ -99,12 +167,31 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
                                                  options:MTLResourceStorageModeShared];
     
     _dynamicUniformBuffer.label = @"UniformBuffer";
+
     
-    // Load the fragment function into the library
     id <MTLFunction> fragmentFunction = [_defaultLibrary newFunctionWithName:@"fragmentLighting"];
+ 
+    
+    //auto fragment = std::shared_ptr<PrutEngine::Data::ShaderData>(new Data::MetalShaderData(fragmentFunction));
+    auto fragment = std::shared_ptr<Shader>(new Shader("fragmentLightning",PrutEngine::Shader_Types::Fragment_Shader));
+    fragment->setShader(new Prutengine::Data::MetalShaderData(fragmentFunction));
     
     // Load the vertex function into the library
     id <MTLFunction> vertexFunction = [_defaultLibrary newFunctionWithName:@"vertexTransform"];
+    //auto vertex = std::shared_ptr<PrutEngine::Data::ShaderData>(new Data::MetalShaderData(vertexFunction));
+    auto vertex = std::shared_ptr<Shader>(new Shader("vertexTransform",PrutEngine::Shader_Types::Vertex_Shader));
+    vertex->setShader(new Prutengine::Data::MetalShaderData(vertexFunction));
+    
+    std::vector<std::shared_ptr<PrutEngine::Data::Shader>> dat;
+    dat.push_back(fragment);
+    dat.push_back(vertex);
+    
+    
+    _renderDestination.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+    _renderDestination.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
+    _renderDestination.sampleCount = 1;
+    
+    
     
     // Create a vertex descriptor for our Metal pipeline. Specifies the layout of vertices the
     //   pipeline should expect.  The layout below keeps attributes used to calculate vertex shader
@@ -137,29 +224,10 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     _mtlVertexDescriptor.layouts[kBufferIndexMeshGenerics].stride = 16;
     _mtlVertexDescriptor.layouts[kBufferIndexMeshGenerics].stepRate = 1;
     _mtlVertexDescriptor.layouts[kBufferIndexMeshGenerics].stepFunction = MTLVertexStepFunctionPerVertex;
+
     
-    _renderDestination.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
-    _renderDestination.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
-    _renderDestination.sampleCount = 1;
-    
-    // Create a reusable pipeline state
-    MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
-    pipelineStateDescriptor.label = @"MyPipeline";
-    pipelineStateDescriptor.sampleCount = _renderDestination.sampleCount;
-    pipelineStateDescriptor.vertexFunction = vertexFunction;
-    pipelineStateDescriptor.fragmentFunction = fragmentFunction;
-    pipelineStateDescriptor.vertexDescriptor = _mtlVertexDescriptor;
-    pipelineStateDescriptor.colorAttachments[0].pixelFormat = _renderDestination.colorPixelFormat;
-    pipelineStateDescriptor.depthAttachmentPixelFormat = _renderDestination.depthStencilPixelFormat;
-    pipelineStateDescriptor.stencilAttachmentPixelFormat = _renderDestination.depthStencilPixelFormat;
-    
-    NSError *error = NULL;
-    _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
-    if (!_pipelineState)
-    {
-        NSLog(@"Failed to created pipeline state, error %@", error);
-    }
-    
+    pipe = std::shared_ptr<Prutengine::Data::MetalPipeline>(new Prutengine::Data::MetalPipeline("MyPdsipeline", dat, self));
+
     MTLDepthStencilDescriptor *depthStateDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStateDesc.depthCompareFunction = MTLCompareFunctionLess;
     depthStateDesc.depthWriteEnabled = YES;
@@ -252,7 +320,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     macFriend->loop();
     // Update any game state (including updating dynamically changing Metal buffer)
     
-    /*Uniforms * uniforms = (Uniforms*)_uniformBufferAddress;
+    Uniforms * uniforms = (Uniforms*)_uniformBufferAddress;
     
     vector_float3 ambientLightColor = {0.02, 0.02, 0.02};
     uniforms->ambientLightColor = ambientLightColor;
@@ -277,7 +345,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     uniforms->normalMatrix = matrix3x3_upper_left(uniforms->modelViewMatrix);
     uniforms->normalMatrix = matrix_invert(matrix_transpose(uniforms->normalMatrix));
     
-    _rotation += .01;*/
+    _rotation += .01;
 }
 
 - (void)drawRectResized:(CGSize)size
@@ -330,7 +398,8 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
         // Set render command encoder state
         [renderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
         [renderEncoder setCullMode:MTLCullModeBack];
-        [renderEncoder setRenderPipelineState:_pipelineState];
+        
+        [renderEncoder setRenderPipelineState:pipe->getPipeline()];
         [renderEncoder setDepthStencilState:_depthState];
         
         // Set any buffers fed into our render pipeline

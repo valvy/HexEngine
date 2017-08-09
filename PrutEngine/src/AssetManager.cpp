@@ -55,7 +55,7 @@ std::string AssetManager::getAppPath() const{
 }
 #endif
 
-std::shared_ptr<Shader> AssetManager::loadShader(std::string path, GLenum type){
+std::shared_ptr<Shader> AssetManager::loadShader(const std::string& path,Shader_Types type){
     //Check if the shader already exists
     for(auto it : AssetManager::loadedShaders){
         if(it->getDataLocation() == path){

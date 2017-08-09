@@ -5,6 +5,7 @@
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/platform/Input.hpp"
 #include <chrono>
+#include <iostream>
 #include "prutengine/exceptions/NotYetInitializedException.hpp"
 using namespace PrutEngine;
 

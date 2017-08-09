@@ -4,7 +4,16 @@
 
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
-GLProgram::GLProgram(std::string name, const std::vector<std::shared_ptr<Shader>> &shaders) : AbstractResource(name){
+
+
+
+GraphicsProgram::GraphicsProgram(const std::string& name, const std::vector<std::shared_ptr<Shader>>& shaders) : AbstractResource(name){
+    this->shaders = shaders;
+}
+
+GLProgram::GLProgram(const std::string& name, const std::vector<std::shared_ptr<Shader>> &shaders)
+    : GraphicsProgram(name, shaders){
+        
     auto assetManager =  Application::getInstance()->getAssetManager();
     const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     
