@@ -1,20 +1,26 @@
 #include "prutengine/AssetManager.hpp"
-#include <iostream>
-
+#include "prutengine/Application.hpp"
+#include "prutengine/exceptions/PrutEngineException.hpp"
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
 
 
 std::vector<GLuint> AssetManager::allPrograms(){
-    std::vector<GLuint> result;
-    for(auto it : AssetManager::loadedPrograms){
-        result.push_back(it->getProgram());
+    if(Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine() == Graphics_Engine::OpenGL){
+        std::vector<GLuint> result;
+        for(auto it : AssetManager::loadedPrograms){
+            auto tmp = static_cast<GLProgram*>(it.get());
+            result.push_back(tmp->getProgram());
+        }
+        return result;
     }
-    return result;
+    throw Exceptions::PrutEngineException("Deprecated invalid method called");
 }
 
-
+Data::GraphicsProgram* AssetManager::compileProgram(const std::string& name,const std::vector<std::shared_ptr<Data::Shader>>& shaders) const{
+    return Application::getInstance()->getGraphicsController()->compileProgram(name, shaders);
+}
 
 std::shared_ptr<Texture> AssetManager::loadTexture(const std::string& path){
     for(auto it : AssetManager::loadedTextures){

@@ -5,16 +5,17 @@
 #include <vector>
 #include "./platform/OpenGL.hpp"
 #include "./data/Shader.hpp"
-#include "./data/GLProgram.hpp"
+#include "./data/GraphicsProgram.hpp"
 #include "./data/Mesh.hpp"
 #include "./data/Texture.hpp"
+#include "./GraphicsController.hpp"
 
 namespace PrutEngine{
     class AssetManager{
     private:
         
         std::vector<std::shared_ptr<Data::Shader> > loadedShaders;
-        std::vector<std::shared_ptr<Data::GLProgram> > loadedPrograms;
+        std::vector<std::shared_ptr<Data::GraphicsProgram> > loadedPrograms;
         std::vector<std::shared_ptr<Data::Mesh> > loadedMeshes;
         
         std::vector<std::shared_ptr<Data::Texture> > loadedTextures;
@@ -27,6 +28,7 @@ namespace PrutEngine{
             return result;
         }
         
+        Data::GraphicsProgram* compileProgram(const std::string& name,const std::vector<std::shared_ptr<Data::Shader>>& shaders) const;
         template<typename... Arguments>
         std::vector<std::shared_ptr<Data::Shader>> massLoadShader(std::pair<std::string, Shader_Types> head, Arguments... tail){
             std::vector<std::shared_ptr<Data::Shader>> result = AssetManager::loadShader(tail...);
@@ -41,13 +43,14 @@ namespace PrutEngine{
         
         std::string getAppPath() const;
 
+        [[deprecated("Should be replaced")]]
         std::vector<GLuint> allPrograms();
         
         
         std::shared_ptr<Data::Texture> loadTexture(const std::string& path);
         
         template<typename... Arguments>
-        std::shared_ptr<Data::GLProgram> loadProgram(std::pair<std::string, Shader_Types> head, Arguments... shaders){
+        std::shared_ptr<Data::GraphicsProgram> loadProgram(std::pair<std::string, Shader_Types> head, Arguments... shaders){
             
             auto usedShaders = this->massLoadShader(shaders...);
             usedShaders.push_back(loadShader(head.first,head.second));
@@ -62,12 +65,12 @@ namespace PrutEngine{
                     return it;
                 }
             }
-            
-            auto program = std::shared_ptr<Data::GLProgram>(new Data::GLProgram(programName, usedShaders));
+           
+            auto program = std::shared_ptr<Data::GraphicsProgram>(this->compileProgram(programName, usedShaders));
+                                                                  //new Data::GLProgram(programName, usedShaders));
             loadedPrograms.push_back(program);
             
             return program;
-            //return program->getMemoryPosition();
         }
     };
 }

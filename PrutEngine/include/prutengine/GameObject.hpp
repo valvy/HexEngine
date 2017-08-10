@@ -3,7 +3,7 @@
 #include "./platform/OpenGL.hpp"
 #include "./Application.hpp"
 #include "./math/Quaternion.hpp"
-
+#include "./Renderer.hpp"
 
 namespace PrutEngine{
     class AbstractScene;
@@ -14,29 +14,14 @@ namespace PrutEngine{
         Math::Quaternion<float> quaternion;
         Math::Vector<float,3> scale;
         Math::Vector<float,3> position;
-        std::shared_ptr<Data::Mesh> mesh;
-        std::shared_ptr<Data::GLProgram> program;
-        std::shared_ptr<Data::Texture> texture;
-        GLint pos_reference;
-        
+        std::shared_ptr<Renderer> renderer;
     protected:
+        void setRenderer(std::shared_ptr<Renderer> renderer);
         virtual void update(float tpf);
-        void loadMesh(std::string meshPath);
-        void loadTexture(std::string texturePath);
         virtual void onKeyDown(unsigned short keycode);
-        template<typename... Arguments>
-        void loadProgram(Arguments... shaders){
-            auto assetManager =  Application::getInstance()->getAssetManager();
-            this->program = assetManager->loadProgram(shaders...);
-            const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
-
-            if(engine == Graphics_Engine::OpenGL){
-                this->pos_reference = glGetUniformLocation(program->getProgram(), "mv_matrix");
-            }
-            
-        }
-    public:
         GameObject();
+        public:
+        std::shared_ptr<Renderer> getRenderer() const;
         void rotate(const Math::Vector<float,3>& vec, float angle);
         void translate(const Math::Vector<float,3>& vec, float speed);
         void setPosition(const Math::Vector<float,3> &position);

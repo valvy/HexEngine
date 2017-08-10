@@ -14,11 +14,11 @@ GameObject::~GameObject(){
 
 }
 
-void GameObject::loadTexture(std::string meshPath){
-    auto assetManager =  Application::getInstance()->getAssetManager();
-    this->texture = assetManager->loadTexture(meshPath);
-}
 
+
+std::shared_ptr<Renderer> GameObject::getRenderer() const{
+    return this->renderer;
+}
 
 void GameObject::translate(const Vector<float,3>& vec, float speed){
     this->position.setX(this->position.getX() + vec.getX() * speed);
@@ -30,37 +30,48 @@ void GameObject::onKeyDown(unsigned short keyCode){
     //virtual
 }
 
+void GameObject::setRenderer(std::shared_ptr<Renderer> renderer){
+    this->renderer = renderer;
+}
 
 void GameObject::update(float tpf){
+   
     using namespace PrutEngine::Exceptions;
     auto assetManager =  Application::getInstance()->getAssetManager(); 
     const Graphics_Engine engine = Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
     if(engine == Graphics_Engine::AppleMetal){
         return;
     }
-    AssertAssetNotLoaded(this->texture == nullptr, "No texture was loaded..");
-    AssertAssetNotLoaded(this->mesh == nullptr, "No mesh was loaded");
-    AssertAssetNotLoaded(this->program == nullptr, "No program was compiled");
+    
+    Data::GraphicsProgram* program = this->getRenderer()->getProgram().get();
+    Data::Mesh* mesh = this->getRenderer()->getMesh().get();
+    Data::Texture* texture = this->getRenderer()->getTexture().get();
 
+    //AssertAssetNotLoaded(this->texture == nullptr, "No texture was loaded..");
+//    AssertAssetNotLoaded(this->mesh == nullptr, "No mesh was loaded");
+  //  AssertAssetNotLoaded(this->program == nullptr, "No program was compiled");
+
+    Data::GLProgram* tmpProgram = static_cast<Data::GLProgram*>(program);
+    GLint pos_reference = glGetUniformLocation(tmpProgram->getProgram(), "mv_matrix");
     //setup the program and mesh
-    glUseProgram(program->getProgram());
+    glUseProgram(tmpProgram->getProgram());
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,this->texture->getTexture());
-    glBindVertexArray(this->mesh->getVao());
+    glBindTexture(GL_TEXTURE_2D,texture->getTexture());
+    glBindVertexArray(mesh->getVao());
     
     //Make the calculation
-    Matrix4x4<GLfloat> mat = Matrix4x4<GLfloat>::identityMatrix();
-    mat = Matrix4x4<GLfloat>::scale(mat,this->scale);
-    Matrix4x4<GLfloat> pos = Matrix4x4<GLfloat>::translate(Matrix4x4<GLfloat>::identityMatrix(),position);
+    Matrix4x4<float> mat = Matrix4x4<float>::identityMatrix();
+    mat = Matrix4x4<float>::scale(mat,this->scale);
+    Matrix4x4<float> pos = Matrix4x4<GLfloat>::translate(Matrix4x4<float>::identityMatrix(),position);
     
-    mat = Matrix4x4<GLfloat>::multiply(mat,pos);
-    mat = Matrix4x4<GLfloat>::multiply(mat, Quaternion<GLfloat>::quaternionToMatrix(this->quaternion));
+    mat = Matrix4x4<float>::multiply(mat,pos);
+    mat = Matrix4x4<float>::multiply(mat, Quaternion<float>::quaternionToMatrix(this->quaternion));
     
     //pass it to opengl
-    glUniformMatrix4fv(this->pos_reference, 1, GL_TRUE, &mat.getRawData()[0]);
+    glUniformMatrix4fv(pos_reference, 1, GL_TRUE, &mat.getRawData()[0]);
     glEnableVertexAttribArray ( 0 );
     
-    glDrawArrays ( GL_TRIANGLES, 0, this->mesh->getSize());
+    glDrawArrays ( GL_TRIANGLES, 0, mesh->getSize());
     glDisableVertexAttribArray(0);
     glBindVertexArray(0);
     
@@ -70,11 +81,6 @@ void GameObject::rotate(const Vector<float,3>& vec, float angle){
     this->quaternion = Quaternion<float>::rotate(quaternion, vec,angle);
 }
 
-void GameObject::loadMesh(std::string meshPath){
-    auto assetManager =  Application::getInstance()->getAssetManager();
-    this->mesh = assetManager->loadMesh(meshPath);
-   
-}
 
 Quaternion<float> GameObject::getQuaternion() const{
     return this->quaternion;

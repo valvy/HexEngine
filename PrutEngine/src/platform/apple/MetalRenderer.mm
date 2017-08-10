@@ -26,9 +26,16 @@ Data::MetalShaderData::MetalShaderData(id<MTLFunction> mtlFunction) : ShaderData
     //[library newFunctionWithName:[NSString stringWithUTF8String:path.c_str()]];
 }
 
+
+Data::MetalShaderData::MetalShaderData(Renderer* renderer, const std::string& name) : ShaderData(PrutEngine::Graphics_Engine::AppleMetal) {
+    this->metalFunction = [[renderer getDefaultLibrary] newFunctionWithName:[NSString stringWithUTF8String:name.c_str()]];
+}
+
 id <MTLFunction> Data::MetalShaderData::getMetalFunction() const{
     return this->metalFunction;
 }
+
+
 
 
 
@@ -127,13 +134,24 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     self = [super init];
     if(self)
     {
+    
         macFriend = std::unique_ptr<PrutEngine::Platform::MacFriend>(new PrutEngine::Platform::MacFriend());
-          macFriend->disableLoadShader();
+  
+        
+        //macFriend->setLoadShader(
+         //                      );
+        
+        //   macFriend->disableLoadShader();
         _device = device;
         _renderDestination = renderDestinationProvider;
         _inFlightSemaphore = dispatch_semaphore_create(kMaxBuffersInFlight);
+        
+
         [self _loadMetal];
         [self _loadAssets];
+    
+         macFriend->awake();
+        
     }
     
     return self;
@@ -143,6 +161,10 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     return _mtlVertexDescriptor;
 }
 
+-(id <MTLLibrary>) getDefaultLibrary{
+    return _defaultLibrary;
+}
+
 -(id<MTLDevice>) getDevice{
     return _device;
 }
@@ -150,15 +172,31 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 -(id<RenderDestinationProvider>) getRenderDestinationProvider{
     return _renderDestination;
 }
+//(compileProgram
 
 - (void)_loadMetal
 {
     using namespace PrutEngine::Data;
     using namespace PrutEngine;
-    macFriend->awake();
+   
   
     _defaultLibrary = [_device newDefaultLibrary];
+    
+    
+   
+    const auto ldshader = std::function<void(std::string, PrutEngine::Shader_Types, PrutEngine::Data::Shader*)>([self](std::string path, PrutEngine::Shader_Types type, PrutEngine::Data::Shader* shader)->void{
+        shader->setShader(new Prutengine::Data::MetalShaderData(self, path));
+    });
+    
+    macFriend->setLoadShader(ldshader);
 
+    const auto compileProgram = std::function<PrutEngine::Data::GraphicsProgram*(const std::string& name, const std::vector<std::shared_ptr<PrutEngine::Data::Shader>>& shaders)>([self](const std::string& name, const std::vector<std::shared_ptr<PrutEngine::Data::Shader>>& shaders) -> PrutEngine::Data::GraphicsProgram* {
+        return new Prutengine::Data::MetalPipeline(name,shaders,self);
+        
+    });
+    
+    macFriend->setCompileProgram(compileProgram);
+    
     NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
     
     // Create and allocate our uniform buffer object.  Indicate shared storage so that both the
@@ -169,18 +207,18 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     _dynamicUniformBuffer.label = @"UniformBuffer";
 
     
-    id <MTLFunction> fragmentFunction = [_defaultLibrary newFunctionWithName:@"fragmentLighting"];
+  //  id <MTLFunction> fragmentFunction = [_defaultLibrary newFunctionWithName:@"fragmentLighting"];
  
     
     //auto fragment = std::shared_ptr<PrutEngine::Data::ShaderData>(new Data::MetalShaderData(fragmentFunction));
-    auto fragment = std::shared_ptr<Shader>(new Shader("fragmentLightning",PrutEngine::Shader_Types::Fragment_Shader));
-    fragment->setShader(new Prutengine::Data::MetalShaderData(fragmentFunction));
+    auto fragment = std::shared_ptr<Shader>(new Shader("fragmentLighting",PrutEngine::Shader_Types::Fragment_Shader));
+    ///fragment->setShader(new Prutengine::Data::MetalShaderData(fragmentFunction));
     
     // Load the vertex function into the library
-    id <MTLFunction> vertexFunction = [_defaultLibrary newFunctionWithName:@"vertexTransform"];
+   //id <MTLFunction> vertexFunction = [_defaultLibrary newFunctionWithName:@"vertexTransform"];
     //auto vertex = std::shared_ptr<PrutEngine::Data::ShaderData>(new Data::MetalShaderData(vertexFunction));
     auto vertex = std::shared_ptr<Shader>(new Shader("vertexTransform",PrutEngine::Shader_Types::Vertex_Shader));
-    vertex->setShader(new Prutengine::Data::MetalShaderData(vertexFunction));
+   // vertex->setShader(new Prutengine::Data::MetalShaderData(vertexFunction));
     
     std::vector<std::shared_ptr<PrutEngine::Data::Shader>> dat;
     dat.push_back(fragment);

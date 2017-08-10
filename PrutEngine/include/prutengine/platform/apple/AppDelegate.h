@@ -1,7 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import "./AbstractWindow.h"
 #import "../../GraphicsController.hpp"
-
+#import <functional>
 namespace PrutEngine{
     class Application;
     namespace Platform{
@@ -14,7 +14,8 @@ namespace PrutEngine{
             void awake();
             void keyDown(unsigned short keydown);
             bool shouldStop() const;
-            void disableLoadShader();
+            void setLoadShader(std::function<void(std::string path, Shader_Types type, Data::Shader* shader)> loadShader);
+            void setCompileProgram(std::function<Data::GraphicsProgram*(const std::string& name, const std::vector<std::shared_ptr<Data::Shader>>& shaders)> compileProgram);
         };
     }
 }

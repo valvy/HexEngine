@@ -1,5 +1,5 @@
-#ifndef PRUTENGINE_GL_PROGRAM_HPP
-#define PRUTENGINE_GL_PROGRAM_HPP
+#ifndef PRUTENGINE_GRAPHICS_PROGRAM_HPP
+#define PRUTENGINE_GRAPHICS_PROGRAM_HPP
 #include "./AbstractResource.hpp"
 #include <vector>
 #include "../platform/OpenGL.hpp"

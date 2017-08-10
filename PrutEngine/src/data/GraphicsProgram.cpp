@@ -1,4 +1,4 @@
-#include "prutengine/data/GLProgram.hpp"
+#include "prutengine/data/GraphicsProgram.hpp"
 #include "prutengine/data/Shader.hpp"
 #include "prutengine/Application.hpp"
 
@@ -10,6 +10,8 @@ using namespace PrutEngine::Data;
 GraphicsProgram::GraphicsProgram(const std::string& name, const std::vector<std::shared_ptr<Shader>>& shaders) : AbstractResource(name){
     this->shaders = shaders;
 }
+
+
 
 GLProgram::GLProgram(const std::string& name, const std::vector<std::shared_ptr<Shader>> &shaders)
     : GraphicsProgram(name, shaders){

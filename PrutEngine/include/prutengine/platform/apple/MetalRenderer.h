@@ -5,7 +5,7 @@
 #import <ModelIO/ModelIO.h>
 #import <Metal/Metal.h>
 #import <functional>
-#import "../../data/GLProgram.hpp"
+#import "../../data/GraphicsProgram.hpp"
 #import <memory>
 #import <vector>
 #import "../../data/Shader.hpp"
@@ -39,6 +39,8 @@
 
 -(id<RenderDestinationProvider>) getRenderDestinationProvider;
 
+-(id <MTLLibrary>) getDefaultLibrary;
+
 -(MTLVertexDescriptor *) getVertexDescriptor;
 - (void)update;
 
@@ -53,6 +55,7 @@ namespace Prutengine{
             id <MTLFunction> metalFunction;
             public:
             MetalShaderData(id<MTLFunction> metalFunction);
+            MetalShaderData(Renderer* renderer, const std::string& name);
             id <MTLFunction> getMetalFunction() const;
         };
         

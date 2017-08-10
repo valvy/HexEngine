@@ -13,30 +13,32 @@ BasicObject::BasicObject(const Vector3f &position) : GameObject(){
         visible = true;
         const std::string path = PrutEngine::Application::getInstance()->getAssetManager()->getAppPath();
 
-    this->loadMesh(path + "/Assets/Meshes/Hex.obj");
     
-    const auto graphicsEngine = PrutEngine::Application::getInstance()->getGraphicsController()->getCurrentGraphicsEngine();
+    const auto graphicsController = PrutEngine::Application::getInstance()->getGraphicsController();//->getCurrentGraphicsEngine();
     
+    const std::string mesh = path + "/Assets/Meshes/Hex.obj";
+    const std::string texture = path + "/Assets/Textures/cube.bmp";
+
+   
     std::string fragmentShader,vertexShader;
     
     //Setup the shaders of the specific programs
-    if( graphicsEngine == PrutEngine::Graphics_Engine::OpenGL){
+    if( graphicsController->getCurrentGraphicsEngine() == PrutEngine::Graphics_Engine::OpenGL){
         vertexShader = path + "/Assets/Shaders/UnshadedVertex.glsl";
         fragmentShader = path + "/Assets/Shaders/UnshadedFragment.glsl";
-    } else if (graphicsEngine == PrutEngine::Graphics_Engine::AppleMetal){
+    } else if (graphicsController->getCurrentGraphicsEngine() == PrutEngine::Graphics_Engine::AppleMetal){
         vertexShader = "vertexTransform";
         fragmentShader = "fragmentLighting";
     }
-   
-    //std::cout << vertexShader << "\n";
-    
-    this->loadProgram(
+ 
+    auto program = PrutEngine::Application::getInstance()->getAssetManager()->loadProgram(
                     std::make_pair(vertexShader, PrutEngine::Shader_Types::Vertex_Shader),
-                    std::make_pair(fragmentShader,PrutEngine::Shader_Types::Fragment_Shader)
-    );
+                              std::make_pair(fragmentShader,PrutEngine::Shader_Types::Fragment_Shader));
     
-    this->loadTexture(path + "/Assets/Textures/cube.bmp");
     
+        
+    this->setRenderer(graphicsController->createRenderer(mesh, texture, program));
+        
     }catch(const PrutEngine::Exceptions::PrutEngineException exception){
         std::cout << "Could not start the program due the following exception: ";
         std::cout << exception.getMsg() << "\n";

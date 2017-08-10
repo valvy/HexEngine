@@ -4,7 +4,7 @@
 //#include "./Vector4.hpp"
 #include "./Vector.hpp"
 #include "./Matrix4x4.hpp"
-#include <math.h>
+#include <cmath>
 
 namespace PrutEngine{
     namespace Math{

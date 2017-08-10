@@ -31,9 +31,15 @@ bool Platform::MacFriend::shouldStop() const{
     return this->application->shouldStop;
 }
 
-void Platform::MacFriend::disableLoadShader(){
-    this->application->getGraphicsController()->loadShaderFunction = std::function<void(std::string path, Shader_Types type, Data::Shader* shader)>([](std::string path, Shader_Types type, Data::Shader* shader){});
+
+void Platform::MacFriend::setLoadShader(std::function<void(std::string path, Shader_Types type, Data::Shader* shader)> loadShader){
+    this->application->getGraphicsController()->loadShaderFunction = loadShader;
 }
+
+void Platform::MacFriend::setCompileProgram(std::function<Data::GraphicsProgram*(const std::string& name, const std::vector<std::shared_ptr<Data::Shader>>& shaders)> compileProgram){
+    this->application->getGraphicsController()->compileProgramfunction = compileProgram;
+}
+
 
 @implementation AppDelegate
 

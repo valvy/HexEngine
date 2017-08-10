@@ -1,8 +1,9 @@
 #include "prutengine/platform/OpenGL.hpp"
 #include "prutengine/exceptions/RenderingException.hpp"
 #include "prutengine/data/Shader.hpp"
+#include "prutengine/data/GraphicsProgram.hpp"
 #include <fstream>
-
+#include "prutengine/Renderer.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
 using namespace PrutEngine;
 
@@ -17,6 +18,10 @@ constexpr GLenum convertShaderToGL(const Shader_Types& shaderType){
     }
     throw Exceptions::PrutEngineException("Could not convert shader");
     
+}
+
+Data::GraphicsProgram* Platform::generateProgram(const std::string& name, const std::vector<std::shared_ptr<Data::Shader>>& shaders){
+    return new Data::GLProgram(name,shaders);
 }
 
 
@@ -61,6 +66,10 @@ void Platform::loadShader(std::string path, Shader_Types type, Data::Shader* sha
     }else{
         throw Exceptions::AssetNotLoadedException("Could not find file");
     }
+}
+
+std::shared_ptr<Renderer> Platform::createRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program){
+    return std::shared_ptr<Renderer>(new GLRenderer(mesh, texture, program));
 }
 
 void Platform::clearAndCheckErrors(){

@@ -55,11 +55,13 @@ SET(PRUT_ENGINE_HEADERS
   ./include/prutengine/GameObject.hpp
   ./include/prutengine/GraphicsController.hpp
   ./include/prutengine/data/AbstractResource.hpp
-  ./include/prutengine/data/GLProgram.hpp
+  ./include/prutengine/data/GraphicsProgram.hpp
   ./include/prutengine/data/Mesh.hpp
   ./include/prutengine/data/shader.hpp
   ./include/prutengine/data/Texture.hpp
   ./include/prutengine/exceptions/AssetNotLoadedException.hpp
+  ./include/prutengine/Renderer.hpp
+  ./include/prutengine/Transform.hpp
   ./include/prutengine/exceptions/NotYetInitializedException.hpp
   ./include/prutengine/exceptions/PrutEngineException.hpp
   ./include/prutengine/exceptions/RenderingException.hpp
@@ -82,7 +84,7 @@ SET(
     src/AssetManager.cpp
     src/Camera.cpp
     src/GameObject.cpp
-    src/data/GLProgram.cpp
+    src/data/GraphicsProgram.cpp
     src/GraphicsController.cpp
     src/data/Mesh.cpp
     src/data/Shader.cpp
@@ -91,6 +93,8 @@ SET(
     src/exceptions/NotYetInitializedException.cpp
     src/exceptions/AssetNotLoadedException.cpp
     src/platform/OpenGL.cpp
+    src/Renderer.cpp
+    src/Transform.cpp
 )
 ADD_DEFINITIONS( "-g -Wall  -O0" )
 

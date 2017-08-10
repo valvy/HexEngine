@@ -18,7 +18,7 @@ BasicApplication::BasicApplication(){
 
 PrutEngine::Graphics_Engine BasicApplication::setRenderer(){
     using PrutEngine::Graphics_Engine;
-   // return Graphics_Engine::OpenGL;
+    return Graphics_Engine::OpenGL;
     if(this->canUseAppleMetal()){
         return Graphics_Engine::AppleMetal;
     }

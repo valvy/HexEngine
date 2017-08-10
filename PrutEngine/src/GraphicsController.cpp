@@ -1,6 +1,7 @@
 #include "prutengine/GraphicsController.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
 #include "prutengine/platform/OpenGL.hpp"
+#include "prutengine/Renderer.hpp"
 
 using namespace PrutEngine;
 
@@ -8,12 +9,10 @@ using namespace PrutEngine;
 GraphicsController::GraphicsController(const Graphics_Engine& engine){
     this->usedEngine = engine;
     if(engine == Graphics_Engine::OpenGL){
-       this->preDrawfunction = std::function<void()>([]() -> void {
-            Platform::clearAndCheckErrors();
-       });
-        this->loadShaderFunction = std::function<void(std::string path, Shader_Types type, Data::Shader* shader)>([](std::string path, Shader_Types type, Data::Shader* shader)->void{
-            Platform::loadShader(path, type, shader);
-        });
+        this->preDrawfunction = Platform::clearAndCheckErrors;
+        this->loadShaderFunction = Platform::loadShader;
+        this->compileProgramfunction = Platform::generateProgram;
+        this->createRendererFunction = Platform::createRenderer;
     }
 }
 
@@ -30,6 +29,22 @@ void GraphicsController::loadShader(std::string path, Shader_Types type, Data::S
     }
 }
 
+Data::GraphicsProgram* GraphicsController::compileProgram(const std::string& name, const std::vector<std::shared_ptr<Data::Shader>>& shaders){
+    try{
+        return this->compileProgramfunction(name,shaders);
+    } catch(std::bad_function_call exception){
+        throw Exceptions::AssetNotLoadedException("compile program is not defined");
+    }
+}
+
+std::shared_ptr<Renderer> GraphicsController::createRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program){
+    try{
+        return this->createRendererFunction(mesh,texture,program);
+    } catch(std::bad_function_call exception){
+        throw Exceptions::AssetNotLoadedException("create renderer function was not setup");
+    }
+}
+
 void GraphicsController::preDraw(){
     try{
         this->preDrawfunction();
@@ -37,4 +52,5 @@ void GraphicsController::preDraw(){
        // throw Exceptions::AssetNotLoadedException("Draw function was not setup");
     }
 }
+
 
