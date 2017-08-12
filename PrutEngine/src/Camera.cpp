@@ -12,19 +12,20 @@ Camera::Camera(const Vector<float,3>& startPos){
 }
 
 void Camera::setPosition(const Vector<float,3> &position){
-    GameObject::setPosition(position);
+   // GameObject::setPosition(position);
+    this->getTransform()->setPosition(position);
 }
 
 void Camera::rotate(const Vector<float,3>& vec, float angle){
-    GameObject::rotate(vec,angle);
+    this->getTransform()->rotate(vec, angle);
 }
 
 void Camera::setQuaternion(const Quaternion<float>& quat){
-    GameObject::setQuaternion(quat);
+    this->getTransform()->setQuaternion(quat);
 }
 
 void Camera::translate(const Vector<float,3>& vec, float speed){
-    GameObject::translate(vec,speed);
+    this->getTransform()->translate(vec, speed);
 }
 
 
@@ -33,11 +34,13 @@ void Camera::onKeyDown(unsigned short keycode){
 }
 
 Quaternion<float> Camera::getQuaternion() const{
-    return GameObject::getQuaternion();
+    return this->getTransform()->getQuaternion();
+    //return GameObject::getQuaternion();
 }
 
 Vector<float,3> Camera::getPosition() const{
-    return GameObject::getPosition();
+    return this->getTransform()->getPosition();
+    // return GameObject::getPosition();
 }
 
 void Camera::update(float tpf){

@@ -10,6 +10,7 @@ namespace PrutEngine{
     };
     
     class Renderer;
+    class Transform;
     
     namespace Data{
         class GraphicsProgram;
@@ -37,6 +38,8 @@ namespace PrutEngine{
        
         std::function<std::shared_ptr<Renderer>(const std::string&, const std::string&, std::shared_ptr<Data::GraphicsProgram>)> createRendererFunction;
         
+        std::function<void(const std::shared_ptr<Renderer>&, const std::shared_ptr<Transform>&)> drawFunction;
+        
         Graphics_Engine usedEngine;
         public:
         Graphics_Engine getCurrentGraphicsEngine() const;
@@ -45,6 +48,8 @@ namespace PrutEngine{
         void loadShader(std::string path, Shader_Types type, Data::Shader* shader);
         Data::GraphicsProgram* compileProgram(const std::string& name, const std::vector<std::shared_ptr<Data::Shader>>& shaders);
         std::shared_ptr<Renderer> createRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program);
+        
+        void draw(const std::shared_ptr<Renderer>& renderer, const std::shared_ptr<Transform>& transform);
     };
 }
 

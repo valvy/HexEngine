@@ -14,12 +14,7 @@ namespace PrutEngine {
         std::shared_ptr<Data::GraphicsProgram> program;
         std::shared_ptr<Data::Texture> texture;
         protected:
-        void set(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program){
-            const auto assetManager =  Application::getInstance()->getAssetManager();
-            this->program = program;
-            this->mesh = assetManager->loadMesh(mesh);
-            this->texture = assetManager->loadTexture(texture);
-        }
+        void set(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program);
         public:
         std::shared_ptr<Data::Mesh> getMesh() const;
         std::shared_ptr<Data::GraphicsProgram> getProgram() const;
@@ -29,11 +24,11 @@ namespace PrutEngine {
     };
     
     class GLRenderer : public Renderer{
+        GLint pos_reference;
         public:
-        GLRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program){
-            this->set(mesh,texture,program);
-        }
+        GLRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program);
         virtual ~GLRenderer();
+        GLint getPositionRef() const;
         private:
     
     };

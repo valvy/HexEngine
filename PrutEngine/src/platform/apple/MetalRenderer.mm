@@ -19,7 +19,12 @@
 #import "prutengine/platform/apple/MetalShaderTypes.h"
 
 
-using namespace Prutengine;
+using namespace PrutEngine;
+
+MetalRenderer::MetalRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program){
+    this->set(mesh,texture, program);
+    
+}
 
 Data::MetalShaderData::MetalShaderData(id<MTLFunction> mtlFunction) : ShaderData(PrutEngine::Graphics_Engine::AppleMetal){
     this->metalFunction = mtlFunction;
@@ -27,7 +32,7 @@ Data::MetalShaderData::MetalShaderData(id<MTLFunction> mtlFunction) : ShaderData
 }
 
 
-Data::MetalShaderData::MetalShaderData(Renderer* renderer, const std::string& name) : ShaderData(PrutEngine::Graphics_Engine::AppleMetal) {
+Data::MetalShaderData::MetalShaderData(MacMetalRenderer* renderer, const std::string& name) : ShaderData(PrutEngine::Graphics_Engine::AppleMetal) {
     this->metalFunction = [[renderer getDefaultLibrary] newFunctionWithName:[NSString stringWithUTF8String:name.c_str()]];
 }
 
@@ -39,14 +44,13 @@ id <MTLFunction> Data::MetalShaderData::getMetalFunction() const{
 
 
 
-Data::MetalPipeline::MetalPipeline(const std::string& name,const std::vector<std::shared_ptr<PrutEngine::Data::Shader>> &shaders,Renderer* renderer) : GraphicsProgram(name, shaders) {
+Data::MetalPipeline::MetalPipeline(const std::string& name,const std::vector<std::shared_ptr<PrutEngine::Data::Shader>> &shaders,MacMetalRenderer* renderer) : GraphicsProgram(name, shaders) {
     MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
     pipelineStateDescriptor.label = [NSString stringWithUTF8String:name.c_str()];
     pipelineStateDescriptor.sampleCount = [renderer getRenderDestinationProvider].sampleCount;
     
     
-    
-    for(auto sh : shaders){
+    for(const auto& sh : shaders){
         MetalShaderData* tmp = static_cast<MetalShaderData*>(sh->getData().get());
         if(sh->getShaderType() == PrutEngine::Shader_Types::Fragment_Shader){
             pipelineStateDescriptor.fragmentFunction = tmp->getMetalFunction();//sh->getShaderData()->getMetalFunction();
@@ -86,7 +90,7 @@ static const NSUInteger kMaxBuffersInFlight = 3;
 static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 
 // Main class performing the rendering
-@implementation Renderer
+@implementation MacMetalRenderer
 {
     std::unique_ptr<PrutEngine::Platform::MacFriend> macFriend;
     dispatch_semaphore_t _inFlightSemaphore;
@@ -99,7 +103,6 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     //id <MTLRenderPipelineState> _pipelineState;
     id <MTLDepthStencilState> _depthState;
     id <MTLTexture> _colorMap;
-    std::shared_ptr<Data::MetalPipeline> pipe;
     // Metal vertex descriptor specifying how vertices will by laid out for input into our render
     //   pipeline and how we'll layout our Model IO verticies
     MTLVertexDescriptor *_mtlVertexDescriptor;
@@ -131,7 +134,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 -(nonnull instancetype) initWithMetalDevice:(nonnull id<MTLDevice>)device
                   renderDestinationProvider:(nonnull id<RenderDestinationProvider>)renderDestinationProvider
 {
-    self = [super init];
+//    /self = [super  init];
     if(self)
     {
     
@@ -183,19 +186,37 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     _defaultLibrary = [_device newDefaultLibrary];
     
     
-   
-    const auto ldshader = std::function<void(std::string, PrutEngine::Shader_Types, PrutEngine::Data::Shader*)>([self](std::string path, PrutEngine::Shader_Types type, PrutEngine::Data::Shader* shader)->void{
-        shader->setShader(new Prutengine::Data::MetalShaderData(self, path));
+   /*Setting also the graphics controller up*/
+    const auto ldshader = std::function<void(
+                                             std::string,
+                                             PrutEngine::Shader_Types,
+                                             PrutEngine::Data::Shader*)>
+    ([self](std::string path, PrutEngine::Shader_Types type, PrutEngine::Data::Shader* shader)->void{
+        shader->setShader(new PrutEngine::Data::MetalShaderData(self, path));
     });
-    
     macFriend->setLoadShader(ldshader);
 
-    const auto compileProgram = std::function<PrutEngine::Data::GraphicsProgram*(const std::string& name, const std::vector<std::shared_ptr<PrutEngine::Data::Shader>>& shaders)>([self](const std::string& name, const std::vector<std::shared_ptr<PrutEngine::Data::Shader>>& shaders) -> PrutEngine::Data::GraphicsProgram* {
-        return new Prutengine::Data::MetalPipeline(name,shaders,self);
+    const auto compileProgram = std::function<PrutEngine::Data::GraphicsProgram*(
+                                                                                 const std::string&,
+                                                                                 const std::vector<std::shared_ptr<PrutEngine::Data::Shader>>&)>
+    ([self](const std::string& name, const std::vector<std::shared_ptr<PrutEngine::Data::Shader>>& shaders) -> PrutEngine::Data::GraphicsProgram* {
+        return new PrutEngine::Data::MetalPipeline(name,shaders,self);
         
     });
     
     macFriend->setCompileProgram(compileProgram);
+    
+    
+    const auto createRenderer = std::function<std::shared_ptr<Renderer>(const std::string&,
+                                                                        const std::string&,
+                                                                        std::shared_ptr<Data::GraphicsProgram>)>
+    ([self](const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program) -> std::shared_ptr<Renderer> {
+        return std::shared_ptr<Renderer>(new MetalRenderer(mesh,texture,program));
+    });
+    macFriend->setCreateRenderer(createRenderer);
+    
+    
+   
     
     NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
     
@@ -206,24 +227,7 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     
     _dynamicUniformBuffer.label = @"UniformBuffer";
 
-    
-  //  id <MTLFunction> fragmentFunction = [_defaultLibrary newFunctionWithName:@"fragmentLighting"];
- 
-    
-    //auto fragment = std::shared_ptr<PrutEngine::Data::ShaderData>(new Data::MetalShaderData(fragmentFunction));
-    auto fragment = std::shared_ptr<Shader>(new Shader("fragmentLighting",PrutEngine::Shader_Types::Fragment_Shader));
-    ///fragment->setShader(new Prutengine::Data::MetalShaderData(fragmentFunction));
-    
-    // Load the vertex function into the library
-   //id <MTLFunction> vertexFunction = [_defaultLibrary newFunctionWithName:@"vertexTransform"];
-    //auto vertex = std::shared_ptr<PrutEngine::Data::ShaderData>(new Data::MetalShaderData(vertexFunction));
-    auto vertex = std::shared_ptr<Shader>(new Shader("vertexTransform",PrutEngine::Shader_Types::Vertex_Shader));
-   // vertex->setShader(new Prutengine::Data::MetalShaderData(vertexFunction));
-    
-    std::vector<std::shared_ptr<PrutEngine::Data::Shader>> dat;
-    dat.push_back(fragment);
-    dat.push_back(vertex);
-    
+
     
     _renderDestination.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
     _renderDestination.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
@@ -264,8 +268,6 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     _mtlVertexDescriptor.layouts[kBufferIndexMeshGenerics].stepFunction = MTLVertexStepFunctionPerVertex;
 
     
-    pipe = std::shared_ptr<Prutengine::Data::MetalPipeline>(new Prutengine::Data::MetalPipeline("MyPdsipeline", dat, self));
-
     MTLDepthStencilDescriptor *depthStateDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStateDesc.depthCompareFunction = MTLCompareFunctionLess;
     depthStateDesc.depthWriteEnabled = YES;
@@ -394,12 +396,8 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
     _projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), aspect, 0.1f, 100.0f);
 }
 
-- (void)update
-{
-    // Wait to ensure only kMaxBuffersInFlight are getting proccessed by any stage in the Metal
-    //   pipeline (App, Metal, Drivers, GPU, etc)
+- (void)update{
     dispatch_semaphore_wait(_inFlightSemaphore, DISPATCH_TIME_FOREVER);
-    
     // Create a new command buffer for each renderpass to the current drawable
     id <MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     commandBuffer.label = @"MyCommand";
@@ -414,78 +412,89 @@ static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
          dispatch_semaphore_signal(block_sema);
      }];
     
+    MTLRenderPassDescriptor* renderPassDescriptor = _renderDestination.currentRenderPassDescriptor;
+    
+    const auto drawFunction = std::function<void(
+                                                 const std::shared_ptr<Renderer>&,
+                                                 const std::shared_ptr<Transform>&)>
+    ([&](const std::shared_ptr<Renderer>& renderer, const std::shared_ptr<Transform>& transform) -> void{
+        // Obtain a renderPassDescriptor generated from the view's drawable textures
+ 
+        if(renderPassDescriptor != nil) {
+            
+            
+            Data::MetalPipeline* pipe = static_cast<Data::MetalPipeline*>(renderer->getProgram().get());
+            // Create a render command encoder so we can render into something
+            id <MTLRenderCommandEncoder> renderEncoder =
+            [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+            renderEncoder.label = @"MyRenderEncoder";
+            
+            // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
+            [renderEncoder pushDebugGroup:@"DrawBox"];
+            
+            // Set render command encoder state
+            [renderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
+            [renderEncoder setCullMode:MTLCullModeBack];
+            
+            [renderEncoder setRenderPipelineState:pipe->getPipeline()];
+            [renderEncoder setDepthStencilState:_depthState];
+            
+            // Set any buffers fed into our render pipeline
+            [renderEncoder setVertexBuffer:_dynamicUniformBuffer
+                                    offset:_uniformBufferOffset
+                                   atIndex:kBufferIndexUniforms];
+            
+            [renderEncoder setFragmentBuffer:_dynamicUniformBuffer
+                                      offset:_uniformBufferOffset
+                                     atIndex:kBufferIndexUniforms];
+            
+            // Set mesh's vertex buffers
+            for (NSUInteger bufferIndex = 0; bufferIndex < _mesh.vertexBuffers.count; bufferIndex++)
+            {
+                MTKMeshBuffer *vertexBuffer = _mesh.vertexBuffers[bufferIndex];
+                if((NSNull*)vertexBuffer != [NSNull null])
+                {
+                    [renderEncoder setVertexBuffer:vertexBuffer.buffer
+                                            offset:vertexBuffer.offset
+                                           atIndex:bufferIndex];
+                }
+            }
+            
+            // Set any textures read/sampled from our render pipeline
+            [renderEncoder setFragmentTexture:_colorMap
+                                      atIndex:kTextureIndexColor];
+            
+            // Draw each submesh of our mesh
+            for(MTKSubmesh *submesh in _mesh.submeshes)
+            {
+                [renderEncoder drawIndexedPrimitives:submesh.primitiveType
+                                          indexCount:submesh.indexCount
+                                           indexType:submesh.indexType
+                                         indexBuffer:submesh.indexBuffer.buffer
+                                   indexBufferOffset:submesh.indexBuffer.offset];
+            }
+            
+            [renderEncoder popDebugGroup];
+            
+            // We're done encoding commands
+            [renderEncoder endEncoding];
+        }
+    });
+    macFriend->setDrawFunction(drawFunction);
+    
     [self _updateDynamicBufferState];
     
     [self _updateGameState];
     
-    // Obtain a renderPassDescriptor generated from the view's drawable textures
-    MTLRenderPassDescriptor* renderPassDescriptor = _renderDestination.currentRenderPassDescriptor;
-    
-    // If we've gotten a renderPassDescriptor we can render to the drawable, otherwise we'll skip
-    //   any rendering this frame because we have no drawable to draw to
-    if(renderPassDescriptor != nil) {
-        
-        // Create a render command encoder so we can render into something
-        id <MTLRenderCommandEncoder> renderEncoder =
-        [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-        renderEncoder.label = @"MyRenderEncoder";
-        
-        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
-        [renderEncoder pushDebugGroup:@"DrawBox"];
-        
-        // Set render command encoder state
-        [renderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
-        [renderEncoder setCullMode:MTLCullModeBack];
-        
-        [renderEncoder setRenderPipelineState:pipe->getPipeline()];
-        [renderEncoder setDepthStencilState:_depthState];
-        
-        // Set any buffers fed into our render pipeline
-        [renderEncoder setVertexBuffer:_dynamicUniformBuffer
-                                offset:_uniformBufferOffset
-                               atIndex:kBufferIndexUniforms];
-        
-        [renderEncoder setFragmentBuffer:_dynamicUniformBuffer
-                                  offset:_uniformBufferOffset
-                                 atIndex:kBufferIndexUniforms];
-        
-        // Set mesh's vertex buffers
-        for (NSUInteger bufferIndex = 0; bufferIndex < _mesh.vertexBuffers.count; bufferIndex++)
-        {
-            MTKMeshBuffer *vertexBuffer = _mesh.vertexBuffers[bufferIndex];
-            if((NSNull*)vertexBuffer != [NSNull null])
-            {
-                [renderEncoder setVertexBuffer:vertexBuffer.buffer
-                                        offset:vertexBuffer.offset
-                                       atIndex:bufferIndex];
-            }
-        }
-        
-        // Set any textures read/sampled from our render pipeline
-        [renderEncoder setFragmentTexture:_colorMap
-                                  atIndex:kTextureIndexColor];
-        
-        // Draw each submesh of our mesh
-        for(MTKSubmesh *submesh in _mesh.submeshes)
-        {
-            [renderEncoder drawIndexedPrimitives:submesh.primitiveType
-                                      indexCount:submesh.indexCount
-                                       indexType:submesh.indexType
-                                     indexBuffer:submesh.indexBuffer.buffer
-                               indexBufferOffset:submesh.indexBuffer.offset];
-        }
-        
-        [renderEncoder popDebugGroup];
-        
-        // We're done encoding commands
-        [renderEncoder endEncoding];
-    }
+    // Wait to ensure only kMaxBuffersInFlight are getting proccessed by any stage in the Metal
+    //   pipeline (App, Metal, Drivers, GPU, etc)
     
     // Schedule a present once the framebuffer is complete using the current drawable
     [commandBuffer presentDrawable:_renderDestination.currentDrawable];
     
     // Finalize rendering here & push the command buffer to the GPU
     [commandBuffer commit];
+
 }
 
 // Generic matrix math utiliy functions

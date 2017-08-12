@@ -40,6 +40,7 @@ namespace PrutEngine{
         void loadShader(std::string path, Shader_Types type, Data::Shader* shader);
         Data::GraphicsProgram* generateProgram(const std::string& name, const std::vector<std::shared_ptr<Data::Shader>>& shaders);
         std::shared_ptr<Renderer> createRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program);
+        void draw(const std::shared_ptr<Renderer>& renderer, const std::shared_ptr<Transform>& transform);
     }
 }
 

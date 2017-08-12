@@ -7,7 +7,7 @@
 
     id<MTLDevice> _device;
 
-    Renderer *_renderer;
+    MacMetalRenderer *_renderer;
 }
 
 - (void)viewDidLoad
@@ -20,7 +20,7 @@
     _view.delegate = self;
     _view.device = _device;
 
-    _renderer = [[Renderer alloc] initWithMetalDevice:_device
+    _renderer = [[MacMetalRenderer alloc] initWithMetalDevice:_device
                             renderDestinationProvider:self];
 
     [_renderer drawRectResized:_view.bounds.size];

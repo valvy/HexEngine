@@ -30,6 +30,9 @@ GLProgram::GLProgram(const std::string& name, const std::vector<std::shared_ptr<
     glLinkProgram(this->programData);
 }
 
+
+
+
 GLuint GLProgram::getProgram() const{
     return this->programData;
 }

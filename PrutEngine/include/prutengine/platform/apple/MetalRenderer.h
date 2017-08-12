@@ -9,7 +9,7 @@
 #import <memory>
 #import <vector>
 #import "../../data/Shader.hpp"
-
+#import "../../Renderer.hpp"
 
 
 // Protocol abstracting the platform specific view in order to keep the Renderer
@@ -26,49 +26,57 @@
 @end
 
 
-
-
-@interface Renderer : NSObject
+@interface MacMetalRenderer : NSObject
 
 -(nonnull instancetype)initWithMetalDevice:(nonnull id<MTLDevice>)device
                  renderDestinationProvider:(nonnull id<RenderDestinationProvider>)renderDestinationProvider;
 
 - (void)drawRectResized:(CGSize)size;
 
--(id<MTLDevice>) getDevice;
+-(_Nonnull id<MTLDevice> ) getDevice;
 
--(id<RenderDestinationProvider>) getRenderDestinationProvider;
+-(_Nonnull id<RenderDestinationProvider>) getRenderDestinationProvider;
 
--(id <MTLLibrary>) getDefaultLibrary;
+-(_Nonnull id<MTLLibrary>) getDefaultLibrary;
 
--(MTLVertexDescriptor *) getVertexDescriptor;
+-(MTLVertexDescriptor*_Nonnull) getVertexDescriptor;
 - (void)update;
 
 @end
 
-namespace Prutengine{
+namespace PrutEngine{
     namespace Data{
         
         
         class MetalShaderData : public PrutEngine::Data::ShaderData{
             private:
-            id <MTLFunction> metalFunction;
+            _Nonnull id<MTLFunction>  metalFunction;
             public:
-            MetalShaderData(id<MTLFunction> metalFunction);
-            MetalShaderData(Renderer* renderer, const std::string& name);
-            id <MTLFunction> getMetalFunction() const;
+            MetalShaderData(_Nonnull id<MTLFunction> metalFunction);
+            MetalShaderData(MacMetalRenderer* _Nonnull  renderer, const std::string& name);
+            _Nonnull id<MTLFunction> getMetalFunction() const;
         };
         
         class MetalPipeline : public PrutEngine::Data::GraphicsProgram{
             private:
-            id <MTLRenderPipelineState> pipeline;
-            MTLVertexDescriptor* mtlVertexDescriptor;
+            _Nonnull id<MTLRenderPipelineState> pipeline;
             public:
-            MetalPipeline(const std::string& name,const std::vector<std::shared_ptr<PrutEngine::Data::Shader>> &shaders,Renderer* renderer);
-            id <MTLRenderPipelineState> getPipeline() const;
+            MetalPipeline(const std::string& name, const std::vector<std::shared_ptr<PrutEngine::Data::Shader>> &shaders,MacMetalRenderer* _Nonnull renderer);
+            _Nonnull id<MTLRenderPipelineState>  getPipeline() const;
         };
     }
+    
+    class MetalRenderer : public PrutEngine::Renderer{
+        _Nonnull id<MTLBuffer> vertexBuffer;
+       _Nonnull id<MTLBuffer> indexBuffer;
+    public:
+        MetalRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program);
+    };
+    
+    
 }
+
+
 
 #endif
 

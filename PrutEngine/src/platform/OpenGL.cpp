@@ -5,6 +5,9 @@
 #include <fstream>
 #include "prutengine/Renderer.hpp"
 #include "prutengine/exceptions/AssetNotLoadedException.hpp"
+#include "prutengine/math/Utilities.hpp"
+#include "prutengine/math/Matrix4x4.hpp"
+#include "prutengine/Transform.hpp"
 using namespace PrutEngine;
 
 
@@ -70,6 +73,37 @@ void Platform::loadShader(std::string path, Shader_Types type, Data::Shader* sha
 
 std::shared_ptr<Renderer> Platform::createRenderer(const std::string& mesh, const std::string& texture, std::shared_ptr<Data::GraphicsProgram> program){
     return std::shared_ptr<Renderer>(new GLRenderer(mesh, texture, program));
+}
+
+void Platform::draw(const std::shared_ptr<Renderer>& renderer, const std::shared_ptr<Transform>& transform){
+    using namespace PrutEngine::Math;
+    GLRenderer* glRenderer = static_cast<GLRenderer*>(renderer.get());
+    Data::GraphicsProgram* program = renderer->getProgram().get();
+    Data::Mesh* mesh = glRenderer->getMesh().get();
+    Data::Texture* texture = glRenderer->getTexture().get();
+    
+    Data::GLProgram* tmpProgram = static_cast<Data::GLProgram*>(program);
+    
+    glUseProgram(tmpProgram->getProgram());
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,texture->getTexture());
+    glBindVertexArray(mesh->getVao());
+    
+    //Make the calculation
+    Matrix4x4<float> mat = Matrix4x4<float>::identityMatrix();
+    mat = Matrix4x4<float>::scale(mat,transform->getScale());
+    Matrix4x4<float> pos = Matrix4x4<GLfloat>::translate(Matrix4x4<float>::identityMatrix(),transform->getPosition());
+    
+    mat = Matrix4x4<float>::multiply(mat,pos);
+    mat = Matrix4x4<float>::multiply(mat, Quaternion<float>::quaternionToMatrix(transform->getQuaternion()));
+    
+    //pass it to opengl
+    glUniformMatrix4fv(glRenderer->getPositionRef(), 1, GL_TRUE, &mat.getRawData()[0]);
+    glEnableVertexAttribArray ( 0 );
+    
+    glDrawArrays ( GL_TRIANGLES, 0, mesh->getSize());
+    glDisableVertexAttribArray(0);
+    glBindVertexArray(0);
 }
 
 void Platform::clearAndCheckErrors(){

@@ -13,6 +13,7 @@ GraphicsController::GraphicsController(const Graphics_Engine& engine){
         this->loadShaderFunction = Platform::loadShader;
         this->compileProgramfunction = Platform::generateProgram;
         this->createRendererFunction = Platform::createRenderer;
+        this->drawFunction = Platform::draw;
     }
 }
 
@@ -50,6 +51,14 @@ void GraphicsController::preDraw(){
         this->preDrawfunction();
     } catch(std::bad_function_call exception){
        // throw Exceptions::AssetNotLoadedException("Draw function was not setup");
+    }
+}
+
+void GraphicsController::draw(const std::shared_ptr<Renderer>& renderer, const std::shared_ptr<Transform>& transform){
+    try{
+        this->drawFunction(renderer, transform);
+    } catch(std::bad_function_call exception){
+         throw Exceptions::AssetNotLoadedException("Draw function was not setup");
     }
 }
 

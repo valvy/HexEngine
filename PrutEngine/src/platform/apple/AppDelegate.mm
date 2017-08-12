@@ -40,6 +40,14 @@ void Platform::MacFriend::setCompileProgram(std::function<Data::GraphicsProgram*
     this->application->getGraphicsController()->compileProgramfunction = compileProgram;
 }
 
+void Platform::MacFriend::setCreateRenderer(std::function<std::shared_ptr<Renderer>(const std::string&, const std::string&, std::shared_ptr<Data::GraphicsProgram>)> createRendererFunction){
+    this->application->getGraphicsController()->createRendererFunction = createRendererFunction;
+}
+
+void  Platform::MacFriend::setDrawFunction(std::function<void(const std::shared_ptr<Renderer>&, const std::shared_ptr<Transform>&)> drawFunction){
+    this->application->getGraphicsController()->drawFunction = drawFunction;
+}
+
 
 @implementation AppDelegate
 
