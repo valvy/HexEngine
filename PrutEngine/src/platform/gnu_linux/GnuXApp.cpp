@@ -99,7 +99,7 @@ void Application::run(){
     
     XMapRaised(dpy,root);
     XMapWindow(dpy, win);
-    XStoreName(dpy, win, "BlockSnake");
+    XStoreName(dpy, win, "Powered by PrutEngine");
     int attribs[] = {
         GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
         GLX_CONTEXT_MINOR_VERSION_ARB, 1,
