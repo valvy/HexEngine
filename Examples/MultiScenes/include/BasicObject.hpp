@@ -5,7 +5,7 @@
 
 class BasicObject : public PrutEngine::GameObject{
 protected:
-    virtual void update(float tpf) override;
+    virtual void update(const float& tpf) override;
 public:
     BasicObject(const PrutEngine::Math::Vector3f &position);
     ~BasicObject();

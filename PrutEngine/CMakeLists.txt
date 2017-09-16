@@ -76,6 +76,8 @@ SET(PRUT_ENGINE_HEADERS
     ./include/prutengine/AssetManager.hpp
     ./include/prutengine/Camera.hpp
     ./include/prutengine/GameObject.hpp
+    ./include/prutengine/Node.hpp
+    ./include/prutengine/PrutWindow.hpp
     ./include/prutengine/GraphicsController.hpp
     ./include/prutengine/data/AbstractResource.hpp
     ./include/prutengine/data/GraphicsProgram.hpp
@@ -109,6 +111,7 @@ SET(
     src/AssetManager.cpp
     src/Camera.cpp
     src/GameObject.cpp
+    src/Node.cpp
     src/data/GraphicsProgram.cpp
     src/GraphicsController.cpp
     src/data/Mesh.cpp

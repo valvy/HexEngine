@@ -9,8 +9,8 @@ public:
     ~SceneOne();
 protected:
     virtual void awake() override;
-    virtual void keyDown(unsigned short keycode) override;
-    virtual void update(float tpf) override;
+    virtual void keyDown(const unsigned short& keycode) override;
+    virtual void update(const float& tpf) override;
     
 
 };

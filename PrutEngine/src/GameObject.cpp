@@ -8,8 +8,9 @@ using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
 GameObject::GameObject(){
-    this->transform = std::shared_ptr<Transform>(new Transform());
-    this->getTransform()->setScale(Vector3f(1,1,1));
+   // this->transform = std::shared_ptr<Transform>(new Transform());
+   // this->getTransform()->setScale(Vector3f(1,1,1));
+    this->transform->setScale(Vector3f(1,1,1));
 }
 
 GameObject::~GameObject(){
@@ -21,20 +22,21 @@ GameObject::~GameObject(){
 std::shared_ptr<Renderer> GameObject::getRenderer() const{
     return this->renderer;
 }
-
+/*
 std::shared_ptr<Transform> GameObject::getTransform() const{
     return this->transform;
-}
-
+}*/
+/*
 void GameObject::onKeyDown(unsigned short keyCode){
     //virtual
-}
+}*/
 
 void GameObject::setRenderer(std::shared_ptr<Renderer> renderer){
     this->renderer = renderer;
 }
 
-void GameObject::update(float tpf){
+void GameObject::update(const float& tpf){
+    Node::update(tpf);
     Application::getInstance()->getGraphicsController()->draw(this->renderer, this->transform);
 }
 

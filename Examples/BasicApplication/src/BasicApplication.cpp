@@ -3,6 +3,8 @@
 #include <iostream>
 #include <prutengine/exceptions/PrutEngineException.hpp>
 #include <prutengine/platform/apple/MetalShaderTypes.h>
+#include <prutengine/GraphicsController.hpp>
+
 BasicApplication::BasicApplication(){
     setInstance(this);
     try{

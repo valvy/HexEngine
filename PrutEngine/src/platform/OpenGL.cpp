@@ -9,6 +9,7 @@
 #include "prutengine/math/Matrix4x4.hpp"
 #include "prutengine/Transform.hpp"
 #include "prutengine/Application.hpp"
+#include "prutengine/PrutWindow.hpp"
 
 using namespace PrutEngine;
 GLenum convertShaderToGL(const Shader_Types& shaderType){
@@ -109,7 +110,7 @@ void Platform::draw(const std::shared_ptr<Renderer>& renderer, const std::shared
 void Platform::clearAndCheckErrors(){
     static const GLfloat background[] = { 0.0f, 0.25f, 0.0f, 1.0f };
     static const GLfloat depth = 1.0f;
-    const auto winSize = Application::getInstance()->getWindowSize();
+    const auto winSize = Application::getInstance()->getWindow()->getWindowSize();
     glViewport(0 , 0, winSize.getZ(), winSize.getW());
     
     glClearBufferfv(GL_COLOR, 0, background);

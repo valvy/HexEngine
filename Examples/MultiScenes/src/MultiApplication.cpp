@@ -3,6 +3,7 @@
 #include <iostream>
 #include <prutengine/exceptions/PrutEngineException.hpp>
 #include <prutengine/platform/apple/MetalShaderTypes.h>
+#include <prutengine/GraphicsController.hpp>
 
 MultiSceneApplication::MultiSceneApplication(){
     setInstance(this);

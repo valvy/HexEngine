@@ -1,10 +1,14 @@
 #include "prutengine/Application.hpp"
 #include "prutengine/platform/OpenGL.hpp"
-
+#include "prutengine/AssetManager.hpp"
 #include "prutengine/math/Matrix4x4.hpp"
 #include "prutengine/math/Utilities.hpp"
+#include "prutengine/GraphicsController.hpp"
 #include "prutengine/platform/Input.hpp"
+#include "prutengine/AbstractScene.hpp"
+#include "prutengine/PrutWindow.hpp"
 #include <chrono>
+
 #include <iostream>
 #include "prutengine/exceptions/NotYetInitializedException.hpp"
 using namespace PrutEngine;
@@ -20,9 +24,13 @@ Application::~Application(){
     
 }
 
+std::shared_ptr<PrutWindow> Application::getWindow() const {
+    return this->prutWindow;
+}
+
 
 Application::Application(){
-
+    this->prutWindow = std::shared_ptr<PrutWindow>(new PrutWindow());
 }
 
 void Application::quit(){

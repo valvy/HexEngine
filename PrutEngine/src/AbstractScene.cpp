@@ -1,8 +1,9 @@
 #include "prutengine/AbstractScene.hpp"
-#include "prutengine/GameObject.hpp"
+#include "prutengine/Node.hpp"
 #include "prutengine/Camera.hpp"
 #include "prutengine/Application.hpp"
 #include "prutengine/exceptions/NotYetInitializedException.hpp"
+
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
@@ -15,7 +16,7 @@ void AbstractScene::awake(){
 }
 
 
-void AbstractScene::update(float tpf){
+void AbstractScene::update(const float& tpf){
     if(this->cam == nullptr){
         throw Exceptions::NotYetInitializedException("The camera is not yet initialized..");
     }
@@ -27,7 +28,7 @@ void AbstractScene::update(float tpf){
 }
 
 
-void AbstractScene::keyDown(unsigned short keycode){
+void AbstractScene::keyDown(const unsigned short& keycode){
     this->cam->onKeyDown(keycode);
     for(auto it : this->gameObjects){
         it->onKeyDown(keycode);
@@ -43,11 +44,11 @@ std::shared_ptr<Camera> AbstractScene::getCamera() const {
     return this->cam;
 }
 
-void AbstractScene::addGameObject(std::shared_ptr<GameObject> obj){
+void AbstractScene::addGameObject(std::shared_ptr<Node> obj){
     this->gameObjects.push_back(obj);
 }
 
-void AbstractScene::removeGameObject(std::shared_ptr<GameObject> obj){
+void AbstractScene::removeGameObject(std::shared_ptr<Node> obj){
     
 }
 

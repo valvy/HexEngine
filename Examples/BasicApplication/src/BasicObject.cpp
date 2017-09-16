@@ -1,5 +1,6 @@
 #include "BasicObject.hpp"
 #include <prutengine/Application.hpp>
+#include <prutengine/AssetManager.hpp>
 #include <prutengine/exceptions/PrutEngineException.hpp>
 #include <string>
 #include <iostream>
@@ -49,7 +50,7 @@ BasicObject::BasicObject(const Vector3f &position) : GameObject(){
 
 
 
-void BasicObject::update(float tpf){
+void BasicObject::update(const float& tpf){
    // if(visible){
         GameObject::update(tpf);
         this->getTransform()->rotate(Vector3f(5,90,0), 50.0f * tpf);

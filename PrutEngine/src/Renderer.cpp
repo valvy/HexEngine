@@ -1,4 +1,5 @@
 #include "prutengine/Renderer.hpp"
+#include "prutengine/AssetManager.hpp"
 
 using namespace PrutEngine;
 

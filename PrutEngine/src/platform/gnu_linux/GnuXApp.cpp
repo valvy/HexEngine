@@ -1,14 +1,15 @@
 //#include "prutengine/platform/gnu_linux/GnuXApp.hpp"
 #include "prutengine/Application.hpp"
+#include "prutengine/platform/OpenGL.hpp"
 #include <cstdlib>
 #include "GL/glxext.h"
 #include "GL/glext.h"
 #include <X11/Xlib.h>
+#include "prutengine/PrutWindow.hpp"
 #include "prutengine/exceptions/InitializationException.hpp"
 #include "prutengine/exceptions/NotYetInitializedException.hpp"
 
 using namespace PrutEngine;
-using namespace PrutEngine::Platform::GnuLinux;
 using namespace PrutEngine::Math;
 
 namespace{
@@ -27,12 +28,16 @@ void Application::clean(){
 }
 
 
-void Application::setWindowTitle(const std::string& title){
+PrutWindow::PrutWindow(){
+    
+}
+
+void PrutWindow::setWindowTitle(const std::string& title){
     Exceptions::assertNotYetInitialized(dpy == nullptr,"Display is not yet initialized");
     XStoreName(dpy, win, title.c_str());
 }
 
-Vector4f Application::getWindowSize() const{
+Vector4f PrutWindow::getWindowSize() const{
     XWindowAttributes xwa;
     XGetWindowAttributes(dpy, win, &xwa);
     return Vector4f(xwa.x,xwa.y, xwa.width,xwa.height);

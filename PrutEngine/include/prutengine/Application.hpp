@@ -1,28 +1,26 @@
 #ifndef PRUTENGINE_APPLICATION_HPP
 #define PRUTENGINE_APPLICATION_HPP
+
 #include <memory>
-#include "./AbstractScene.hpp"
 #include "./math/Vector.hpp"
-#include "./GraphicsController.hpp"
-#include "prutengine/AssetManager.hpp"
-#include <ostream>
+
 namespace PrutEngine{
 
+	class PrutWindow;
+	
+	enum class Graphics_Engine;
 
+	class GraphicsController;
+
+	class AbstractScene;
+
+	class AssetManager;
 
 	#ifdef __APPLE__
 	namespace Platform{
 		class MacFriend;
 	}
-	#elif __linux__
-	namespace Platform{
-		namespace GnuLinux{
-
-			class GnuXApp;
-		}
-	}
 	#endif
-	
 
 	/**
 	* This class manages all the input of the Hex application.
@@ -32,8 +30,6 @@ namespace PrutEngine{
 	class Application{
 		#ifdef __APPLE__
 		friend Platform::MacFriend;
-		#elif __linux__
-		friend Platform::GnuLinux::GnuXApp;
 		#endif
 	private:
 		std::shared_ptr<AbstractScene> currentScene;
@@ -42,6 +38,7 @@ namespace PrutEngine{
 		*/
 		bool shouldStop = false;
 		static Application* instance;
+		std::shared_ptr<PrutWindow> prutWindow;
 		std::shared_ptr<AssetManager> assetManager;
 		std::shared_ptr<GraphicsController> graphicsController;
 		float time_per_frame;
@@ -57,6 +54,7 @@ namespace PrutEngine{
 		bool canUseAppleMetal() const ;
 		
 		
+		
 		virtual void loop() = 0;
 		/**
 		* private constructor so it enforces only on instance
@@ -67,9 +65,11 @@ namespace PrutEngine{
 		virtual void awake();
 	public:
 		virtual ~Application();
+
+		std::shared_ptr<PrutWindow> getWindow() const;
 		std::shared_ptr<AssetManager> getAssetManager();
 	
-		void setWindowTitle(const std::string& title);
+		//void setWindowTitle(const std::string& title);
 
 		void loadScene(std::shared_ptr<AbstractScene> scene);
 		/**
@@ -79,7 +79,7 @@ namespace PrutEngine{
 		static Application* getInstance();
 		
 		std::shared_ptr<GraphicsController> getGraphicsController() const ;
-		Math::Vector4f getWindowSize() const;
+		//Math::Vector4f getWindowSize() const;
 		
 		/**
 		* Cleans up the data and stops the program

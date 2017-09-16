@@ -1,10 +1,11 @@
 #include "SceneOne.hpp"
 #include "SceneTwo.hpp"
 #include <prutengine/Camera.hpp>
-#include "prutengine/Application.hpp"
-#include "prutengine/math/Utilities.hpp"
-#include "prutengine/platform/Input.hpp"
-#include "prutengine/Application.hpp"
+#include <prutengine/Application.hpp>
+#include <prutengine/math/Utilities.hpp>
+#include <prutengine/platform/Input.hpp>
+#include <prutengine/Application.hpp>
+#include <prutengine/PrutWindow.hpp>
 #include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -14,11 +15,11 @@ SceneTwo::SceneTwo(){
 }
 
 void SceneTwo::awake(){
-    Application::getInstance()->setWindowTitle("Scene Two");
+    Application::getInstance()->getWindow()->setWindowTitle("Scene Two");
     this->setCamera(std::shared_ptr<Camera>(new Camera(Vector3f(0,0,9))));
 }
 
-void SceneTwo::keyDown(unsigned short keycode){
+void SceneTwo::keyDown(const unsigned short& keycode){
     AbstractScene::keyDown(keycode);
     if(keycode == PrutEngine::KeyCodes::ESCAPE_KEY){
         Application::getInstance()->quit();
@@ -29,7 +30,7 @@ void SceneTwo::keyDown(unsigned short keycode){
 
 }
 
-void SceneTwo::update(float tpf){
+void SceneTwo::update(const float& tpf){
 	AbstractScene::update(tpf);//Updates the gameobjects
 }
 

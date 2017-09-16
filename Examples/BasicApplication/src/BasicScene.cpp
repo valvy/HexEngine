@@ -4,6 +4,7 @@
 #include "prutengine/Application.hpp"
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/platform/Input.hpp"
+#include "prutengine/PrutWindow.hpp"
 #include "prutengine/Application.hpp"
 
 using namespace PrutEngine;
@@ -14,7 +15,7 @@ BasicScene::BasicScene(){
 }
 
 void BasicScene::awake(){
-    Application::getInstance()->setWindowTitle("Basic scene");
+    Application::getInstance()->getWindow()->setWindowTitle("Basic scene");
     this->setCamera(std::shared_ptr<Camera>(new Camera(Vector3f(0,0,9))));
     float offset = 0;
 
@@ -28,7 +29,7 @@ void BasicScene::awake(){
     }
 }
 
-void BasicScene::keyDown(unsigned short keycode){
+void BasicScene::keyDown(const unsigned short& keycode){
     AbstractScene::keyDown(keycode);
     if(keycode == PrutEngine::KeyCodes::ESCAPE_KEY){
         Application::getInstance()->quit();
@@ -37,6 +38,6 @@ void BasicScene::keyDown(unsigned short keycode){
    
 }
 
-void BasicScene::update(float tpf){
+void BasicScene::update(const float& tpf){
 	AbstractScene::update(tpf);//Updates the gameobjects
 }
