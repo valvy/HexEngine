@@ -1,11 +1,12 @@
-#ifndef BASIC_SCENE_HPP
-#define BASIC_SCENE_HPP
+#ifndef SCENE_ONE_HPP
+#define SCENE_ONE_HPP
 
 #include <prutengine/AbstractScene.hpp>
 
-class BasicScene : public PrutEngine::AbstractScene{
+class SceneOne : public PrutEngine::AbstractScene{
 public:
-    BasicScene();
+    SceneOne();
+    ~SceneOne();
 protected:
     virtual void awake() override;
     virtual void keyDown(unsigned short keycode) override;
@@ -13,7 +14,5 @@ protected:
     
 
 };
-
-
 
 #endif

@@ -1,6 +1,6 @@
 //#include "prutengine/platform/gnu_linux/GnuXApp.hpp"
 #include "prutengine/Application.hpp"
-#include <iostream>
+#include <cstdlib>
 #include "GL/glxext.h"
 #include "GL/glext.h"
 #include <X11/Xlib.h>
@@ -63,8 +63,8 @@ void Application::run(){
     };
 
     dpy = XOpenDisplay(nullptr);
-    if(dpy == nullptr) {
-        
+
+    if(dpy == nullptr) {    
         throw Exceptions::InitializationException("Could not open display");
     }
 
@@ -172,6 +172,6 @@ void Application::run(){
     glXDestroyContext(dpy, glc);
     XDestroyWindow(dpy, win);
     XCloseDisplay(dpy);
-
+    std::exit(EXIT_SUCCESS); //To be compliant with MacOS exit :*(
 }
 

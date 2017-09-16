@@ -4,12 +4,11 @@
 #include <prutengine/GameObject.hpp>
 
 class BasicObject : public PrutEngine::GameObject{
-private:
-    bool visible;
 protected:
     virtual void update(float tpf) override;
 public:
     BasicObject(const PrutEngine::Math::Vector3f &position);
+    ~BasicObject();
 };
 
 

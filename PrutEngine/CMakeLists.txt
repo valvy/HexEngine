@@ -53,11 +53,6 @@ ELSEIF(UNIX)#Linux check
         ${GLEW_INCLUDE_DIRS}
     )
 
-    SET(
-        PRUT_ENGINE_PLATFORM_HEADERS
-        ./include/prutengine/platform/gnu_linux/GnuXApp.hpp
-    )
-
     SET( 
         PRUT_ENGINE_PLATFORM_SOURCES
         ./src/platform/gnu_linux/GnuXApp.cpp

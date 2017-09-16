@@ -1,1 +1,2 @@
 ADD_SUBDIRECTORY(BasicApplication)
+ADD_SUBDIRECTORY(MultiScenes)

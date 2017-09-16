@@ -43,7 +43,13 @@ std::shared_ptr<AssetManager> Application::getAssetManager(){
 }
 
 void Application::loadScene(std::shared_ptr<AbstractScene> scene){
+    const bool firstLoad = this->currentScene == nullptr;
     this->currentScene = scene;
+    if(!firstLoad){
+        this->currentScene->awake();
+    }
+
+    
 }
 
 void Application::awake(){
