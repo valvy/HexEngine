@@ -6,6 +6,7 @@
 #import "prutengine/platform/Input.hpp"
 #import "prutengine/platform/apple/OpenGLWindow.h"
 #import "prutengine/platform/apple/MetalWindow.h"
+#import "prutengine/PrutWindow.hpp"
 
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
@@ -115,14 +116,14 @@ namespace{
 }
 
 
-Vector4f Application::getWindowSize() const{
+Vector4f PrutWindow::getWindowSize() const{
     NSSize s = [app getWindowSize].size;
     NSPoint p = [app getWindowSize].origin;
     return Vector4f(p.x, p.y, s.width,s.height);
 }
 
 
-void Application::setWindowTitle(const std::string& title){
+void PrutWindow::setWindowTitle(const std::string& title){
     // not yet implemented
 }
 
