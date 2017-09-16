@@ -8,10 +8,10 @@
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/math/Matrix4x4.hpp"
 #include "prutengine/Transform.hpp"
+#include "prutengine/Application.hpp"
+
 using namespace PrutEngine;
-
-
-constexpr GLenum convertShaderToGL(const Shader_Types& shaderType){
+GLenum convertShaderToGL(const Shader_Types& shaderType){
     switch (shaderType) {
         case Shader_Types::Vertex_Shader:
         return GL_VERTEX_SHADER;
@@ -109,7 +109,8 @@ void Platform::draw(const std::shared_ptr<Renderer>& renderer, const std::shared
 void Platform::clearAndCheckErrors(){
     static const GLfloat background[] = { 0.0f, 0.25f, 0.0f, 1.0f };
     static const GLfloat depth = 1.0f;
-    glViewport(0, 0, 600, 600);
+    const auto winSize = Application::getInstance()->getWindowSize();
+    glViewport(0 , 0, winSize.getZ(), winSize.getW());
     
     glClearBufferfv(GL_COLOR, 0, background);
     glClearBufferfv(GL_DEPTH, 0, &depth);

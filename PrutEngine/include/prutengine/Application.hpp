@@ -14,7 +14,15 @@ namespace PrutEngine{
 	namespace Platform{
 		class MacFriend;
 	}
+	#elif __linux__
+	namespace Platform{
+		namespace GnuLinux{
+
+			class GnuXApp;
+		}
+	}
 	#endif
+	
 
 	/**
 	* This class manages all the input of the Hex application.
@@ -24,6 +32,8 @@ namespace PrutEngine{
 	class Application{
 		#ifdef __APPLE__
 		friend Platform::MacFriend;
+		#elif __linux__
+		friend Platform::GnuLinux::GnuXApp;
 		#endif
 	private:
 		std::shared_ptr<AbstractScene> currentScene;
@@ -36,13 +46,16 @@ namespace PrutEngine{
 		std::shared_ptr<GraphicsController> graphicsController;
 		float time_per_frame;
 		void keyDown(unsigned short keycode);
+		void clean();
 	protected:
 		/**
 		* Loops the program
 		*/
 		void setInstance(Application* instance);
 		void update();
+		
 		bool canUseAppleMetal() const ;
+		
 		
 		virtual void loop() = 0;
 		/**
@@ -56,6 +69,8 @@ namespace PrutEngine{
 		virtual ~Application();
 		std::shared_ptr<AssetManager> getAssetManager();
 	
+		void setWindowTitle(const std::string& title);
+
 		void loadScene(std::shared_ptr<AbstractScene> scene);
 		/**
 		* gets the instance of the application

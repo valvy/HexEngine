@@ -110,7 +110,10 @@ void  Platform::MacFriend::setDrawFunction(std::function<void(const std::shared_
 
 @end
 
-AppDelegate* app;
+namespace{
+    AppDelegate* app;
+}
+
 
 Vector4f Application::getWindowSize() const{
     NSSize s = [app getWindowSize].size;
@@ -119,9 +122,19 @@ Vector4f Application::getWindowSize() const{
 }
 
 
+void Application::setWindowTitle(const std::string& title){
+    // not yet implemented
+}
+
+
+
 bool Application::canUseAppleMetal() const {
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
     return (version.majorVersion >= 10 && version.minorVersion >= 12);
+}
+
+void Application::clean(){
+    //Do nothing, os dependend
 }
 
 

@@ -1,6 +1,7 @@
 #include "prutengine/AssetManager.hpp"
 #include "prutengine/Application.hpp"
 #include "prutengine/exceptions/PrutEngineException.hpp"
+#include <unistd.h>
 using namespace PrutEngine;
 using namespace PrutEngine::Data;
 
@@ -56,8 +57,19 @@ void AssetManager::clear(){
 }
 
 #ifndef __APPLE__
+
+#define GetCurrentDir getcwd
 std::string AssetManager::getAppPath() const{
-    return "";
+    char cCurrentPath[FILENAME_MAX];
+    
+    if(!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
+    {
+        return "Error";
+    }
+    
+    cCurrentPath[sizeof(cCurrentPath) - 1] = '\0';
+    
+    return cCurrentPath;
 }
 #endif
 

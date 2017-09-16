@@ -5,6 +5,7 @@
 #include "prutengine/math/Utilities.hpp"
 #include "prutengine/platform/Input.hpp"
 #include "prutengine/Application.hpp"
+
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
@@ -13,7 +14,7 @@ BasicScene::BasicScene(){
 }
 
 void BasicScene::awake(){
-    
+    Application::getInstance()->setWindowTitle("Basic scene");
     this->setCamera(std::shared_ptr<Camera>(new Camera(Vector3f(0,0,9))));
     float offset = 0;
     //auto obj = std::shared_ptr<GameObject>(new BasicObject(Vector3f(0,0,0)));

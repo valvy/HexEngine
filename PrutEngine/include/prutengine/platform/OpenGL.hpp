@@ -22,9 +22,8 @@
 #include <GL/glx.h>
 #endif
 #include <string>
-
 #include <memory>
-
+#include <vector>
 namespace PrutEngine{
     
     namespace Data{

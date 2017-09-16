@@ -1,5 +1,6 @@
 #ifndef PRUTENGINE_ASSET_MANAGER_HPP
 #define PRUTENGINE_ASSET_MANAGER_HPP
+
 #include <utility>
 #include <string>
 #include <vector>

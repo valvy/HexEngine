@@ -1,6 +1,10 @@
 #ifndef PRUTENGINE_GRAPHICS_CONTROLLER_HPP
 #define PRUTENGINE_GRAPHICS_CONTROLLER_HPP
+
 #include <functional>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace PrutEngine{
 

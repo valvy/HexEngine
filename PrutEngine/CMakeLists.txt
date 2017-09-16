@@ -43,36 +43,66 @@ IF(APPLE)
         ./include/prutengine/platform/apple/MetalViewController.h
         ./include/prutengine/platform/apple/OpenGLWindow.h
     )
+ELSEIF(UNIX)#Linux check
+    FIND_PACKAGE(OpenGL REQUIRED)
+    FIND_PACKAGE(X11 REQUIRED)
+    FIND_PACKAGE(GLEW REQUIRED)
+
+    INCLUDE_DIRECTORIES(
+        ${OPENGL_INCLUDE_DIR}
+        ${GLEW_INCLUDE_DIRS}
+    )
+
+    SET(
+        PRUT_ENGINE_PLATFORM_HEADERS
+        ./include/prutengine/platform/gnu_linux/GnuXApp.hpp
+    )
+
+    SET( 
+        PRUT_ENGINE_PLATFORM_SOURCES
+        ./src/platform/gnu_linux/GnuXApp.cpp
+    )
+
+    SET(
+        PRUT_ENGINE_PLATFORM_LIBRARIES
+        ${GLEW_LIBRARIES} 
+        ${OPENGL_LIBRARIES} 
+        ${X11_LIBRARIES}
+    )
 
 ENDIF()
 
+
+
 SET(PRUT_ENGINE_HEADERS
     ${PRUT_ENGINE_PLATFORM_HEADERS}
-  ./include/prutengine/AbstractScene.hpp
-  ./include/prutengine/Application.hpp
-  ./include/prutengine/AssetManager.hpp
-  ./include/prutengine/Camera.hpp
-  ./include/prutengine/GameObject.hpp
-  ./include/prutengine/GraphicsController.hpp
-  ./include/prutengine/data/AbstractResource.hpp
-  ./include/prutengine/data/GraphicsProgram.hpp
-  ./include/prutengine/data/Mesh.hpp
-  ./include/prutengine/data/shader.hpp
-  ./include/prutengine/data/Texture.hpp
-  ./include/prutengine/exceptions/AssetNotLoadedException.hpp
-  ./include/prutengine/Renderer.hpp
-  ./include/prutengine/Transform.hpp
-  ./include/prutengine/exceptions/NotYetInitializedException.hpp
-  ./include/prutengine/exceptions/PrutEngineException.hpp
-  ./include/prutengine/exceptions/RenderingException.hpp
-  ./include/prutengine/math/Matrix.hpp
-  ./include/prutengine/math/Matrix4x4.hpp
-  ./include/prutengine/math/Quaternion.hpp
-  ./include/prutengine/math/Utilities.hpp
-  ./include/prutengine/math/Vector.hpp
-  ./include/prutengine/platform/Input.hpp
+    ./include/prutengine/AbstractScene.hpp
+    ./include/prutengine/Application.hpp
+    ./include/prutengine/AssetManager.hpp
+    ./include/prutengine/Camera.hpp
+    ./include/prutengine/GameObject.hpp
+    ./include/prutengine/GraphicsController.hpp
+    ./include/prutengine/data/AbstractResource.hpp
+    ./include/prutengine/data/GraphicsProgram.hpp
+    ./include/prutengine/data/Mesh.hpp
+    ./include/prutengine/data/Shader.hpp
+    ./include/prutengine/data/Texture.hpp
+    ./include/prutengine/exceptions/AssetNotLoadedException.hpp
+    ./include/prutengine/Renderer.hpp
+    ./include/prutengine/Transform.hpp
+    ./include/prutengine/exceptions/NotYetInitializedException.hpp
+    ./include/prutengine/exceptions/PrutEngineException.hpp
+    ./include/prutengine/exceptions/RenderingException.hpp
+    ./include/prutengine/exceptions/InitializationException.hpp
+    ./include/prutengine/math/Matrix.hpp
+    ./include/prutengine/math/Matrix4x4.hpp
+    ./include/prutengine/math/Quaternion.hpp
+    ./include/prutengine/math/Utilities.hpp
+    ./include/prutengine/math/Vector.hpp
+    ./include/prutengine/platform/Input.hpp
     
-  ./include/prutengine/platform/OpenGL.hpp
+    ./include/prutengine/platform/OpenGL.hpp
+    
 )
 
 SET(
@@ -92,6 +122,7 @@ SET(
     src/exceptions/RenderingException.cpp
     src/exceptions/NotYetInitializedException.cpp
     src/exceptions/AssetNotLoadedException.cpp
+    src/exceptions/InitializationException.cpp
     src/platform/OpenGL.cpp
     src/Renderer.cpp
     src/Transform.cpp

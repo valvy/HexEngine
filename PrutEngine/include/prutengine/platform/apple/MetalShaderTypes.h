@@ -2,6 +2,7 @@
 #ifndef ShaderTypes_h
 #define ShaderTypes_h
 
+#ifdef __APPLE__
 #include <simd/simd.h>
 
 
@@ -52,6 +53,6 @@ typedef struct
 
 
 
-
+#endif
 
 #endif /* ShaderTypes_h */

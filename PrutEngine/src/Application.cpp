@@ -10,7 +10,6 @@
 using namespace PrutEngine;
 
 
-
 Application* Application::instance;
 
 void Application::setInstance(Application* app){
@@ -20,6 +19,7 @@ void Application::setInstance(Application* app){
 Application::~Application(){
     
 }
+
 
 Application::Application(){
 
@@ -32,6 +32,8 @@ void Application::quit(){
     currentScene.reset();
     shouldStop = true;
 }
+
+
 
 std::shared_ptr<AssetManager> Application::getAssetManager(){
     if(this->assetManager == nullptr){
