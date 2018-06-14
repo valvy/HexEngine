@@ -123,7 +123,7 @@ void Platform::clearAndCheckErrors(){
         do{
             switch(error){
                 case GL_INVALID_ENUM:
-                errorMsg = "My first info log using default logger";
+                errorMsg = "Invalid Enum\n";
                 break;
                 case GL_INVALID_VALUE:
                 errorMsg = "found invalid value \n";

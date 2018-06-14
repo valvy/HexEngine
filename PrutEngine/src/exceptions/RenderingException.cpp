@@ -13,3 +13,12 @@ RenderingException::RenderingException(const char* msg) : PrutEngineException(ms
 void RenderingException::addError(const std::string& error){
     this->errors.push_back(error);
 }
+
+std::string RenderingException::getError() {
+    if(!errors.empty()) {
+        std::string msg = this->errors.back();
+        this->errors.pop_back();
+        return msg;
+    }
+    return "no error occured";
+}

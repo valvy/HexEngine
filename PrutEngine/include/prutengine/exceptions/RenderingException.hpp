@@ -10,6 +10,7 @@ namespace PrutEngine{
             RenderingException(const std::string& msg);
             RenderingException(const char* msg);
             void addError(const std::string& error);
+            std::string getError();
 
         };
     }

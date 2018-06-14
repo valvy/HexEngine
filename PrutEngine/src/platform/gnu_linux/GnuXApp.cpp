@@ -116,7 +116,7 @@ void Application::run(){
 
     glc = glXCreateContextAttribsARB(dpy, *fbc, 0, true, attribs);
     glXMakeCurrent(dpy, win, glc); 
-
+    glewExperimental = GL_TRUE; 
     GLenum err = glewInit();
     if (GLEW_OK != err){
         glXMakeCurrent(dpy, None, nullptr);

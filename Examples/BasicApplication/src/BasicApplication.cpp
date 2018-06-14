@@ -2,6 +2,7 @@
 #include "BasicScene.hpp"
 #include <iostream>
 #include <prutengine/exceptions/PrutEngineException.hpp>
+#include <prutengine/exceptions/RenderingException.hpp>
 #include <prutengine/platform/apple/MetalShaderTypes.h>
 #include <prutengine/GraphicsController.hpp>
 
@@ -20,17 +21,18 @@ BasicApplication::BasicApplication(){
 
 PrutEngine::Graphics_Engine BasicApplication::setRenderer(){
     using PrutEngine::Graphics_Engine;
-    //return Graphics_Engine::OpenGL;
-    if(this->canUseAppleMetal()){
-        return Graphics_Engine::AppleMetal;
-    }
+
     return Graphics_Engine::OpenGL;
 }
 
 void BasicApplication::loop(){
     try{
         update();
-    }catch(const PrutEngine::Exceptions::PrutEngineException exception){
+    }
+    catch( PrutEngine::Exceptions::RenderingException& exception){
+        std::cout << exception.getError() << "\n";
+    }
+    catch(const PrutEngine::Exceptions::PrutEngineException exception){
         std::cout << "Program crashed with following exception: ";
         std::cout << exception.getMsg() << "\n";
         this->quit();

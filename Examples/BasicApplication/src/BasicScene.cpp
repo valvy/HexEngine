@@ -6,7 +6,7 @@
 #include "prutengine/platform/Input.hpp"
 #include "prutengine/PrutWindow.hpp"
 #include "prutengine/Application.hpp"
-
+#include <iostream>
 using namespace PrutEngine;
 using namespace PrutEngine::Math;
 
